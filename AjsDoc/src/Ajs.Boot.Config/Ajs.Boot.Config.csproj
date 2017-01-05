@@ -22,23 +22,25 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AjsDoc\AjsDoc.csproj">
+    <ProjectReference Include="..\..\AjsDoc.csproj">
       <Project>{f50eb30f-7563-41d2-b64d-c1588509a691}</Project>
       <Name>AjsDoc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ajs\Ajs.csproj">
+      <Project>{267086da-ab24-4d8d-bd5f-d7d3b3d7db67}</Project>
+      <Name>Ajs</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="..\..\Ajs\Ajs\js\ajs.d.ts">
+    <TypeScriptCompile Include="..\..\js\ajs.d.ts">
       <Link>lib\ajs.d.ts</Link>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="..\AjsDoc\js\ajsdocbrowser.d.ts">
+    <TypeScriptCompile Include="..\..\js\ajsdocbrowser.d.ts">
       <Link>lib\ajsdocbrowser.d.ts</Link>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\ajs.boot.config.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="js\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
@@ -69,16 +71,17 @@
     <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptJSXEmit>Preserve</TypeScriptJSXEmit>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
     <TypeScriptModuleKind>None</TypeScriptModuleKind>
-    <TypeScriptOutFile>./js/ajs.boot.config.js</TypeScriptOutFile>
+    <TypeScriptOutFile>../../js/ajs.boot.config.js</TypeScriptOutFile>
     <TypeScriptOutDir />
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
-    <TypeScriptMapRoot />
-    <TypeScriptSourceRoot />
+    <TypeScriptMapRoot>
+    </TypeScriptMapRoot>
+    <TypeScriptSourceRoot>/src/Ajs.Boot.Config/src/</TypeScriptSourceRoot>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
@@ -88,7 +91,7 @@
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
     <TypeScriptModuleKind>None</TypeScriptModuleKind>
-    <TypeScriptOutFile>./js/ajs.boot.config.js</TypeScriptOutFile>
+    <TypeScriptOutFile>../../js/ajs.boot.config.js</TypeScriptOutFile>
     <TypeScriptOutDir />
     <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
@@ -97,9 +100,11 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>..\..\tools\clean.bat "$(SolutionDir)"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>..\..\tools\copy.bat "$(SolutionDir)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

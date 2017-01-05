@@ -41,9 +41,7 @@ namespace ajsdoc {
             const anyPath: string = "(\\/.*|.*)";
 
             ajs.Framework.router.registerRoute([{ base: "^\/doc", params: anyPath + allParamsAndHashes }], "AjsDoc");
-
-            ajs.Framework.router.registerRoute([{ base: "^\/event\\/users", params: allParamsAndHashes }], "EventUsersTest");
-            ajs.Framework.router.registerRoute([{ base: "^\/.*", params: "" }], "Index");
+            ajs.Framework.router.registerRoute([{ base: "^\/.*", params: "" }], "AjsDoc");
 
             this._initDone();
 

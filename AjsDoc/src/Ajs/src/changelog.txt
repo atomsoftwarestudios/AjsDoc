@@ -1,0 +1,137 @@
+﻿/*! ************************************************************************
+The MIT License (MIT)
+Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+**************************************************************************** */
+
+AJS Framework changelog
+
+0.01 - Initial version
+
+Features:
+	- Boot process
+	- Resource management
+	- Routing
+	- Navigation
+	- Application management
+	- View, View Components and Visual Components (templating)
+	- Language & translation
+
+	- Data
+		- JSON API
+		- Data caching
+
+	- WebSockets
+
+TODO:
+    - Documentation
+		- Copyrights & thanks to lib developers
+		- Intentions and reasons why AJS was developed
+		- How it works
+		- Visual Studio project and compilation
+		   - Tools & toolchain
+		      - Javascript minification
+		      - Template compiler / minifier
+			  - Style compiler
+			  - Language & translation transpiller
+			  - Code optimalization
+		- Coding guidelines
+		- Browser application caching
+		- Features
+		   - Boot process
+		   - Resource Management
+		   - Navigation
+		   - Routing
+		   - Application
+		   - View, View Components and Visual Components (templating)
+		- Code documentation
+			- Add license agreement to all files
+		    - Finish the code documentation for the existing code
+			- Get rid of all errors reported by the Visual Studio Intellisense
+
+	- Browser Application Caching
+		- Only index.html, ajs.js and ajs.boot.js need to be cached
+		- Tool to update the manifest if the index.html, ajs.js or ajs.boot.js will change
+
+	- Error handling, exceptions & exception rethrowing
+		- Especially in templating and view component processings
+
+	- Resource management
+	    - remove resources older than
+		- performance optiomizations
+		   - creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
+		   - multiple calls of getResource during single operation can be optimized
+		   - review cycles
+
+
+	- View, View Components, Visual Components
+		- CSS style management
+		   - LESS & reuired toolchain
+		- ViewComponent._getState -> implement function to collect the state information from the view component tree
+		- Dynamic View Component -> implement a component allowing to set the view component programatically, not just from template
+		- Static content view component
+		- Event subscriptions
+		- View Component Finalization
+		- Refactor ViewComponent properties to ajs... property name
+		- Refactor ViewComponent state management to look nicer
+
+	- Data
+		- JSON API
+		- Data caching
+		- Data validation
+		- Data binding
+
+	- WebSockets
+
+	- Language & Translation
+
+
+	FAR FUTURE:
+	- Caching of processed objects - especially visualComponents and view components??
+
+	----
+
+	Optimizations:
+	
+	A lot of optimizations can be done, at least:
+
+	a) Template class - when it is getting components, children components and placeholders
+	it is browsing the DOM structure multiple times. This can be done in a single step.
+
+	b) ViewComponent - while creating a new array of components it calls functions to
+	get viewcomponent constructor and visual constructor in the loop, this can be done just
+	once
+
+	c) if undefined && not null can be optimized at many places
+
+	----
+
+	tags:
+
+	<ajsstatic id="content" src="/ui/static/loremipsum.html" />
+	<ajsdynamic id="content" src="ToDos" />
+
+
+-------------------------------------------------------------------------------------
+Notes:
+-------------------------------------------------------------------------------------
+
+Generate documentation JSON:
+typedoc --mode file --target ES5 --json "D:\Documents\Visual Studio 2015\Projects\HoldEvent.com\HoldEvent.com-Client\ajsdoc\program.json" "d:\Documents\Visual Studio 2015\Projects\HoldEvent.com\HoldEvent.com-Client\ts\ajs"
+
+
+http://hilite.me/

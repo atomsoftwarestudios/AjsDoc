@@ -23,7 +23,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
+    <Content Include="js\ajs.boot.config.js" />
     <Content Include="js\ajs.js" />
+    <Content Include="js\ajsdocbrowser.js" />
     <Content Include="js\highlight.pack.js" />
     <Content Include="res\img\ajs-logo.png" />
     <Content Include="res\img\atom-logo.png" />
@@ -48,7 +50,12 @@
     <TypeScriptCompile Include="src\hljs.ts" />
     <TypeScriptCompile Include="static\examples\app_init.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="src\Ajs\Ajs.csproj">
+      <Project>{267086da-ab24-4d8d-bd5f-d7d3b3d7db67}</Project>
+      <Name>Ajs</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
@@ -106,4 +113,12 @@
     <TypeScriptSourceRoot />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>
