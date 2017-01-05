@@ -43,7 +43,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="lib\ajs.d.ts" />
+    <TypeScriptCompile Include="js\ajs.d.ts" />
     <TypeScriptCompile Include="src\AjsDocBrowser.ts" />
     <TypeScriptCompile Include="src\AjsDoc.ts" />
     <TypeScriptCompile Include="src\DocModel.ts" />
@@ -56,6 +56,7 @@
       <Name>Ajs</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
