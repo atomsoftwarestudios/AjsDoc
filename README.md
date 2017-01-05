@@ -1,9 +1,9 @@
 # ajsDoc
 TypeScript documentation browser
 
-This repository is under construction and both projects are still in early development phase.
-
 Currently, the Ajs Visual Studio Project is included here and the last recent version of the Ajs is in this repository because of debugging purposes.
+
+This repository is under construction and both projects are still in early development phase.
 
 This application can be used as an example for the AjsFramework (https://github.com/atomsoftwarestudios/ajs)
 
