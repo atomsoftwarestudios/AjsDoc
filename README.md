@@ -22,7 +22,9 @@ compile it and run/debug in both, debug and release vesrions under the local IIS
 # Usage
 
 ```
-Please note the implementation of all data types is not currently complete and probably will never be as the primary purpose is to document the Ajs and currently only the statements used there are in development and testing.
+Please note the implementation of templates for all data types is not currently complet
+and probably  will never be as the primary purpose is to document the Ajs and currently
+only the statements used there are in development and testing. Feel free to contibute.
 ```
 
 The JSON data grabbed from the TypeDoc must be provided. The JSDoc code documentation can contain HTML tags to format the output as desired.
@@ -30,7 +32,7 @@ The JSON data grabbed from the TypeDoc must be provided. The JSDoc code document
 Following statements already are or will available (as TypeDoc filters the original JSoc):
 
 ```
-   #example <relative_path>            Inserts the example file to the target document
+#example <relative_path>            Inserts the example file to the target document
 ```
 
 # Contribution
