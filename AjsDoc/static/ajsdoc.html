@@ -1,0 +1,352 @@
+﻿<template name="ajsdoc">
+
+    <style type="text/css">
+
+        html, body {
+            margin: 0; 
+            padding: 0;
+            font-size: 1.0em;
+        }
+
+        .ajsDoc {
+            font-family: Calibri, Arial, sans-serif;
+        }
+
+        .ajsDocLink {
+            text-decoration: none;
+            color: black;
+        }
+
+        .ajsDocLink:hover {
+            color: darkblue;
+        }
+
+        .ajsDocLayoutHeaderContainer {
+            border-bottom: solid 1px #EEEEEE;
+            margin: 3px;
+            padding: 3px;
+        }
+
+        .ajsDocLayoutMenuContainer {
+            display: table-cell;
+            vertical-align: top;
+            min-width: 200px;
+            margin: 0px 3px 0px 3px;
+            padding-right: 3px;
+            padding-left: 3px;
+        }
+
+        .ajsDocLayoutContentContainer {
+            display: table-cell;
+            width: 100%;
+            vertical-align: top;
+            border-left: 1px solid #EEEEEE;
+        }
+
+        .ajsDocLayoutPageNavContainer {
+            display: table-cell;
+            vertical-align: top;
+            padding: 3px;
+            border-left: 1px solid #EEEEEE;
+        }
+
+        .ajsDocNavBar {
+            border-bottom: solid 1px #EEEEEE;
+            margin: 0 3px 0 3px;
+            padding-bottom: 3px;
+        }
+
+        .ajsDocContentPlaceholder {
+            margin: 0px 3px 3px 0px;
+            padding: 3px;
+            vertical-align:top;
+        }
+
+        .ajsDocContentPlaceholder pre {
+            border: solid 1px #EEEEEE;
+            margin: 0;
+        }
+        
+        .ajsDocContentPlaceholder h5 {
+            margin: 0; padding: 0;
+        }
+
+        .ajsDocHeaderLabel {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .ajsDocAjsLogo {
+            height: 48px;
+            float: left;
+            margin-right: 5px;
+        }
+
+        .ajsDocAtomLogo {
+            height: 48px;
+            float: right;
+        }
+
+        .ajsDocLayoutFooterContainer {
+            text-align: center;
+            font-size: 0.75em;
+
+            border-top: solid 1px #EEEEEE;
+        }
+
+        .ajsDocMenuLabel {
+            font-weight: bold;
+            background-color: #EEEEEE;
+            text-align: center;
+        }
+
+        .ajsDocMenuParent {
+            font-weight: bold;
+            font-size: 1.25em;
+            text-decoration: none;
+            color: black;
+        }
+
+        .ajsDocMenuItemGroup {
+            list-style: none;
+            margin: 0;
+            padding: 0 0 0 1em;
+        }
+
+        .ajsDocMenuItemGroupLabel {
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .ajsDocMenuItem {
+            list-style: none;
+            padding: 1px;
+        }
+
+        .ajsDocMenuItem[ajsselected="true"] a {
+            color: darkblue;
+            font-weight: bold;
+        }
+
+
+        .ajsDocArticleCaption {
+            margin: 0;
+            padding: 0;
+        }
+
+
+
+        .ajsDocStatement {
+            background-color: #FAFAFA; /*font-family: 'Courier New'; font-size: 0.9em; margin: 0 1em 0 1em;*/
+        }
+
+    </style>
+
+    <!-- VIEW COMPONENTS -->
+
+    <component name="ajsdoc" class="ajsDoc">
+        <ajsDocLayout id="ajsDocLayout"></ajsDocLayout>
+    </component>
+
+    <component name="ajsDocHeader">
+        <div style="height: 48px">
+            <img class="ajsDocAjsLogo" src="/res/img/ajs-logo.png" alt="ajsLogo" />
+            <img class="ajsDocAtomLogo" src="/res/img/atom-logo.png" alt="atomLogo" />
+            <div>
+                <h3 class="ajsDocHeaderLabel" style="display: inline; margin: 0; padding: 0">AJS Framework</h3>
+                <br />
+                Reference Guide
+            </div>
+        </div>
+    </component>
+
+    <component name="ajsDocFooter">
+        <div>AjsDoc browser v. 1.0.0 (<a class="ajsDocLink" href="https://github.com/atomsoftwarestudios/ajsDoc">GitHub</a>) Using the AJS Frontend Application Framework (<a class="ajsDocLink" href="https://github.com/atomsoftwarestudios/ajs">GitHub</a>)<br />
+        Released under the MIT License. Copyright &copy;2016-2017 Atom Software Studios</div>
+    </component>
+
+    
+    <!-- VIEW COMPONENTS -->
+
+    <!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+    <!-- LAYOUT COMPONENT -->
+
+    <component name="ajsDocLayout">
+        <div class="ajsDocLayoutHeaderContainer">
+            <ajsDocHeader id="ajsDocHeader"></ajsDocHeader>
+        </div>
+
+        <div class="ajsDocLayoutMenuContainer">
+            <ajsDocMenu id="ajsDocMenu"></ajsDocMenu>
+        </div>
+
+        <div class="ajsDocLayoutContentContainer">
+            <ajsDocNavBar id="ajsDocNavBar"></ajsDocNavBar>
+            <div class="ajsDocContentPlaceholder" placeholder="content"></div>
+        </div>
+
+        <div class="ajsDocLayoutPageNavContainer">
+            PageNav
+        </div>
+
+        <div class="ajsDocLayoutFooterContainer">
+            <ajsDocFooter id="ajsDocFooter"></ajsDocFooter>
+        </div>
+    </component>
+
+    <!-- LAYOUT COMPONENT -->
+
+    <!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+    <!-- NAV BAR COMPONENTS -->
+
+    <span component="ajsDocNavBarItem">
+        <span if="!this.firstItem"> > </span>
+        <a class="ajsDocLink" href="/doc/{itemPath}" style="white-space: nowrap">{itemType} {itemLabel}</a>
+    </span>
+
+    <component name="ajsDocNavBar">
+        <div class="ajsDocNavBar">
+            <ajsDocNavBarItem id="items"></ajsDocNavBarItem>
+        </div>
+    </component>
+
+    <!-- NAV BAR COMPONENTS -->
+
+    <!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+    <!-- MENU COMPONENTS -->
+
+
+    <component name="ajsDocMenu">
+        <div class="ajsDocMenuLabel">{label}</div>
+
+        <div>
+            <a class="ajsDocLink" if="this.parentPath !== undefined && this.parentPath !== ''" href="/doc/{parentPath}">...</a>
+            <span if="this.parentPath === undefined || this.parentPath === ''">{parentLabel}</span>
+        </div>
+
+        <component name="ajsDocMenuGroup" id="groups">
+
+            <span class="ajsDocMenuItemGroupLabel">{label}</span>
+            
+            <ul class="ajsDocMenuItemGroup">
+                <li component="ajsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}">
+                    <a class="ajsDocLink" href="/doc/{path}">{label}</a>
+                </li>
+            </ul>
+
+        </component>
+
+    </component>
+
+    <!-- MENU COMPONENTS -->
+
+    <!-- ------------------------------------------------------------------------------------------------------------------------ -->
+
+    <!-- CONTENT COMPONENTS -->
+
+    <component name="ajsDocFunctionParams">{name}<span if="this.isOptional">?</span><span>: {type}</span><span if="!this.isLast">, </span></component>
+
+    <component name="ajsDocExtends">{name}<span if="!this.isLast">, </span></component>
+
+    <component name="ajsDocImplements">{name}<span if="!this.isLast">, </span></component>
+
+    <component name="ajsDocModuleMembers">
+
+        <div component="ajsDocModuleMembersModules" id="items">
+
+            <a class="ajsDocLink" href="/doc/{path}">
+                <div class="ajsDocStatement ">
+                    <code class="typescript">
+                        <span if="this.exported">export</span>
+                        <span>{statement}</span>
+                        {name}<!--
+                        --><span if="this.extends"> extends <ajsDocExtends id="extendedTypes"></ajsDocExtends></span><!--
+                        --><span if="this.implements"> implements <ajsDocExtends id="implementedTypes"></ajsDocExtends></span><!--
+                        --><span if="this.hasParams"><!--
+                            -->(<!--
+                            --><span if="this.params !== null && this.params.length > 0"><ajsDocFunctionParams id="params"></ajsDocFunctionParams></span><!--
+                            -->)<!--
+                        --></span><!--
+                        --><span if="this.hasDataType">: {dataType}</span>
+                        <!--{body}-->
+                    </code>
+                </div>
+                <div style="padding: 0 0 1em 2em;">{description}</div>
+            </a>
+
+        </div>
+
+    </component>
+
+    <component name="ajsDocModule">
+
+        <h2 class="ajsDocArticleCaption">Module {articleCaption}</h2>
+        <p>{description}</p>
+
+        <div if="this.hasModules">
+            <h3>Modules</h3>
+            <ajsDocModuleMembers id="modules"></ajsDocModuleMembers>
+        </div>
+
+        <div if="this.hasFunctions">
+            <h3>Functions</h3>
+            <ajsDocModuleMembers id="functions"></ajsDocModuleMembers>
+        </div>
+
+        <div if="this.hasClasses">
+            <h3>Classes</h3>
+            <ajsDocModuleMembers id="classes"></ajsDocModuleMembers>
+        </div>
+
+        <div if="this.hasInterfaces">
+            <h3>Interfaces</h3>
+            <ajsDocModuleMembers id="interfaces"></ajsDocModuleMembers>
+        </div>
+
+        <div if="this.hasVariables">
+            <h3>Variables</h3>
+            <ajsDocModuleMembers id="variables"></ajsDocModuleMembers>
+        </div>
+
+        <div if="this.hasEnumerations">
+            <h3>Enumerations</h3>
+            <ajsDocModuleMembers id="enumerations"></ajsDocModuleMembers>
+        </div>
+
+        <div if="this.hasObjectLiterals">
+            <h3>Object literals</h3>
+            <ajsDocModuleMembers id="objectLiterals"></ajsDocModuleMembers>
+        </div>
+    </component>
+
+    <component name="ajsDocClass">
+        <h2 class="ajsDocArticleCaption">class {articleCaption}</h2>
+        <p>{description}</p>
+    </component>
+
+    <component name="ajsDocInterface">
+        This is an interface
+    </component>
+
+    <component name="ajsDocFunction">
+        This is a function
+    </component>
+
+    <component name="ajsDocVariable">
+        This is a variable
+    </component>
+
+    <component name="ajsDocObjectLiteral">
+        This is an object literal
+    </component>
+
+    <component name="ajsDocEnumeration">
+        This is an enumeration
+    </component>
+
+    <!-- CONTENT COMPONENTS -->
+
+</template>
