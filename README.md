@@ -11,13 +11,13 @@ The JSON data are required to be generated with the TypeDoc (https://github.com/
 
 # Compilation
 
-The porject is the Visual Studio solution and should not be a problem to clone:
+The project is the Visual Studio solution and should not be a problem to clone:
 
 ```
 https://github.com/atomsoftwarestudios/AjsDoc.git
 ```
 
-and compile it. Please note the full version of VS (Enterprise, Standard, Community or Express for Web) with the latest TypeScipt tools must be used.
+compile it and run/debug in both, debug and release vesrions under the local IIS Express. Please note the full version of VS (Enterprise, Standard, Community or Express for Web) with the latest TypeScipt tools must be used. Please, report all issues with the compilation and running.
 
 # Contribution
 
