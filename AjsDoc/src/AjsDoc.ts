@@ -33,7 +33,7 @@
             this._renderedListener = (sender: ajs.mvvm.viewmodel.ViewComponent) => {
                 this._rendered();
                 return true;
-            }
+            };
 
             this._view.navigationNotifier.subscribe(this._navigatedListener);
             this._view.renderDoneNotifier.subscribe(this._renderedListener);
@@ -72,7 +72,7 @@
             if (resource === undefined || resource === null) {
                 throw new Error("Documentation definition not loaded");
             }
-            
+
             this._docModel = new DocModel(resource.data);
 
 
@@ -259,7 +259,7 @@
             let extendedTypes: any[] = this._getExtendedTypes(node);
             let implementedTypes: any[] = this._getImplementedTypes(node);
 
-            let data = {
+            let data: any = {
                 key: key,
                 hasPath: path && path !== null && path !== "",
                 path: path && path !== null && path !== "" ? path + "/" + name : null,
@@ -276,7 +276,7 @@
                 extendedTypes: extendedTypes,
                 implements: implementedTypes !== null,
                 implementedTypes: implementedTypes
-            }
+            };
 
             switch (node.kindString) {
                 case "Module":
@@ -313,7 +313,7 @@
                     break;
                 case "Enumeration":
                     data.body = "{ ... }";
-                    data.statement = "enum"
+                    data.statement = "enum";
                     state.enumerations.items.push(data);
                     state.hasEnumerations = true;
                     break;
@@ -321,7 +321,7 @@
                     data.body = "{ ... }";
                     data.hasDataType = true;
                     data.dataType = data.dataType && data.dataType !== null ? data.dataType : "any";
-                    data.statement = "let"
+                    data.statement = "let";
                     state.objectLiterals.items.push(data);
                     state.hasObjectLiterals = true;
                     break;
@@ -339,7 +339,7 @@
                         name: node.parameters[i].name ? node.parameters[i].name : null,
                         type: node.parameters[i].type && node.parameters[i].type.name ? node.parameters[i].type.name : "any",
                         isLast: i === node.parameters.length - 1
-                    }
+                    };
                     params.push(param);
                 }
                 return params;
@@ -356,7 +356,7 @@
                         key: node.extendedTypes[i].id,
                         name: node.extendedTypes[i].name,
                         isLast: i === node.extendedTypes.length - 1
-                    }
+                    };
                     exts.push(ext);
                 }
                 return exts;
@@ -372,7 +372,7 @@
                         key: node.implementedTypes[i].id,
                         name: node.implementedTypes[i].name,
                         isLast: i === node.implementedTypes.length - 1
-                    }
+                    };
                     impls.push(impl);
                 }
                 return impls;
