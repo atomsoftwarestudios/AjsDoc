@@ -1,4 +1,4 @@
-# ajsDoc
+# AjsDoc
 TypeScript documentation browser
 
 Currently, the Ajs Visual Studio Project is included here and the last recent version of the Ajs is in this repository because of debugging purposes.
