@@ -22,7 +22,7 @@ compile it and run/debug in both, debug and release vesrions under the local IIS
 # Usage
 
 ```
-Please note the implementation of templates for all data types is not currently complet
+Please note the implementation of templates for all data types is not currently complete
 and probably  will never be as the primary purpose is to document the Ajs and currently
 only the statements used there are in development and testing. Feel free to contibute.
 ```
