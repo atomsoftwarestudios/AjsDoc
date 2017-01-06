@@ -28,6 +28,11 @@ namespace ajs.utils {
 
     "use strict";
 
+    export interface IDeepMergeOptions {
+        arrayMerge?: Function;
+        clone?: boolean;
+    }
+
     export class DeepMerge {
 
         protected static isMergeableObject(val): boolean {
@@ -42,7 +47,7 @@ namespace ajs.utils {
             return Array.isArray(val) ? [] : {};
         }
 
-        protected static cloneIfNecessary(value: any, optionsArgument: any): any {
+        protected static cloneIfNecessary(value: any, optionsArgument: IDeepMergeOptions): any {
             var clone: boolean = optionsArgument && optionsArgument.clone === true;
             return (clone && DeepMerge.isMergeableObject(value)) ?
                 DeepMerge.merge(DeepMerge.emptyTarget(value), value, optionsArgument) : value;
@@ -79,7 +84,7 @@ namespace ajs.utils {
             return destination;
         }
 
-        public static merge(target: any, source: any, optionsArgument?: any): any {
+        public static merge(target: any, source: any, optionsArgument?: IDeepMergeOptions): any {
             var array: boolean = Array.isArray(source);
             var options: any = optionsArgument || { arrayMerge: DeepMerge.defaultArrayMerge };
             var arrayMerge: any = options.arrayMerge || DeepMerge.defaultArrayMerge;

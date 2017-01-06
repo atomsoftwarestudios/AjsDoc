@@ -48,7 +48,10 @@
     <TypeScriptCompile Include="src\AjsDoc.ts" />
     <TypeScriptCompile Include="src\DocModel.ts" />
     <TypeScriptCompile Include="src\hljs.ts" />
-    <TypeScriptCompile Include="static\examples\app_init.ts" />
+    <TypeScriptCompile Include="src\ViewComponents\IArticleState.ts" />
+    <TypeScriptCompile Include="src\ViewComponents\AjsDocArticle.ts" />
+    <Content Include="static\examples\app_init.ts" />
+    <TypeScriptCompile Include="static\examples\viewComponent_placeholder.ts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="src\Ajs\Ajs.csproj">

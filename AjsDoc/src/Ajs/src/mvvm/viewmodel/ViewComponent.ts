@@ -26,37 +26,37 @@ namespace ajs.mvvm.viewmodel {
 
     export class ViewComponent {
 
-        protected _componentId: number;
-        public get componentId(): number { return this._componentId; }
+        protected _ajsComponentId: number;
+        public get ajsComponentId(): number { return this._ajsComponentId; }
 
-        protected _view: View;
-        public get view(): View { return this.view; }
+        protected _ajsView: View;
+        public get ajsview(): View { return this.ajsview; }
 
-        protected _parentComponent: ViewComponent;
-        public get parentComponent(): ViewComponent { return this._parentComponent; }
+        protected _ajsParentComponent: ViewComponent;
+        public get ajsParentComponent(): ViewComponent { return this._ajsParentComponent; }
 
-        protected _visualComponent: ajs.templating.IVisualComponent;
-        public get visualComponent(): ajs.templating.IVisualComponent { return this._visualComponent; }
+        protected _ajsVisualComponent: ajs.templating.IVisualComponent;
+        public get ajsVisualComponent(): ajs.templating.IVisualComponent { return this._ajsVisualComponent; }
 
-        protected _stateKeys: string[];
-        public get stateKeys(): string[] { return this._stateKeys; }
+        protected _ajsStateKeys: string[];
+        public get ajsStateKeys(): string[] { return this._ajsStateKeys; }
 
-        protected _stateChanged: boolean;
-        public get stateChanged(): boolean { return this._stateChanged; }
-        public resetStateChanged(): void { this._stateChanged = false; }
-        public setStateChanged(): void { this._stateChanged = true; }
+        protected _ajsStateChanged: boolean;
+        public get ajsStateChanged(): boolean { return this._ajsStateChanged; }
+        public ajsResetStateChanged(): void { this._ajsStateChanged = false; }
+        public ajsSetStateChanged(): void { this._ajsStateChanged = true; }
 
-        protected _element: HTMLElement;
-        public get element(): HTMLElement { return this._element; }
-        public set element(element: HTMLElement) { this._element = element; };
+        protected _ajsElement: HTMLElement;
+        public get ajsElement(): HTMLElement { return this._ajsElement; }
+        public set ajsElement(element: HTMLElement) { this._ajsElement = element; };
 
-        protected _attributeProcessors: IAttributeProcessorsCollection;
+        protected _ajsAttributeProcessors: IAttributeProcessorsCollection;
 
         public constructor(
             view: View,
             parentComponent: ViewComponent,
             visualComponent: ajs.templating.IVisualComponent,
-            state?: IViewState) {
+            state?: IViewStateSet) {
 
             /*console.warn("IMPLEMENT: ajs.mvvm.viewmodel.ViewComponent - Navigation event notification processig");
             console.warn("IMPLEMENT: ajs.mvvm.viewmodel.ViewComponent - Event registration and handling");*/
@@ -67,18 +67,18 @@ namespace ajs.mvvm.viewmodel {
             }
 
             // initialize properties
-            this._componentId = view.getComponentId;
-            this._view = view;
-            this._parentComponent = parentComponent;
-            this._visualComponent = visualComponent;
-            this._element = null;
-            this._stateKeys = [];
+            this._ajsComponentId = view.getComponentId;
+            this._ajsView = view;
+            this._ajsParentComponent = parentComponent;
+            this._ajsVisualComponent = visualComponent;
+            this._ajsElement = null;
+            this._ajsStateKeys = [];
 
             // register instance to the ViewComponentManager for simple lookups
             ajs.Framework.viewComponentManager.registerComponentInstance(this);
 
             // setup tag attribute processors for the_processAttributes method
-            this._attributeProcessors = {
+            this._ajsAttributeProcessors = {
                 "__default": <IAttributeProcessor>this._attrDefault,
                 "component": <IAttributeProcessor>this._attrComponent,
                 "if": <IAttributeProcessor>this._attrIf,
@@ -91,7 +91,7 @@ namespace ajs.mvvm.viewmodel {
 
             // apply passed or default state
             if (state && state !== null) {
-                let newState: IViewState = ajs.utils.DeepMerge.merge(this._defaultState(), state);
+                let newState: IViewStateSet = ajs.utils.DeepMerge.merge(this._defaultState(), state);
                 ajs.utils.Obj.assign(state, newState);
                 this._applyState(state);
             } else {
@@ -99,10 +99,10 @@ namespace ajs.mvvm.viewmodel {
             }
 
             // indicate the state was changed
-            this._stateChanged = true;
+            this._ajsStateChanged = true;
 
             // ???????????????????????????????????????????????????????????????
-            this._view.notifyParentsChildrenStateChange(this._parentComponent);
+            this._ajsView.notifyParentsChildrenStateChange(this._ajsParentComponent);
             // ???????????????????????????????????????????????????????????????
 
             this._initialize();
@@ -114,16 +114,19 @@ namespace ajs.mvvm.viewmodel {
         }
 
         protected _destroy(): void {
+            // remove all children components
+            this.clearState(false);
+
             // finalize the component
             this._finalize();
 
             // if the component was rendered, remove it from the DOM tree
-            if (this.element !== undefined && this.element !== null) {
-                this.element.parentElement.removeChild(this.element);
+            if (this.ajsElement !== undefined && this.ajsElement !== null) {
+                this.ajsElement.parentElement.removeChild(this.ajsElement);
             }
 
             // unregister component instance from ViewComponent manager
-            ajs.Framework.viewComponentManager.removeComponentInstance(this);
+            // ajs.Framework.viewComponentManager.removeComponentInstance(this);
 
         };
 
@@ -131,127 +134,246 @@ namespace ajs.mvvm.viewmodel {
             return;
         }
 
-        protected _defaultState(): IViewState {
+        protected _defaultState(): IViewStateSet {
             return {};
         }
 
-        public setState(state: IViewState): void {
-            this._view._stateChangeBegin(this);
+        public setState(state: IViewStateSet): void {
+            this._ajsView._stateChangeBegin(this);
             this._applyState(state);
-            this._view._stateChangeEnd(this);
+            this._ajsView._stateChangeEnd(this);
         }
 
+        /**
+         * Removes all state properties and destroys children component tree
+         * @param render
+         */
+        public clearState(render: boolean): void {
+            if (render) {
+                this._ajsView._stateChangeBegin(this);
+            }
 
-        protected _applyState(state: IViewState): void {
+            for (let i: number = 0; i < this._ajsStateKeys.length; i++) {
+                if (this[this._ajsStateKeys[i]] instanceof ViewComponent) {
+                    this[this._ajsStateKeys[i]]._destroy();
+                }
+                if (this[this._ajsStateKeys[i]] instanceof Array) {
+                    for (let j: number = 0; j < this[this._ajsStateKeys[i]].length; j++) {
+                        if (this[this._ajsStateKeys[i]][j] instanceof ViewComponent) {
+                            this[this._ajsStateKeys[i]][j]._destroy();
+                        }
+                    }
+                }
+                delete (this[this._ajsStateKeys[i]]);
+            }
+
+            this._ajsStateKeys = [];
+
+            if (render) {
+                this._ajsStateChanged = true;
+                this._ajsView._stateChangeEnd(this);
+            }
+        }
+
+        /**
+         * This method can be overriden to filter the full state before it is applied
+         * @param state
+         */
+        protected _filterState(state: IViewStateSet): IViewStateGet {
+            return state;
+        }
+
+        /**
+         * This method can be overriden to remap the state key or modify the state value
+         * @param key name of the key
+         * @param state state
+         */
+        protected _filterStateKey(key: string, state: IViewStateSet): IFilteredState {
+            return {
+                filterApplied: false,
+                key: null,
+                state: null
+            };
+        }
+
+        /**
+         * This method can be overriden to remap the array state key or modify the state value
+         * @param state
+         */
+        protected _filterStateArrayItem(key: string, index: number, length: number, state: IViewStateSet): IFilteredState {
+            return {
+                filterApplied: false,
+                key: null,
+                state: null
+            };
+        }
+
+        protected _applyState(state: IViewStateSet): void {
+            // perform the state filtering
+            state = this._filterState(state);
+
+            // apply the state
             if (state && state !== null) {
                 for (var key in state) {
-                    // if the property exists, update it
-                    if (this.hasOwnProperty(key)) {
-                        // update children component state
-                        if (this[key] instanceof ViewComponent) {
-                            (this[key] as ViewComponent).setState(state[key]);
-                        } else {
-                            // set or update array of children components
-                            if (state[key] instanceof Array &&
-                                this._visualComponent.children.hasOwnProperty(key) &&
-                                this[key] instanceof Array) {
+                    if (state.hasOwnProperty(key)) {
 
-                                // update and insert new components
-                                if (this.stateKeys.indexOf(key) === -1) {
-                                    this._stateKeys.push(key);
-                                }
+                        // perform the state key/value filtering
+                        let filteredState: IFilteredState = this._filterStateKey(key, state[key]);
+                        if (filteredState.filterApplied) {
+                            delete state[key];
+                            key = filteredState.key;
+                            state[key] = filteredState.state;
+                        }
 
-                                // delete all components which does not exist in the array anymore
-                                let i: number = 0;
-                                while (i < this[key].length) {
-                                    let del: boolean = true;
+                        // if the state property exists in this ViewComponent, update it
+                        if (this.hasOwnProperty(key)) {
+                            // update children component state
+                            if (this[key] instanceof ViewComponent) {
+                                (this[key] as ViewComponent).setState(state[key]);
+                            } else {
+                                // set or update array of children components
+                                if (state[key] instanceof Array &&
+                                    this._ajsVisualComponent.children.hasOwnProperty(key) &&
+                                    this[key] instanceof Array) {
 
-                                    // check if component still should exist
-                                    for (let j: number = 0; j < state[key].length; j++) {
-                                        if (this[key][i].key === state[key][j].key) {
-                                            del = false;
-                                            break;
+                                    // update and insert new components
+                                    if (this.ajsStateKeys.indexOf(key) === -1) {
+                                        this._ajsStateKeys.push(key);
+                                    }
+
+                                    // delete all components which does not exist in the array anymore
+                                    let i: number = 0;
+                                    while (i < this[key].length) {
+                                        let del: boolean = true;
+
+                                        // check if component still should exist
+                                        for (let j: number = 0; j < state[key].length; j++) {
+                                            if (this[key][i].key === state[key][j].key) {
+                                                del = false;
+                                                break;
+                                            }
+                                        }
+
+                                        // delete component
+                                        if (del) {
+                                            this._ajsStateKeys.splice(this._ajsStateKeys.indexOf(key), 1);
+                                            (this[key][i] as ViewComponent)._destroy();
+                                            this._ajsView.notifyParentsChildrenStateChange((this[key][i] as ViewComponent)._ajsParentComponent);
+                                            this[key].splice(i, 1);
+                                        } else {
+                                            i++;
                                         }
                                     }
 
-                                    // delete component
-                                    if (del) {
-                                        this._stateKeys.splice(this._stateKeys.indexOf(key), 1);
-                                        (this[key][i] as ViewComponent)._destroy();
-                                        this._view.notifyParentsChildrenStateChange((this[key][i] as ViewComponent)._parentComponent);
-                                        this[key].splice(i, 1);
-                                    } else {
-                                        i++;
+                                    for (i = 0; i < state[key].length; i++) {
+                                        // update component state
+                                        if (this[key].length > i && this[key][i].key === state[key][i].key) {
+                                            (this[key][i] as ViewComponent).setState(state[key][i]);
+                                            // create new component
+                                        } else {
+                                            let newViewComponent: ViewComponent =
+                                                this._createViewComponent(this._ajsVisualComponent.children[key], state[key][i]);
+                                            this[key].splice(i, 0, newViewComponent);
+                                        }
+                                    }
+                                    // set or update current component property
+                                } else {
+                                    if (this._ajsStateKeys.indexOf(key) === -1) {
+                                        this._ajsStateKeys.push(key);
+                                    }
+                                    if (this[key] !== state[key]) {
+                                        this[key] = state[key];
+                                        this._ajsStateChanged = true;
+                                        this._ajsView.notifyParentsChildrenStateChange(this._ajsParentComponent);
                                     }
                                 }
-
-                                for (i = 0; i < state[key].length; i++) {
-                                    // update component state
-                                    if (this[key].length > i && this[key][i].key === state[key][i].key) {
-                                        (this[key][i] as ViewComponent).setState(state[key][i]);
-                                        // create new component
-                                    } else {
-                                        let newViewComponent: ViewComponent =
-                                            this._createViewComponent(this._visualComponent.children[key], state[key][i]);
-                                        this[key].splice(i, 0, newViewComponent);
-                                    }
-                                }
-                                // set or update current component property
-                            } else {
-                                if (this._stateKeys.indexOf(key) === -1) {
-                                    this._stateKeys.push(key);
-                                }
-                                if (this[key] !== state[key]) {
-                                    this[key] = state[key];
-                                    this._stateChanged = true;
-                                    this._view.notifyParentsChildrenStateChange(this._parentComponent);
-                                }
-                            }
-                        }
-
-
-                    // if the property does not exist, create it
-                    } else {
-
-                        // if the state is setting state of children component
-                        if (this._visualComponent.children.hasOwnProperty(key)) {
-
-                            // create array of components
-                            if (state[key] instanceof Array) {
-
-                                this[key] = [];
-                                this.stateKeys.push(key);
-
-                                for (let i: number = 0; i < state[key].length; i++) {
-
-                                    let newViewComponent: ViewComponent;
-                                    newViewComponent = this._createViewComponent(this._visualComponent.children[key], state[key][i]);
-
-                                    this[key][i] = newViewComponent;
-
-                                }
-
-                            // create a component and apply a state to it
-                            } else {
-                                this[key] = this._createViewComponent(this._visualComponent.children[key], state[key]);
-                                this.stateKeys.push(key);
-
                             }
 
+
+                        // if the property does not exist, create it
                         } else {
-                            this[key] = state[key];
-                            this._stateKeys.push(key);
-                            this._stateChanged = true;
-                            this._view.notifyParentsChildrenStateChange(this._parentComponent);
-                        }
-                    }
 
+                            // if the state is setting state of children component
+                            if (this._ajsVisualComponent.children.hasOwnProperty(key)) {
+
+                                // create array of components
+                                if (state[key] instanceof Array) {
+
+                                    this[key] = [];
+                                    this.ajsStateKeys.push(key);
+
+                                    for (let i: number = 0; i < state[key].length; i++) {
+
+                                        let filteredState: IFilteredState = this._filterStateArrayItem(key, i, state[key].length, state[key][i]);
+
+                                        let newViewComponent: ViewComponent;
+                                        newViewComponent = this._createViewComponent(this._ajsVisualComponent.children[key], filteredState.filterApplied ? filteredState.state : state[key][i]);
+
+                                        this[key][i] = newViewComponent;
+
+                                    }
+
+                                // create a component and apply a state to it
+                                } else {
+                                    this[key] = this._createViewComponent(this._ajsVisualComponent.children[key], state[key]);
+                                    this.ajsStateKeys.push(key);
+
+                                }
+
+                            } else {
+
+                                // if the state is array, try to filter the array and check if the state is applicable after array filtering
+                                let filteredStates: IFilteredState[] = [];
+                                if (state[key] instanceof Array) {
+                                    for (let i: number = 0; i < state[key].length; i++) {
+                                        let filteredState: IFilteredState = this._filterStateArrayItem(key, i, state[key].length, state[key][i]);
+                                        if (filteredState.filterApplied) {
+                                            filteredStates.push(filteredState);
+                                        }
+                                    }
+                                }
+
+                                // build a new filtered state
+                                if (filteredStates.length > 0) {
+
+                                    let filteredState: IViewStateSet = {};
+                                    for (let i: number = 0; i < filteredStates.length; i++) {
+                                        if (filteredState[filteredStates[i].key] === undefined) {
+                                            filteredState[filteredStates[i].key] = [];
+                                        }
+                                        if (filteredStates[i].state instanceof Array) {
+                                            for (let j: number = 0; j < (filteredStates[i].state as IViewStateSet[]).length; j++) {
+                                                filteredState[filteredStates[i].key].push(filteredStates[i].state[j]);
+                                            }
+                                        } else {
+                                           filteredState[filteredStates[i].key].push(filteredStates[i].state);
+                                        }
+                                    }
+
+                                    // try to reapply the filtered state
+                                    this._applyState(filteredState);
+
+
+
+                                } else {
+
+                                    this[key] = state[key];
+                                    this._ajsStateKeys.push(key);
+                                    this._ajsStateChanged = true;
+                                    this._ajsView.notifyParentsChildrenStateChange(this._ajsParentComponent);
+
+                                }
+
+                            }
+                        }
+
+                    }
                 }
             }
 
         }
 
-        protected _createViewComponent(viewComponentInfo: ajs.templating.IVisualComponentChildInfo, state: IViewState): ViewComponent {
+        protected _createViewComponent(viewComponentInfo: ajs.templating.IVisualComponentChildInfo, state: IViewStateSet): ViewComponent {
 
             let name: string = viewComponentInfo.tagName;
             if (name === "COMPONENT" && viewComponentInfo.nameAttribute) {
@@ -259,20 +381,20 @@ namespace ajs.mvvm.viewmodel {
             }
 
             let viewComponentConstructor: typeof ViewComponent;
-            viewComponentConstructor = this._view.viewComponentManager.getComponentConstructorByName(name);
+            viewComponentConstructor = this._ajsView.viewComponentManager.getComponentConstructorByName(name);
 
             if (viewComponentConstructor === null) {
                 viewComponentConstructor = ViewComponent;
             }
 
             let visualComponent: IVisualComponent;
-            visualComponent = this._view.templateManager.getVisualComponent(name);
+            visualComponent = this._ajsView.templateManager.getVisualComponent(name);
 
             if (visualComponent === null) {
                 throw new VisualComponentNotRegisteredException(name);
             }
 
-            return new viewComponentConstructor(this._view, this, visualComponent, state);
+            return new viewComponentConstructor(this._ajsView, this, visualComponent, state);
         }
 
         /**
@@ -285,23 +407,23 @@ namespace ajs.mvvm.viewmodel {
             let node: Node;
 
             // render the tree of the visual component related to the current view component
-            node = this._renderTree(this._visualComponent.component, parentElement, usingShadowDom, clearStateChangeOnly);
+            node = this._renderTree(this._ajsVisualComponent.component, parentElement, usingShadowDom, clearStateChangeOnly);
 
             // reset the dirty state after change
-            this._stateChanged = false;
+            this._ajsStateChanged = false;
 
             // if the render was not just because of reseting the state change flag
             // set view component attributes and return the view component
             if (!clearStateChangeOnly) {
                 if (node instanceof HTMLElement) {
 
-                    let componentName: string = this._visualComponent.component.getAttribute("name");
+                    let componentName: string = this._ajsVisualComponent.component.getAttribute("name");
 
-                    (node as HTMLElement).setAttribute("ajscid", this._componentId.toString());
+                    (node as HTMLElement).setAttribute("ajscid", this._ajsComponentId.toString());
                     (node as HTMLElement).setAttribute("ajscname", componentName);
 
                     if (!usingShadowDom) {
-                        this._element = node as HTMLElement;
+                        this._ajsElement = node as HTMLElement;
                     }
 
                     return node;
@@ -356,7 +478,7 @@ namespace ajs.mvvm.viewmodel {
                 // children components didn't change, just render it with skip attribute and don't render
                 // children tags
 
-                let skip: boolean = sourceNode === this._visualComponent.component && !this._stateChanged;
+                let skip: boolean = sourceNode === this._ajsVisualComponent.component && !this._ajsStateChanged;
 
                 if (addedNode !== null && skip) {
                     (addedNode as HTMLElement).setAttribute("ajsskip", "true");
@@ -392,7 +514,7 @@ namespace ajs.mvvm.viewmodel {
             let processedNode: Node = this._processNode(adoptedNode);
             if (processedNode && processedNode !== null) {
                 if (processedNode instanceof HTMLElement) {
-                    (processedNode as HTMLElement).setAttribute("ajscid", this._componentId.toString());
+                    (processedNode as HTMLElement).setAttribute("ajscid", this._ajsComponentId.toString());
                 }
                 targetNode.appendChild(processedNode);
             }
@@ -434,8 +556,8 @@ namespace ajs.mvvm.viewmodel {
                 }
             }
             // if there is HTML in the node, replace the node by the HTML
-            if (node.nodeValue.substr(0, 8) == "#ASHTML:") {
-                let asHtml = document.createElement("ashtml");
+            if (node.nodeValue.substr(0, 8) === "#ASHTML:") {
+                let asHtml: HTMLElement = document.createElement("ashtml");
                 asHtml.innerHTML = node.nodeValue.substr(8);
                 node = asHtml;
             }
@@ -469,12 +591,12 @@ namespace ajs.mvvm.viewmodel {
         protected _processAttributes(element: HTMLElement): HTMLElement {
             let toRemove: string[] = [];
             for (let i: number = 0; i < element.attributes.length; i++) {
-                if (this._attributeProcessors[element.attributes[i].nodeName] !== undefined) {
-                    if (!this._attributeProcessors[element.attributes[i].nodeName].call(this, toRemove, element.attributes[i])) {
+                if (this._ajsAttributeProcessors[element.attributes[i].nodeName] !== undefined) {
+                    if (!this._ajsAttributeProcessors[element.attributes[i].nodeName].call(this, toRemove, element.attributes[i])) {
                         return null;
                     }
                 } else {
-                    if (!this._attributeProcessors.__default.call(this, toRemove, element.attributes[i])) {
+                    if (!this._ajsAttributeProcessors.__default.call(this, toRemove, element.attributes[i])) {
                         return null;
                     }
                 }
@@ -529,7 +651,7 @@ namespace ajs.mvvm.viewmodel {
         public insertChildComponent(
             viewComponentName: string,
             id: string,
-            state: IViewState,
+            state: IViewStateSet,
             placeholder: string,
             index?: number): void {
 
@@ -538,7 +660,7 @@ namespace ajs.mvvm.viewmodel {
             }
 
             let visualComponent: IVisualComponent;
-            visualComponent = this._view.templateManager.getVisualComponent(viewComponentName);
+            visualComponent = this._ajsView.templateManager.getVisualComponent(viewComponentName);
 
             if (visualComponent === null) {
                 throw new VisualComponentNotRegisteredException(viewComponentName);
@@ -546,7 +668,7 @@ namespace ajs.mvvm.viewmodel {
 
             this._visualComponentInsertChild(placeholder, viewComponentName, id, index);
 
-            var thisState: IViewState = {};
+            var thisState: IViewStateSet = {};
             thisState[id] = state;
 
             this.setState(thisState);
@@ -559,17 +681,17 @@ namespace ajs.mvvm.viewmodel {
 
                 this[id]._destroy();
                 delete this[id];
-                let i: number = this._stateKeys.indexOf(id);
+                let i: number = this._ajsStateKeys.indexOf(id);
                 if (i !== -1) {
-                    this._stateKeys.splice(i, 1);
+                    this._ajsStateKeys.splice(i, 1);
                 }
             }
         }
 
         protected _visualComponentInsertChild(placeholder: string, componentName: string, id: string, index?: number): void {
-            if (this._visualComponent.placeholders.hasOwnProperty(placeholder)) {
+            if (this._ajsVisualComponent.placeholders.hasOwnProperty(placeholder)) {
 
-                let ph: HTMLElement = this._visualComponent.placeholders[placeholder].placeholder;
+                let ph: HTMLElement = this._ajsVisualComponent.placeholders[placeholder].placeholder;
 
                 let vc: HTMLElement = ph.ownerDocument.createElement(componentName);
                 vc.setAttribute("id", id);
@@ -580,7 +702,7 @@ namespace ajs.mvvm.viewmodel {
                     ph.appendChild(vc);
                 }
 
-                this._visualComponent.children[id] = {
+                this._ajsVisualComponent.children[id] = {
                     tagName: componentName,
                     nameAttribute: null
                 };
@@ -588,9 +710,9 @@ namespace ajs.mvvm.viewmodel {
         }
 
         protected _visualComponentRemoveChild(placeholder: string, id: string): void {
-            if (this._visualComponent.placeholders.hasOwnProperty(placeholder)) {
+            if (this._ajsVisualComponent.placeholders.hasOwnProperty(placeholder)) {
 
-                let ph: HTMLElement = this._visualComponent.placeholders[placeholder].placeholder;
+                let ph: HTMLElement = this._ajsVisualComponent.placeholders[placeholder].placeholder;
                 let vc: HTMLElement = null;
 
                 for (let i: number = 0; i < ph.childElementCount; i++) {
@@ -602,7 +724,7 @@ namespace ajs.mvvm.viewmodel {
 
                 if (vc !== null) {
                     ph.removeChild(vc);
-                    delete this._visualComponent.children[id];
+                    delete this._ajsVisualComponent.children[id];
                 }
 
             }

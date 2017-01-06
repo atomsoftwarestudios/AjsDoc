@@ -10,9 +10,7 @@ namespace ajsdoc {
                     this._templatesLoaded(successfull);
                 },
                 [
-                    "/res/css/hljsvs.css",
                     "/static/ajsdoc.html",
-                    "/static/ajs.json"
                 ],
                 ajs.resources.STORAGE_TYPE.LOCAL,
                 ajs.resources.CACHE_POLICY.PERMANENT
@@ -28,11 +26,26 @@ namespace ajsdoc {
         }
 
         protected _loadResources(): void {
-            this._resourcesLoaded();
+            ajs.Framework.resourceManager.loadMultiple(
+                (successfull: boolean) => {
+                    this._resourcesLoaded(successfull);
+                },
+                [
+                    "/res/css/hljsvs.css",
+                    "/static/ajs.json"
+                ],
+                null,
+                ajs.resources.STORAGE_TYPE.SESSION,
+                ajs.resources.CACHE_POLICY.PERMANENT
+            );
         }
 
-        protected _resourcesLoaded(): void {
-            this._setupRoutes();
+        protected _resourcesLoaded(succesfull: Boolean): void {
+            if (succesfull) {
+                this._setupRoutes();
+            } else {
+                throw new Error("Failed to load resources.");
+            }
         }
 
         protected _setupRoutes(): void {

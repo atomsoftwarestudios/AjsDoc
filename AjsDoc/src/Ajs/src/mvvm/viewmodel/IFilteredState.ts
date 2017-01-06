@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -22,8 +22,10 @@ namespace ajs.mvvm.viewmodel {
 
     "use strict";
 
-    export interface IViewState {
-        [key: string]: any;
+    export interface IFilteredState {
+        filterApplied: boolean;
+        key: string;
+        state: IViewStateSet;
     }
 
 }

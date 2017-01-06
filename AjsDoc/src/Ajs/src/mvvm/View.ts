@@ -208,26 +208,26 @@ namespace ajs.mvvm {
 
         public notifyParentsChildrenStateChange(viewComponent: viewmodel.ViewComponent): void {
             if (viewComponent !== null && this._changeRootComponent !== null) {
-                while (viewComponent !== this._changeRootComponent.parentComponent && viewComponent !== null) {
-                    viewComponent.setStateChanged();
-                    viewComponent = viewComponent.parentComponent;
+                while (viewComponent !== this._changeRootComponent.ajsParentComponent && viewComponent !== null) {
+                    viewComponent.ajsSetStateChanged();
+                    viewComponent = viewComponent.ajsParentComponent;
                 }
             }
         }
 
         public render(viewComponent: viewmodel.ViewComponent): void {
 
-            if (viewComponent.element !== null) {
+            if (viewComponent.ajsElement !== null) {
                 // update the render of the component
                 this._shadowDom.body.innerHTML = "";
                 let componentElement: HTMLElement = viewComponent.render(this._shadowDom.body, true, false);
                 // if the component was rendered to shadow DOM, update the main DOM
                 if (componentElement !== null) {
-                    this._updateDom(componentElement, viewComponent.element);
+                    this._updateDom(componentElement, viewComponent.ajsElement);
                 // otherwise remove the component root element from the DOM
                 } else {
-                    viewComponent.element.parentElement.removeChild(viewComponent.element);
-                    viewComponent.element = null;
+                    viewComponent.ajsElement.parentElement.removeChild(viewComponent.ajsElement);
+                    viewComponent.ajsElement = null;
                 }
             } else {
                 // initial render of the view component (and all of its children)
@@ -287,7 +287,7 @@ namespace ajs.mvvm {
                         if (this._isComponent(source)) {
                             let id: number = this._getComponentId(source);
                             let component: viewmodel.ViewComponent = this._viewComponentManager.getComponentInstance(id);
-                            component.element = adoptedNode as HTMLElement;
+                            component.ajsElement = adoptedNode as HTMLElement;
                         }
                         this._updateDom(source, adoptedNode);
                     }
@@ -313,7 +313,7 @@ namespace ajs.mvvm {
                                 if (this._isComponent(source.childNodes.item(i))) {
                                     let id: number = this._getComponentId(source.childNodes.item(i));
                                     let component: viewmodel.ViewComponent = ajs.Framework.viewComponentManager.getComponentInstance(id);
-                                    component.element = adoptedNode as HTMLElement;
+                                    component.ajsElement = adoptedNode as HTMLElement;
                                 }
 
                                 this._updateDom(source.childNodes.item(i), adoptedNode);

@@ -2,10 +2,15 @@
 
     "use strict";
 
+    const RESOURCE_STORAGE_TYPE: ajs.resources.STORAGE_TYPE = ajs.resources.STORAGE_TYPE.SESSION;
+
+
+
     export interface IAjsDocLayout extends ajs.mvvm.viewmodel.ViewComponent {
         ajsDocHeader: ajs.mvvm.viewmodel.ViewComponent;
         ajsDocMenu: ajs.mvvm.viewmodel.ViewComponent;
         ajsDocNavBar: ajs.mvvm.viewmodel.ViewComponent;
+        ajsDocArticle: AjsDocArticle;
     }
 
     const staticResources: string[] = [
@@ -35,8 +40,8 @@
                 return true;
             };
 
-            this._view.navigationNotifier.subscribe(this._navigatedListener);
-            this._view.renderDoneNotifier.subscribe(this._renderedListener);
+            this._ajsView.navigationNotifier.subscribe(this._navigatedListener);
+            this._ajsView.renderDoneNotifier.subscribe(this._renderedListener);
 
 
             this._lastContent = "";
@@ -66,7 +71,7 @@
 
             let resource: ajs.resources.IResource;
             resource = ajs.Framework.resourceManager.getCachedResource(
-                "/static/ajs.json", ajs.resources.STORAGE_TYPE.LOCAL
+                "/static/ajs.json", RESOURCE_STORAGE_TYPE
             );
 
             if (resource === undefined || resource === null) {
@@ -78,7 +83,7 @@
 
 
             resource = ajs.Framework.resourceManager.getCachedResource(
-                "/res/css/hljsvs.css", ajs.resources.STORAGE_TYPE.LOCAL
+                "/res/css/hljsvs.css", RESOURCE_STORAGE_TYPE
             );
 
             if (resource === undefined || resource === null) {
@@ -97,8 +102,8 @@
 
 
         protected _finalize(): void {
-            this._view.navigationNotifier.unsubscribe(this._navigatedListener);
-            this._view.renderDoneNotifier.unsubscribe(this._renderedListener);
+            this._ajsView.navigationNotifier.unsubscribe(this._navigatedListener);
+            this._ajsView.renderDoneNotifier.unsubscribe(this._renderedListener);
         }
 
         protected _navigated(): void {
@@ -138,21 +143,40 @@
                 items: navbarItems
             };
 
+            // get content from the model and update the article state
+            let content: INodeInfo = this._docModel.getContent(routeInfo.path);
+
+            let articleState: IAjsDocArticleStateSet = {
+                caption: content.node.kindString + " " + content.node.name,
+                description: this._setupHTMLContent(this._getComment(content.node))
+            };
+
+            if (content.node.kindString !== undefined) {
+                articleState.members = content.node.children;
+            } else {
+                articleState = {};
+            }
+
+            // update state
             if (updateLayout) {
-                this.ajsDocLayout.setState({ ajsDocMenu: menuState, ajsDocNavBar: navBarState });
+                this.ajsDocLayout.setState({ ajsDocMenu: menuState, ajsDocNavBar: navBarState, ajsDocArticle: articleState });
             } else {
                 this.ajsDocLayout.ajsDocMenu.setState(menuState);
                 this.ajsDocLayout.ajsDocNavBar.setState(navBarState);
+
+                this.ajsDocLayout.ajsDocArticle.clearState(false);
+                this.ajsDocLayout.ajsDocArticle.setState(articleState);
             }
 
-            // get content from model and update the placeholder and content components
-            let content: INodeInfo = this._docModel.getContent(routeInfo.path);
+
+            /*
             let viewComponentName: string;
             if (content !== null && content.node.kind !== 0) {
                 viewComponentName = "ajsDoc" + content.node.kindString.replace(" ", "");
             } else {
                 viewComponentName = "";
             }
+
             this._setupContentViewComponent(viewComponentName);
 
             if (viewComponentName !== "") {
@@ -170,9 +194,7 @@
                 // set the module state
                 this.ajsDocLayout[viewComponentName].setState(contentState);
             }
-
-
-            return;
+            */
         }
 
         protected _setupContentViewComponent(componentName: string): void {
@@ -189,6 +211,11 @@
 
         }
 
+        /*protected _prepareArticleState(): IArticleState {
+
+        }*/
+
+
         protected _prepareModuleState(content: INodeInfo): any {
 
             let text: string = this._getComment(content.node);
@@ -197,19 +224,19 @@
                 articleCaption: content.node.name,
                 description: this._setupHTMLContent(text),
                 hasModules: false,
-                modules: { items: [] },
+                modules: { members: [] },
                 hasFunctions: false,
-                functions: { items: [] },
+                functions: { members: [] },
                 hasClasses: false,
-                classes: { items: [] },
+                classes: { members: [] },
                 hasInterfaces: false,
-                interfaces: { items: [] },
+                interfaces: { members: [] },
                 hasVariables: false,
-                variables: { items: [] },
+                variables: { members: [] },
                 hasEnumerations: false,
-                enumerations: { items: [] },
+                enumerations: { members: [] },
                 hasObjectLiterals: false,
-                objectLiterals: { items: [] }
+                objectLiterals: { members: [] }
             };
 
             if (content.node && content.node.children) {
@@ -248,6 +275,8 @@
             };
         }
 
+
+
         protected _addDefinition(state: any, path: string, node: INode): void {
             let key: string = node.id.toString();
             let name: string = node.name;
@@ -282,17 +311,17 @@
                 case "Module":
                     data.statement = "namespace";
                     data.body = "{ ... }";
-                    state.modules.items.push(data);
+                    state.modules.members.push(data);
                     state.hasModules = true;
                     break;
                 case "Class":
                     data.body = "{ ... }";
-                    state.classes.items.push(data);
+                    state.classes.members.push(data);
                     state.hasClasses = true;
                     break;
                 case "Interface":
                     data.body = "{ ... }";
-                    state.interfaces.items.push(data);
+                    state.interfaces.members.push(data);
                     state.hasInterfaces = true;
                     break;
                 case "Function":
@@ -300,7 +329,7 @@
                     data.hasDataType = true;
                     data.dataType = data.dataType && data.dataType !== null ? data.dataType : "any";
                     data.hasParams = true;
-                    state.functions.items.push(data);
+                    state.functions.members.push(data);
                     state.hasFunctions = true;
                     break;
                 case "Variable":
@@ -308,13 +337,13 @@
                     data.hasDataType = true;
                     data.dataType = data.dataType && data.dataType !== null ? data.dataType : "any";
                     data.statement = (data.name === data.name.toUpperCase()) ? "const" : "let";
-                    state.variables.items.push(data);
+                    state.variables.members.push(data);
                     state.hasVariables = true;
                     break;
                 case "Enumeration":
                     data.body = "{ ... }";
                     data.statement = "enum";
-                    state.enumerations.items.push(data);
+                    state.enumerations.members.push(data);
                     state.hasEnumerations = true;
                     break;
                 case "Object literal":
@@ -322,7 +351,7 @@
                     data.hasDataType = true;
                     data.dataType = data.dataType && data.dataType !== null ? data.dataType : "any";
                     data.statement = "let";
-                    state.objectLiterals.items.push(data);
+                    state.objectLiterals.members.push(data);
                     state.hasObjectLiterals = true;
                     break;
             }

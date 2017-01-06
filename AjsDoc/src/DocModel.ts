@@ -6,6 +6,7 @@
 
     export interface IComment {
         shortText?: string;
+        longText?: string;
     }
 
     export interface IFlags {
@@ -18,6 +19,7 @@
     }
 
     export interface INode {
+        parent: INode;
         id: number;
         name: string;
         kind: number;
@@ -28,8 +30,8 @@
         type?: IType;
         signatures?: INode[];
         parameters?: INode[];
-        extendedTypes: INode[];
-        implementedTypes: INode[];
+        extendedTypes?: INode[];
+        implementedTypes?: INode[];
     }
 
     export interface INodeInfo {
@@ -99,10 +101,22 @@
 
     export class DocModel {
 
-        protected _data: any;
+        protected _jsonData: string;
+        protected _data: INode;
 
         constructor(data: string) {
+            this._jsonData = data;
             this._data = JSON.parse(data);
+            this._setParent(this._data, null);
+        }
+
+        protected _setParent(node: INode, parent: INode) {
+            node.parent = parent;
+            if (node.children) {
+                for (let i: number = 0; i < node.children.length; i++) {
+                    this._setParent(node.children[i], node);
+                }
+            }
         }
 
         public getMenu(navPath: string): IMenu {

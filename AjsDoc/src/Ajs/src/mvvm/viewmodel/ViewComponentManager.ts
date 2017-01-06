@@ -73,11 +73,11 @@ namespace ajs.mvvm.viewmodel {
         }
 
         public registerComponentInstance(component: ViewComponent): void {
-            this._componentInstances[component.componentId] = component;
+            this._componentInstances[component.ajsComponentId] = component;
         }
 
         public removeComponentInstance(component: ViewComponent): void {
-            delete (this._componentInstances[component.componentId]);
+            delete (this._componentInstances[component.ajsComponentId]);
         }
 
         public getComponentInstance(componentId: number): ViewComponent {
