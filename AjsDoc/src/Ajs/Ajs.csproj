@@ -40,6 +40,7 @@
     <TypeScriptCompile Include="src\boot\IGetAjsConfig.ts" />
     <TypeScriptCompile Include="src\boot\IGetResourceList.ts" />
     <TypeScriptCompile Include="src\boot\IResourceLists.ts" />
+    <TypeScriptCompile Include="src\boot\IResourceLoadingInfo.ts" />
     <TypeScriptCompile Include="src\mvvm\!mvvm.ts" />
     <TypeScriptCompile Include="src\mvvm\Exceptions.ts" />
     <TypeScriptCompile Include="src\mvvm\View.ts" />

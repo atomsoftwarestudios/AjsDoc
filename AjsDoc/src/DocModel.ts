@@ -16,6 +16,8 @@
 
     export interface IType {
         name: string;
+        type?: string;
+        types?: IType[];
     }
 
     export interface INode {
@@ -32,6 +34,10 @@
         parameters?: INode[];
         extendedTypes?: INode[];
         implementedTypes?: INode[];
+        getSignature?: INode[];
+        setSignature?: INode[];
+        isLast?: boolean;
+        path: string;
     }
 
     export interface INodeInfo {

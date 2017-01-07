@@ -71,7 +71,7 @@
 
             let resource: ajs.resources.IResource;
             resource = ajs.Framework.resourceManager.getCachedResource(
-                "/static/ajs.json", RESOURCE_STORAGE_TYPE
+                "/static/program.json", RESOURCE_STORAGE_TYPE
             );
 
             if (resource === undefined || resource === null) {

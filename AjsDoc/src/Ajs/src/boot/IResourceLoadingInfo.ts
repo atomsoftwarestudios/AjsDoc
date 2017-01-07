@@ -18,14 +18,19 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs {
+namespace ajs.boot {
 
     "use strict";
 
-    /** Thrown when the start is called before the application is configured */
-    export class ApplicationNotConfiguredException extends Error { }
-
-    /** Thrown the passed application constructor is not a function */
-    export class AppConstructorMustBeAFunctionException extends Error { }
+    /**
+     * Represents single set of resources loading
+     */
+    interface IResourceLoadingInfo {
+        resources: string[];
+        storageType: ajs.resources.STORAGE_TYPE;
+        cachePolicy: ajs.resources.CACHE_POLICY;
+        loadingEnd: boolean;
+        loaded: boolean;
+    }
 
 }

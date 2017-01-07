@@ -32,7 +32,7 @@ namespace ajsdoc {
                 },
                 [
                     "/res/css/hljsvs.css",
-                    "/static/ajs.json"
+                    "/static/program.json"
                 ],
                 null,
                 ajs.resources.STORAGE_TYPE.SESSION,

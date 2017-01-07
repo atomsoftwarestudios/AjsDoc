@@ -270,7 +270,14 @@
 
     <span component="ajsDataType">: <span if="this.name !==''">{name}</span><span if="this.name ===''">any</span></span>
 
-    <component name="ajsDocFunctionParams">{name}<span if="this.flags.isOptional">?</span><span><ajsDataType id="type"></ajsDataType></span><span if="!this.isLast">, </span></component>
+    <component name="ajsDocFunctionParams"><!--
+        -->{name}<!--
+        --><span if="this.flags.isOptional">?</span><!--
+        --><span><!--
+            --><ajsDataType id="type"></ajsDataType><!--
+        --></span><!--
+        --><span if="!this.isLast">, </span><!--
+    --></component>
 
     <component name="ajsDocExtends">{name}<span if="!this.isLast">, </span></component>
 
@@ -281,8 +288,12 @@
         <a class="ajsDocLink" href="/doc/{path}">
             <div class="ajsDocStatement ">
                 <code class="typescript">
-                    <span if="this.flags.isExported">export</span>
-                    <span>{kindString}</span>
+                    <span if="this.flags.isExported && this.kindString !== 'property' && this.kindString !== 'method'">export</span>
+                    <span if="!this.flags.isPrivate && !this.flags.isProtected && (this.kindString === 'property' || this.kindString === 'method' || this.kindString === 'accessor')">public</span>
+                    <span if="this.flags.isPrivate">protected</span>
+                    <span if="this.flags.isProtected">protected</span>
+                    <span if="this.flags.isStatic">static</span>
+                    <span if="this.kindString !== 'property' && this.kindString !== 'method' && this.kindString !== 'variable'">{kindString}</span>
                     {name}<!--
                     --><span if="this.extendedTypes"> extends <ajsDocExtends id="extendedTypes"></ajsDocExtends></span><!--
                     --><span if="this.implementedTypes"> implements <ajsDocExtends id="implementedTypes"></ajsDocExtends></span><!--
@@ -296,7 +307,9 @@
                 </code>
             </div>
             <div style="padding: 0 0 0em 2em;">
-                <span if="!this.comment"><strong>!!! DOCUMENTATION IS MISSING !!!</strong></span>
+                <span if="!this.comment || !this.comment.shortText || this.comment.shortText.trim() === ''">
+                    <strong>!!! DOCUMENTATION IS MISSING !!!</strong>
+                </span>
                 <span component="ajsDocDescription" id="comment">
                     <span if="this.shortText !== ''">{shortText}</span>
                 </span>
@@ -315,6 +328,11 @@
 
         <div if="this.hasHierarchy">
             <h3 class="ajsDocHierarchy">Hierarchy</h3>
+        </div>
+
+        <div if="this.hasConstructors">
+            <h3>Constructors</h3>
+            <ajsDocMember id="constructors"></ajsDocMember>
         </div>
 
         <div if="this.hasModules">
@@ -338,7 +356,7 @@
         </div>
 
         <div if="this.hasVariables">
-            <h3>ajsDocMemberList</h3>
+            <h3>Variables</h3>
             <ajsDocMember id="variables"></ajsDocMember>
         </div>
 
@@ -352,14 +370,14 @@
             <ajsDocMember id="objectLiterals"></ajsDocMember>
         </div>
 
-        <div if="this.properties">
+        <div if="this.hasProperties">
             <h3>Properties</h3>
             <ajsDocMember id="properties"></ajsDocMember>
         </div>
 
-        <div if="this.properties">
+        <div if="this.hasAccessors">
             <h3>Accessors</h3>
-            <ajsDocMember id="properties"></ajsDocMember>
+            <ajsDocMember id="accessors"></ajsDocMember>
         </div>
 
         <div if="this.hasMethods">
@@ -373,36 +391,6 @@
         </div>
 
 
-    </component>
-
-    <component name="ajsDocModule">
-
-        <h2 class="ajsDocArticleCaption">Module {articleCaption}</h2>
-        <p>{description}</p>
-
-    </component>
-
-    <component name="ajsDocClass">
-    </component>
-
-    <component name="ajsDocInterface">
-        This is an interface
-    </component>
-
-    <component name="ajsDocFunction">
-        This is a function
-    </component>
-
-    <component name="ajsDocVariable">
-        This is a variable
-    </component>
-
-    <component name="ajsDocObjectLiteral">
-        This is an object literal
-    </component>
-
-    <component name="ajsDocEnumeration">
-        This is an enumeration
     </component>
 
 </template>

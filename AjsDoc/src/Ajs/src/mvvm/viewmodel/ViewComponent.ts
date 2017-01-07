@@ -307,7 +307,7 @@ namespace ajs.mvvm.viewmodel {
                                         let filteredState: IFilteredState = this._filterStateArrayItem(key, i, state[key].length, state[key][i]);
 
                                         let newViewComponent: ViewComponent;
-                                        newViewComponent = this._createViewComponent(this._ajsVisualComponent.children[key], filteredState.filterApplied ? filteredState.state : state[key][i]);
+                                        newViewComponent = this._createViewComponent(this._ajsVisualComponent.children[key], filteredState.filterApplied && filteredState.key === key ? filteredState.state : state[key][i]);
 
                                         this[key][i] = newViewComponent;
 
@@ -328,7 +328,9 @@ namespace ajs.mvvm.viewmodel {
                                     for (let i: number = 0; i < state[key].length; i++) {
                                         let filteredState: IFilteredState = this._filterStateArrayItem(key, i, state[key].length, state[key][i]);
                                         if (filteredState.filterApplied) {
-                                            filteredStates.push(filteredState);
+                                            if (filteredState.key !== key) {
+                                                filteredStates.push(filteredState);
+                                            }
                                         }
                                     }
                                 }
