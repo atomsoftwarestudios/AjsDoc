@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="js\ajs.d.ts" />
+    <TypeScriptCompile Include="src\!ajsdoc.ts" />
     <TypeScriptCompile Include="src\components\AjsDocArticle.ts" />
     <TypeScriptCompile Include="src\components\AjsDocBrowser.ts" />
     <TypeScriptCompile Include="src\components\AjsDoc.ts" />

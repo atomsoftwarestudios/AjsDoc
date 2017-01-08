@@ -6,7 +6,7 @@ class Clock extends ajs.mvvm.viewmodel.ViewComponent {
 
     public time: string;
 
-    public setState(state: IClockState) {
+    public setState(state: IClockState): void {
         super.setState(state);
     }
 }
@@ -19,7 +19,7 @@ class UserComponent extends ajs.mvvm.viewmodel.ViewComponent {
 
     public clock: Clock;
 
-    protected _initialize() {
+    protected _initialize(): void {
 
         this._counter = 0;
         this._lastContent = "";
@@ -27,11 +27,11 @@ class UserComponent extends ajs.mvvm.viewmodel.ViewComponent {
         this._timer = setTimeout(() => { this._updateView(); }, 1000);
     }
 
-    protected _finalize() {
+    protected _finalize(): void {
         clearTimeout(this._timer);
     }
 
-    protected _updateView() {
+    protected _updateView(): void {
 
         switch (this._counter) {
             case 0:
