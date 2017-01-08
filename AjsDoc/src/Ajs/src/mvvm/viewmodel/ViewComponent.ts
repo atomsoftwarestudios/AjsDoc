@@ -126,7 +126,7 @@ namespace ajs.mvvm.viewmodel {
             }
 
             // unregister component instance from ViewComponent manager
-            // ajs.Framework.viewComponentManager.removeComponentInstance(this);
+            ajs.Framework.viewComponentManager.removeComponentInstance(this);
 
         };
 
@@ -153,21 +153,20 @@ namespace ajs.mvvm.viewmodel {
                 this._ajsView._stateChangeBegin(this);
             }
 
-            for (let i: number = 0; i < this._ajsStateKeys.length; i++) {
-                if (this[this._ajsStateKeys[i]] instanceof ViewComponent) {
-                    this[this._ajsStateKeys[i]]._destroy();
+            while (this._ajsStateKeys.length > 0) {
+                if (this[this._ajsStateKeys[0]] instanceof ViewComponent) {
+                    this[this._ajsStateKeys[0]]._destroy();
                 }
-                if (this[this._ajsStateKeys[i]] instanceof Array) {
-                    for (let j: number = 0; j < this[this._ajsStateKeys[i]].length; j++) {
-                        if (this[this._ajsStateKeys[i]][j] instanceof ViewComponent) {
-                            this[this._ajsStateKeys[i]][j]._destroy();
+                if (this[this._ajsStateKeys[0]] instanceof Array) {
+                    for (let i = 0; i < this[this._ajsStateKeys[0]].length; i++) {
+                        if (this[this._ajsStateKeys[0]][i] instanceof ViewComponent) {
+                            this[this._ajsStateKeys[0]][i]._destroy();
                         }
                     }
                 }
-                delete (this[this._ajsStateKeys[i]]);
+                delete (this[this._ajsStateKeys[0]]);
+                this._ajsStateKeys.splice(0, 1);
             }
-
-            this._ajsStateKeys = [];
 
             if (render) {
                 this._ajsStateChanged = true;
@@ -236,11 +235,6 @@ namespace ajs.mvvm.viewmodel {
                                     this._ajsVisualComponent.children.hasOwnProperty(key) &&
                                     this[key] instanceof Array) {
 
-                                    // update and insert new components
-                                    if (this.ajsStateKeys.indexOf(key) === -1) {
-                                        this._ajsStateKeys.push(key);
-                                    }
-
                                     // delete all components which does not exist in the array anymore
                                     let i: number = 0;
                                     while (i < this[key].length) {
@@ -256,21 +250,28 @@ namespace ajs.mvvm.viewmodel {
 
                                         // delete component
                                         if (del) {
-                                            this._ajsStateKeys.splice(this._ajsStateKeys.indexOf(key), 1);
                                             (this[key][i] as ViewComponent)._destroy();
                                             this._ajsView.notifyParentsChildrenStateChange((this[key][i] as ViewComponent)._ajsParentComponent);
                                             this[key].splice(i, 1);
+                                            if (this[key].length === 0) {
+                                                this._ajsStateKeys.splice(this._ajsStateKeys.indexOf(key), 1);
+                                            }
                                         } else {
                                             i++;
                                         }
+                                    }
+
+                                    // update and insert new components
+                                    if (this.ajsStateKeys.indexOf(key) === -1) {
+                                        this._ajsStateKeys.push(key);
                                     }
 
                                     for (i = 0; i < state[key].length; i++) {
                                         // update component state
                                         if (this[key].length > i && this[key][i].key === state[key][i].key) {
                                             (this[key][i] as ViewComponent).setState(state[key][i]);
-                                            // create new component
                                         } else {
+                                            // create new component
                                             let newViewComponent: ViewComponent =
                                                 this._createViewComponent(this._ajsVisualComponent.children[key], state[key][i]);
                                             this[key].splice(i, 0, newViewComponent);

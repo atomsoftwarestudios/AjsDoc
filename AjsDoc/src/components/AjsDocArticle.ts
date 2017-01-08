@@ -1,4 +1,4 @@
-﻿namespace ajsdoc {
+namespace ajsdoc {
 
     "use strict";
 
@@ -34,6 +34,8 @@
     }
 
     export class AjsDocArticle extends ajs.mvvm.viewmodel.ViewComponent implements IAjsDocArticleStateSet, IAjsDocArticleStateGet {
+
+        protected _renderedListener: ajs.mvvm.viewmodel.IComponentEventNotifyListener;
 
         public caption: string;
         public description: string;
@@ -72,10 +74,30 @@
         public get hasEnumMembers(): boolean { return this.enumMembers instanceof Array && this.enumMembers.length > 0; }
 
         public constructors: AjsDocMember[];
-        public hasConstructors(): boolean { return this.constructors instanceof Array && this.constructors.length > 0; }
+        public get hasConstructors(): boolean { return this.constructors instanceof Array && this.constructors.length > 0; }
 
         public setState(state: IAjsDocArticleStateSet): void {
             super.setState(state);
+        }
+
+        protected _initialize() {
+            this._renderedListener = (sender: ajs.mvvm.viewmodel.ViewComponent) => {
+                this._rendered();
+                return true;
+            };
+
+            this._ajsView.renderDoneNotifier.subscribe(this._renderedListener);
+        }
+
+        protected _finalize() {
+            this._ajsView.renderDoneNotifier.unsubscribe(this._renderedListener);
+        }
+
+        protected _rendered(): void {
+            let pre: NodeListOf<HTMLPreElement> = document.getElementsByTagName("pre");
+            for (let i: number = 0; i < pre.length; i++) {
+                hljs.highlightBlock(pre[i]);
+            }
         }
 
         protected _filterStateArrayItem(key: string, index: number, length: number, state: INodeState): ajs.mvvm.viewmodel.IFilteredState {
@@ -129,6 +151,8 @@
 
                 // Based on the type set the state of appropriate member
                 switch ((newState as INode).kindString) {
+                    case "constructor":
+                        return { filterApplied: true, key: "constructors", state: this._function(newState) }
                     case "module":
                         return { filterApplied: true, key: "modules", state: newState }
                     case "function":
@@ -294,7 +318,9 @@
                         parameters: [],
                         path: (state as INode).path,
                         comment: {
-                            shortText: (state as INode).signatures[i].comment.shortText,
+                            shortText: (state as INode).signatures[i].comment &&
+                                (state as INode).signatures[i].comment.shortText ?
+                                (state as INode).signatures[i].comment.shortText : null,
                             longText: null
                         }
                     }
@@ -330,28 +356,5 @@
         }
     }
     ajs.Framework.viewComponentManager.registerComponents(AjsDocArticle);
-
-    export class AjsDocMember extends ajs.mvvm.viewmodel.ViewComponent {
-
-        protected _filterStateArrayItem(key: string, index: number, length: number, state: INodeState): ajs.mvvm.viewmodel.IFilteredState {
-            if (key === "extendedTypes") {
-                state.isLast = index == length - 1;
-                return {
-                    filterApplied: true,
-                    key: key,
-                    state: state
-                }
-            }
-
-            return {
-                filterApplied: false,
-                key: null,
-                state: null
-            }
-        }
-
-    }
-    ajs.Framework.viewComponentManager.registerComponents(AjsDocMember);
-
 
 }

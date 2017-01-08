@@ -1,4 +1,4 @@
-﻿interface IClockState {
+interface IClockState {
     time: string;
 }
 

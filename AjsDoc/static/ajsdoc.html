@@ -228,7 +228,7 @@
         <div class="ajsDocNavBar">
             <span component="ajsDocNavBarItem" id="items">
                 <span if="!this.firstItem"> > </span>
-                <a class="ajsDocLink" href="/doc/{itemPath}" style="white-space: nowrap">{itemType} {itemLabel}</a>
+                <a class="ajsDocLink" href="/doc{itemPath}" style="white-space: nowrap">{itemType} {itemLabel}</a>
             </span>
         </div>
     </component>
@@ -244,7 +244,7 @@
         <div class="ajsDocMenuLabel">{label}</div>
 
         <div>
-            <a class="ajsDocLink" if="this.parentPath !== undefined && this.parentPath !== ''" href="/doc/{parentPath}">...</a>
+            <a class="ajsDocLink" if="this.parentPath !== undefined && this.parentPath !== ''" href="/doc{parentPath}">...</a>
             <span if="this.parentPath === undefined || this.parentPath === ''">{parentLabel}</span>
         </div>
 
@@ -254,7 +254,7 @@
             
             <ul class="ajsDocMenuItemGroup">
                 <li component="ajsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}">
-                    <a class="ajsDocLink" href="/doc/{path}">{label}</a>
+                    <a class="ajsDocLink" href="/doc{path}">{label}</a>
                 </li>
             </ul>
 
@@ -268,7 +268,7 @@
 
     <!-- CODE TEMPLATES -->
 
-    <span component="ajsDataType">: <span if="this.name !==''">{name}</span><span if="this.name ===''">any</span></span>
+    <span component="ajsDataType">: <span class="hljs-built_in" if="this.name !==''">{name}</span><span class="hljs-built_in" if="this.name ===''">any</span></span>
 
     <component name="ajsDocFunctionParams"><!--
         -->{name}<!--
@@ -279,7 +279,7 @@
         --><span if="!this.isLast">, </span><!--
     --></component>
 
-    <component name="ajsDocExtends">{name}<span if="!this.isLast">, </span></component>
+    <component class="hljs-built_in" name="ajsDocExtends">{name}<span if="!this.isLast">, </span></component>
 
     <component name="ajsDocImplements">{name}<span if="!this.isLast">, </span></component>
 
@@ -287,22 +287,22 @@
 
         <a class="ajsDocLink" href="/doc/{path}">
             <div class="ajsDocStatement ">
-                <code class="typescript">
-                    <span if="this.flags.isExported && this.kindString !== 'property' && this.kindString !== 'method'">export</span>
-                    <span if="!this.flags.isPrivate && !this.flags.isProtected && (this.kindString === 'property' || this.kindString === 'method' || this.kindString === 'accessor')">public</span>
-                    <span if="this.flags.isPrivate">protected</span>
-                    <span if="this.flags.isProtected">protected</span>
-                    <span if="this.flags.isStatic">static</span>
-                    <span if="this.kindString !== 'property' && this.kindString !== 'method' && this.kindString !== 'variable'">{kindString}</span>
+                <code>
+                    <span class="hljs-keyword" if="this.exported">export</span>
+                    <span class="hljs-keyword" if="!this.flags.isPrivate && !this.flags.isProtected && (this.kindString === 'property' || this.kindString === 'method' || this.kindString === 'accessor' || this.kindString === 'constructor')">public</span>
+                    <span class="hljs-keyword" if="this.flags.isPrivate">protected</span>
+                    <span class="hljs-keyword" if="this.flags.isProtected">protected</span>
+                    <span class="hljs-keyword" if="this.flags.isStatic">static</span>
+                    <span class="hljs-keyword" if="this.kindString !== 'property' && this.kindString !== 'method' && this.kindString !== 'variable'">{kindString}</span>
                     {name}<!--
-                    --><span if="this.extendedTypes"> extends <ajsDocExtends id="extendedTypes"></ajsDocExtends></span><!--
-                    --><span if="this.implementedTypes"> implements <ajsDocExtends id="implementedTypes"></ajsDocExtends></span><!--
+                    --><span class="hljs-keyword" if="this.extendedTypes"> extends <ajsDocExtends id="extendedTypes"></ajsDocExtends></span><!--
+                    --><span class="hljs-keyword" if="this.implementedTypes"> implements <ajsDocExtends id="implementedTypes"></ajsDocExtends></span><!--
                     --><span if="this.parameters"><!--
                         -->(<!--
                         --><span if="this.parameters !== null && this.parameters.length > 0"><ajsDocFunctionParams id="parameters"></ajsDocFunctionParams></span><!--
                         -->)<!--
                     --></span><!--
-                    --><ajsDataType id="type"></ajsDataType>
+                    --><ajsDataType class="hljs-built_in" id="type"></ajsDataType>
                     <!--{body}-->
                 </code>
             </div>
@@ -322,7 +322,7 @@
     </component>
 
     <component name="ajsDocArticle">
-
+        
         <h2 class="ajsDocArticleCaption">{caption}</h2>
         <p>{description}</p>
 

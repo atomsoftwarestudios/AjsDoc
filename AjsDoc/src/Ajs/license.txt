@@ -1,4 +1,4 @@
-﻿The AJS Framework
+The AJS Framework
 -----------------
 
 The MIT License (MIT)

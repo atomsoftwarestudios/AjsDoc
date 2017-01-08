@@ -44,13 +44,24 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="js\ajs.d.ts" />
-    <TypeScriptCompile Include="src\AjsDocBrowser.ts" />
-    <TypeScriptCompile Include="src\AjsDoc.ts" />
-    <TypeScriptCompile Include="src\DocModel.ts" />
-    <TypeScriptCompile Include="src\hljs.ts" />
-    <TypeScriptCompile Include="src\ViewComponents\IArticleState.ts" />
-    <TypeScriptCompile Include="src\ViewComponents\AjsDocArticle.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocArticle.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocBrowser.ts" />
+    <TypeScriptCompile Include="src\components\AjsDoc.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocMember.ts" />
+    <TypeScriptCompile Include="src\models\DocModel.ts" />
+    <TypeScriptCompile Include="src\Exceptions.ts" />
+    <TypeScriptCompile Include="src\lib\hljs.ts" />
     <Content Include="static\examples\app_init.ts" />
+    <TypeScriptCompile Include="src\states\IAjsDocLayoutState.ts" />
+    <TypeScriptCompile Include="src\states\IMenuState.ts" />
+    <TypeScriptCompile Include="src\states\IMenuItemState.ts" />
+    <TypeScriptCompile Include="src\states\IMenuItemGroupState.ts" />
+    <TypeScriptCompile Include="src\states\INavBarItemState.ts" />
+    <TypeScriptCompile Include="src\states\INavBarItemsState.ts" />
+    <TypeScriptCompile Include="src\program\IComment.ts" />
+    <TypeScriptCompile Include="src\program\IFlags.ts" />
+    <TypeScriptCompile Include="src\program\INode.ts" />
+    <TypeScriptCompile Include="src\program\IType.ts" />
     <TypeScriptCompile Include="static\examples\viewComponent_placeholder.ts" />
   </ItemGroup>
   <ItemGroup>

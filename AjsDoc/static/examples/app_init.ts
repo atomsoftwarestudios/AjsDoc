@@ -1,4 +1,4 @@
-﻿class UserApplication extends ajs.app.Application {
+class UserApplication extends ajs.app.Application {
 
     // override the initialize method
     // perform necessary tasks here. for example, template file can be loaded. always use 
