@@ -22,24 +22,42 @@ namespace ajsdoc {
 
     "use strict";
 
+    /**
+     * Specifies where resources used by AjsDoc will be cached - MOVE TO APPLICATION CONFIG
+     */
     const RESOURCE_STORAGE_TYPE: ajs.resources.STORAGE_TYPE = ajs.resources.STORAGE_TYPE.SESSION;
 
+    /**
+     * Static resources to be loaded - MOVE TO APPLICATION CONFIG
+     */
     const staticResources: string[] = [
         "/static/examples/app_init.ts",
     ];
 
     export class AjsDoc extends ajs.mvvm.viewmodel.ViewComponent {
 
-
+        /** Layout view component state **/
         public ajsDocLayout: IAjsDocLayoutState;
 
+        /** Last view component shown in the content placeholder **/
         protected _lastContent: string;
+
+        /** Program tree parsed from the JSON file generated with the TypeDoc */
         protected _docModel: DocModel;
 
+        /** Listener to the browser navigation event **/
         protected _navigatedListener: ajs.mvvm.viewmodel.IComponentEventNotifyListener;
 
+        /**
+         * Synchronous initialization of the view component
+         * Subscribes to the navigation notifier, inititalizes the view component and
+         * initiates loading of resources. Once resources are loaded the _initAsync
+         * method is called to finish the initialization and perform initial state
+         * set call
+         */
         protected _initialize(): void {
 
+            // subscribe to _navigated event
             this._navigatedListener = (sender: ajs.mvvm.viewmodel.ViewComponent) => {
                 this._navigated();
                 return true;
@@ -47,8 +65,10 @@ namespace ajsdoc {
 
             this._ajsView.navigationNotifier.subscribe(this._navigatedListener);
 
+            // setup last content -> used previously for multiple component exchange in the content placeholder
             this._lastContent = "";
 
+            // load necessary template
             ajs.Framework.templateManager.loadTemplateFiles(
                 (successfull: boolean) => {
                     if (successfull) {
@@ -61,8 +81,14 @@ namespace ajsdoc {
             );
         }
 
+        /**
+         * Called when templates are loaded to finish initialization of the view component
+         * Loads the highlighting style
+         * TODO: Move loading of the JSON resource to the DocModel to follow layer separation
+         */
         protected _initAsync(): void {
 
+            // default state of the component
             this.setState({
                 ajsDocLayout: {
                     ajsDocHeader: {},
@@ -72,6 +98,8 @@ namespace ajsdoc {
                 }
             });
 
+            // load the data
+            // TODO: move this to DocModel
             let resource: ajs.resources.IResource;
             resource = ajs.Framework.resourceManager.getCachedResource(
                 "/static/program.json", RESOURCE_STORAGE_TYPE
@@ -81,10 +109,10 @@ namespace ajsdoc {
                 throw new Error("Documentation definition not loaded");
             }
 
+            // Construct the DocModel object
             this._docModel = new DocModel(resource.data);
 
-
-
+            // load the highlighting CSS file
             resource = ajs.Framework.resourceManager.getCachedResource(
                 "/res/css/hljsvs.css", RESOURCE_STORAGE_TYPE
             );
@@ -93,25 +121,35 @@ namespace ajsdoc {
                 throw new Error("Code style sheet not loaded");
             }
 
+            // register the style to the web page (ajsStyle manager is not implemented yet)
             let style: HTMLStyleElement = document.createElement("style");
             style.setAttribute("type", "text/css");
             style.innerHTML = resource.data;
             document.head.appendChild(style);
 
-
+            // perform initial state update (so set state through layout, not separate compoents)
             this._updateView(true);
         }
 
-
-
+        /**
+         * Unregisters the component from notifiers
+         */
         protected _finalize(): void {
             this._ajsView.navigationNotifier.unsubscribe(this._navigatedListener);
         }
 
+        /**
+         * Executed when the browser navigation occurs
+         * This method is called from the notifier registered in the _initialize method
+         */
         protected _navigated(): void {
             this._updateView(false);
         }
 
+        /**
+         * Updates the view based on the navigation path
+         * @param updateLayout Specifies if the full layout render should be performed at once or if separate components should be rendered
+         */
         protected _updateView(updateLayout: boolean): void {
 
             let routeInfo: ajs.routing.IRouteInfo = ajs.Framework.router.currentRoute;
@@ -136,7 +174,7 @@ namespace ajsdoc {
             // get content from the model and update the article state
             let content: INode = this._docModel.getContent(routeInfo.path);
 
-            let articleState: IAjsDocArticleStateSet = this._prepareArticle(content);
+            let articleState: IAjsDocArticleStateSet = this._prepareArticleState(content);
 
             if (content.kindString !== undefined) {
                 articleState.members = content.children;
@@ -157,7 +195,11 @@ namespace ajsdoc {
 
         }
 
-        protected _prepareArticle(node: INode): IAjsDocArticleStateSet {
+        /**
+         * Prepares the article state based on the current navigation path
+         * @param node Node from the data has to be collected
+         */
+        protected _prepareArticleState(node: INode): IAjsDocArticleStateSet {
 
             let hierarchy: any;
 
@@ -178,6 +220,12 @@ namespace ajsdoc {
             };
         }
 
+        /**
+         * Prepares the content view component
+         * This was used recently when multiple components were exchanged in the content
+         * placeholder
+         * @param componentName Name of the ViewCOmponent to be set to the content placeholder
+         */
         protected _setupContentViewComponent(componentName: string): void {
 
             if (componentName !== this._lastContent) {
@@ -192,6 +240,11 @@ namespace ajsdoc {
 
         }
 
+        /**
+         * Reads the documentation comment from particular documentation node
+         * @param node The node the commend has to be get from
+         * @param firstLineOnly Specifies if the full comment is returned or its first line only
+         */
         protected _getComment(node: INode, firstLineOnly?: boolean): string {
             if (node && node.comment && node.comment.shortText &&
                 node.comment.shortText !== null && node.comment.shortText.trim() !== "") {
@@ -206,6 +259,12 @@ namespace ajsdoc {
 
         }
 
+        /**
+         * Sets the #ASHTML to let the AjsFw know the text shoule be rendered as HTML
+         * Also processes additional AjsDoc comment tags and includes external resources
+         * to the string
+         * @param text The text to be converted and updated
+         */
         protected _setupHTMLContent(text: string): string {
 
             text = "#ASHTML:" + text;
@@ -235,6 +294,7 @@ namespace ajsdoc {
 
     }
 
+    /** Register the component to ViewComponentManager */
     ajs.Framework.viewComponentManager.registerComponents(AjsDoc);
 
 }

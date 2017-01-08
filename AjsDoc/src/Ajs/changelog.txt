@@ -62,8 +62,11 @@ TODO:
 	- Error handling, exceptions & exception rethrowing
 		- Especially in templating and view component processings
 
+	- Loading message / page while the ajs is initializing
+	    - should be later usable through user project so should be implemented as a component
+
 	- Resource management
-	    - remove resources older than
+	    - remove resources older than, partially done, need to be tested
 		- performance optiomizations
 		   - creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
 		   - multiple calls of getResource during single operation can be optimized
@@ -71,6 +74,9 @@ TODO:
 
 
 	- View, View Components, Visual Components
+	    - Support for render target.
+		   - Currently, only the main window document is supported so it will be hard to integrate to playgrounds
+		- Revert setting of ajs attributes back to object, its faster than manipulating the DOM attributes
 		- CSS style management
 		   - LESS & reuired toolchain
 		- ViewComponent._getState -> implement function to collect the state information from the view component tree

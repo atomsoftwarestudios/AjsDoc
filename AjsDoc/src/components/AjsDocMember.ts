@@ -37,7 +37,7 @@ namespace ajsdoc {
 
         protected _filterStateArrayItem(key: string, index: number, length: number, state: INodeState): ajs.mvvm.viewmodel.IFilteredState {
             if (key === "extendedTypes" || key === "implementedTypes") {
-                state.isLast = index == length - 1;
+                state.isLast = index === length - 1;
                 return {
                     filterApplied: true,
                     key: key,
