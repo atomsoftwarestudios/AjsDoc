@@ -1,4 +1,4 @@
-﻿<template name="ajsdoc">
+<template name="ajsdoc">
 
     <style type="text/css">
 
@@ -99,11 +99,11 @@
             border: solid 1px #EEEEEE;
             margin: 0;
         }
-        
+
         .ajsDocContentPlaceholder h5 {
             margin: 0; padding: 0;
         }
-
+        
         /* MENU */
 
         .ajsDocMenuLabel {
@@ -145,6 +145,11 @@
         .ajsDocArticleCaption {
             margin: 0;
             padding: 0;
+        }
+
+        .ajsDocExample {
+            border: solid 1px #EEEEEE;
+            background-color: #FEFEFE;
         }
 
         /* CODE TEMPLATES */
@@ -206,7 +211,6 @@
         <div class="ajsDocLayoutContentContainer">
             <ajsDocNavBar id="ajsDocNavBar"></ajsDocNavBar>
             <ajsDocArticle id="ajsDocArticle"></ajsDocArticle>
-            <!--<div class="ajsDocContentPlaceholder" placeholder="content"></div>-->
         </div>
 
         <div class="ajsDocLayoutPageNavContainer">
@@ -289,7 +293,7 @@
             <div class="ajsDocStatement ">
                 <code>
                     <span class="hljs-keyword" if="this.exported">export</span>
-                    <span class="hljs-keyword" if="!this.flags.isPrivate && !this.flags.isProtected && (this.kindString === 'property' || this.kindString === 'method' || this.kindString === 'accessor' || this.kindString === 'constructor')">public</span>
+                    <span class="hljs-keyword" if="this.isPublic">public</span>
                     <span class="hljs-keyword" if="this.flags.isPrivate">protected</span>
                     <span class="hljs-keyword" if="this.flags.isProtected">protected</span>
                     <span class="hljs-keyword" if="this.flags.isStatic">static</span>
@@ -322,74 +326,84 @@
     </component>
 
     <component name="ajsDocArticle">
-        
-        <h2 class="ajsDocArticleCaption">{caption}</h2>
-        <p>{description}</p>
 
-        <div if="this.hasHierarchy">
-            <h3 class="ajsDocHierarchy">Hierarchy</h3>
+        <div style="padding: 0.5em">
+
+            <h2 class="ajsDocArticleCaption">{caption}</h2>
+
+            <div if="this.hasHierarchy">
+                <h3 class="ajsDocHierarchy">Hierarchy</h3>
+                <div style="display: inline-block;">
+                    <ul component="ajsDocHierarchy" id="hierarchy" style="text-decoration: none; list-style: none; margin: 0; padding-left: 1em">
+                        <li><a class="ajsDocLink" href="/doc{path}">{name}</a></li>
+                        <ajsDocHierarchy id="extends"></ajsDocHierarchy>
+                    </ul>
+                </div>
+            </div>
+
+            <p>{description}</p>
+
+            <div if="this.hasConstructors">
+                <h3>Constructors</h3>
+                <ajsDocMember id="constructors"></ajsDocMember>
+            </div>
+
+            <div if="this.hasModules">
+                <h3>Modules</h3>
+                <ajsDocMember id="modules"></ajsDocMember>
+            </div>
+
+            <div if="this.hasFunctions">
+                <h3>Functions</h3>
+                <ajsDocMember id="functions"></ajsDocMember>
+            </div>
+
+            <div if="this.hasClasses">
+                <h3>Classes</h3>
+                <ajsDocMember id="classes"></ajsDocMember>
+            </div>
+
+            <div if="this.hasInterfaces">
+                <h3>Interfaces</h3>
+                <ajsDocMember id="interfaces"></ajsDocMember>
+            </div>
+
+            <div if="this.hasVariables">
+                <h3>Variables</h3>
+                <ajsDocMember id="variables"></ajsDocMember>
+            </div>
+
+            <div if="this.hasEnumerations">
+                <h3>Enumerations</h3>
+                <ajsDocMember id="enumerations"></ajsDocMember>
+            </div>
+
+            <div if="this.hasObjectLiterals">
+                <h3>Object literals</h3>
+                <ajsDocMember id="objectLiterals"></ajsDocMember>
+            </div>
+
+            <div if="this.hasProperties">
+                <h3>Properties</h3>
+                <ajsDocMember id="properties"></ajsDocMember>
+            </div>
+
+            <div if="this.hasAccessors">
+                <h3>Accessors</h3>
+                <ajsDocMember id="accessors"></ajsDocMember>
+            </div>
+
+            <div if="this.hasMethods">
+                <h3>Methods</h3>
+                <ajsDocMember id="methods"></ajsDocMember>
+            </div>
+
+            <div if="this.hasEnumMembers">
+                <h3>Members</h3>
+                <ajsDocMember id="enumMembers"></ajsDocMember>
+            </div>
+
         </div>
-
-        <div if="this.hasConstructors">
-            <h3>Constructors</h3>
-            <ajsDocMember id="constructors"></ajsDocMember>
-        </div>
-
-        <div if="this.hasModules">
-            <h3>Modules</h3>
-            <ajsDocMember id="modules"></ajsDocMember>
-        </div>
-
-        <div if="this.hasFunctions">
-            <h3>Functions</h3>
-            <ajsDocMember id="functions"></ajsDocMember>
-        </div>
-
-        <div if="this.hasClasses">
-            <h3>Classes</h3>
-            <ajsDocMember id="classes"></ajsDocMember>
-        </div>
-
-        <div if="this.hasInterfaces">
-            <h3>Interfaces</h3>
-            <ajsDocMember id="interfaces"></ajsDocMember>
-        </div>
-
-        <div if="this.hasVariables">
-            <h3>Variables</h3>
-            <ajsDocMember id="variables"></ajsDocMember>
-        </div>
-
-        <div if="this.hasEnumerations">
-            <h3>Enumerations</h3>
-            <ajsDocMember id="enumerations"></ajsDocMember>
-        </div>
-
-        <div if="this.hasObjectLiterals">
-            <h3>Object literals</h3>
-            <ajsDocMember id="objectLiterals"></ajsDocMember>
-        </div>
-
-        <div if="this.hasProperties">
-            <h3>Properties</h3>
-            <ajsDocMember id="properties"></ajsDocMember>
-        </div>
-
-        <div if="this.hasAccessors">
-            <h3>Accessors</h3>
-            <ajsDocMember id="accessors"></ajsDocMember>
-        </div>
-
-        <div if="this.hasMethods">
-            <h3>Methods</h3>
-            <ajsDocMember id="methods"></ajsDocMember>
-        </div>
-
-        <div if="this.hasEnumMembers">
-            <h3>Members</h3>
-            <ajsDocMember id="enumMembers"></ajsDocMember>
-        </div>
-
 
     </component>
 

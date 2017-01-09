@@ -72,8 +72,11 @@ TODO:
 		   - multiple calls of getResource during single operation can be optimized
 		   - review cycles
 
-
 	- View, View Components, Visual Components
+	    - Don't render the component tag to the output
+		   - will be hard to achieve as root node is needed at this time
+		- Move IFs from Template to the View Component
+		   - This is idea now, not designed, how it should work
 	    - Support for render target.
 		   - Currently, only the main window document is supported so it will be hard to integrate to playgrounds
 		- Revert setting of ajs attributes back to object, its faster than manipulating the DOM attributes
@@ -84,7 +87,6 @@ TODO:
 		- Static content view component
 		- Event subscriptions
 		- View Component Finalization
-		- Refactor ViewComponent properties to ajs... property name
 		- Refactor ViewComponent state management to look nicer
 
 	- Data
@@ -97,6 +99,12 @@ TODO:
 
 	- Language & Translation
 
+	----
+
+	Tools:
+		Implement typescript preprocessor
+		- Just // #ifdef and // #ifndef
+		- Integrate to msbuild process
 
 	FAR FUTURE:
 	- Caching of processed objects - especially visualComponents and view components??

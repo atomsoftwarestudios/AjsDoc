@@ -22,6 +22,12 @@ namespace ajsdoc {
 
     "use strict";
 
+    export interface IHierarchyNode {
+        path?: string;
+        name: string;
+        extends?: IHierarchyNode;
+    }
+
     export interface INodeState extends ajs.mvvm.viewmodel.IViewStateSet, INode {
         key: string;
         isLast: boolean;
@@ -32,6 +38,7 @@ namespace ajsdoc {
         caption?: string;
         description?: string;
         members?: INode[];
+        hierarchy?: IHierarchyNode;
     }
 
     export interface IAjsDocArticleStateGet extends ajs.mvvm.viewmodel.IViewStateGet {
@@ -59,6 +66,10 @@ namespace ajsdoc {
 
         public caption: string;
         public description: string;
+        public syntax: ajs.mvvm.viewmodel.ViewComponent;
+
+        public hierarchy: IHierarchyNode;
+        public get hasHierarchy(): boolean { return this.hierarchy !== undefined && this.hierarchy !== null; }
 
         public modules: AjsDocMember[];
         public get hasModules(): boolean { return this.modules instanceof Array && this.modules.length > 0; }

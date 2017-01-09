@@ -1,4 +1,4 @@
-﻿/* *************************************************************************
+/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2017 Atom Software Studios. All rights reserved.
 
@@ -36,16 +36,13 @@ namespace ajsdoc {
 
     export class AjsDoc extends ajs.mvvm.viewmodel.ViewComponent {
 
-        /** Layout view component state **/
+        /** Layout view component state */
         public ajsDocLayout: IAjsDocLayoutState;
-
-        /** Last view component shown in the content placeholder **/
-        protected _lastContent: string;
 
         /** Program tree parsed from the JSON file generated with the TypeDoc */
         protected _docModel: DocModel;
 
-        /** Listener to the browser navigation event **/
+        /** Listener to the browser navigation event */
         protected _navigatedListener: ajs.mvvm.viewmodel.IComponentEventNotifyListener;
 
         /**
@@ -62,11 +59,7 @@ namespace ajsdoc {
                 this._navigated();
                 return true;
             };
-
             this._ajsView.navigationNotifier.subscribe(this._navigatedListener);
-
-            // setup last content -> used previously for multiple component exchange in the content placeholder
-            this._lastContent = "";
 
             // load necessary template
             ajs.Framework.templateManager.loadTemplateFiles(
@@ -99,7 +92,7 @@ namespace ajsdoc {
             });
 
             // load the data
-            // TODO: move this to DocModel
+            // #TODO: move this to DocModel
             let resource: ajs.resources.IResource;
             resource = ajs.Framework.resourceManager.getCachedResource(
                 "/static/program.json", RESOURCE_STORAGE_TYPE
@@ -109,7 +102,7 @@ namespace ajsdoc {
                 throw new Error("Documentation definition not loaded");
             }
 
-            // Construct the DocModel object
+            // construct the DocModel object
             this._docModel = new DocModel(resource.data);
 
             // load the highlighting CSS file
@@ -196,48 +189,72 @@ namespace ajsdoc {
         }
 
         /**
-         * Prepares the article state based on the current navigation path
+         * Prepares the article state based on the current navigation path and data types to be displayed
          * @param node Node from the data has to be collected
          */
         protected _prepareArticleState(node: INode): IAjsDocArticleStateSet {
 
-            let hierarchy: any;
+            let hierarchyNode: IHierarchyNode = this._buildHierarchy(node);
 
-            if (node.kindString === "Class") {
-                if (node.extendedTypes) {
-                    let id: number = node.extendedTypes[0].id;
-                    let h: any = { name: node.extendedTypes[0].name, children: null };
-                    /*while (id) {
-                        let node: INode = this._docModel.getItemById(id);
-                    }*/
-                }
+            let retVal: IAjsDocArticleStateSet = {};
+            retVal.caption = node.kindString + " " + node.name;
+            retVal.description = this._setupHTMLContent(this._getComment(node));
+            if (hierarchyNode) {
+                retVal.hierarchy = hierarchyNode;
             }
-
-            return {
-                caption: node.kindString + " " + node.name,
-                description: this._setupHTMLContent(this._getComment(node)),
-                hierarchy: hierarchy
-            };
+            return retVal;
         }
 
         /**
-         * Prepares the content view component
-         * This was used recently when multiple components were exchanged in the content
-         * placeholder
-         * @param componentName Name of the ViewCOmponent to be set to the content placeholder
+         * Builds the hierarchy (for classes and interfaces) to be displayed under the article
+         * @param node
          */
-        protected _setupContentViewComponent(componentName: string): void {
+        protected _buildHierarchy(node: INode): IHierarchyNode {
+            let hierarchyNode: IHierarchyNode;
 
-            if (componentName !== this._lastContent) {
+            if (node.kindString === "Class" || node.kindString === "Interface") {
+                if (node.extendedTypes) {
 
-                if (this._lastContent !== "") {
-                    this.ajsDocLayout.removeChildComponent("content", this._lastContent);
+                    hierarchyNode = {
+                        path: node.path,
+                        name: node.name
+                    };
+
+                    if (node.extendedTypes && node.extendedTypes.length > 0) {
+                        let id: number = node.extendedTypes[0].id;
+
+                        if (id) {
+
+                            let h: IHierarchyNode = hierarchyNode;
+
+                            while (id !== 0) {
+                                node = this._docModel.getItemById(id);
+                                if (node !== null) {
+                                    h.extends = {
+                                        path: node.path,
+                                        name: node.name
+                                    };
+                                    h = h.extends;
+                                    if (node.extendedTypes && node.extendedTypes.length > 0) {
+                                        id = node.extendedTypes[0].id;
+                                    } else {
+                                        id = 0;
+                                    }
+                                } else {
+                                    id = 0;
+                                }
+                            }
+                        } else {
+
+                            hierarchyNode.extends = {
+                                name: node.extendedTypes[0].name
+                            };
+
+                        }
+                    }
                 }
-
-                this.ajsDocLayout.insertChildComponent(componentName, componentName, null, "content");
-                this._lastContent = componentName;
             }
-
+            return hierarchyNode;
         }
 
         /**
@@ -282,7 +299,7 @@ namespace ajsdoc {
                                 ajs.resources.STORAGE_TYPE.LOCAL
                             );
                             text = text.replace(new RegExp("#example " + example + ".*", "g"),
-                                "<pre><code class=\"typescript\">" + resource.data + "</pre></code>");
+                                "<pre class=\"ajsDocExample\"><code class=\"typescript\">" + resource.data + "</pre></code>");
                         }
                     }
                 }

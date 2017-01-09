@@ -1,4 +1,4 @@
-﻿/* *************************************************************************
+/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2017 Atom Software Studios. All rights reserved.
 
@@ -25,6 +25,7 @@ namespace ajsdoc {
     export class AjsDocMember extends ajs.mvvm.viewmodel.ViewComponent {
 
         public get exported(): boolean {
+            // too lazy to implement the state interface so retype to any
             let _this: any = this;
 
             return _this.flags.isExported &&
@@ -33,6 +34,17 @@ namespace ajsdoc {
                 _this.kindString !== "get" &&
                 _this.kindString !== "set" &&
                 _this.kindString !== "constructor";
+        }
+
+        public get isPublic(): boolean {
+            let _this: any = this;
+
+            return !_this.flags.isPrivate &&
+                !_this.flags.isProtected &&
+                (_this.kindString === "property" ||
+                    _this.kindString === "method" ||
+                    _this.kindString === "accessor" ||
+                    _this.kindString === "constructor");
         }
 
         protected _filterStateArrayItem(key: string, index: number, length: number, state: INodeState): ajs.mvvm.viewmodel.IFilteredState {

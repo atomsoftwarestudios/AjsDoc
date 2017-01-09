@@ -1,4 +1,4 @@
-﻿/* *************************************************************************
+/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2017 Atom Software Studios. All rights reserved.
 
@@ -137,7 +137,7 @@ namespace ajsdoc {
                             key: node.children[i].id.toString(),
                             path: node.children[i].path,
                             label: node.children[i].name,
-                            selected: node.children[i].path === navPath
+                            selected: node.children[i].path === ("/" + navPath)
                         });
                     }
                 }
