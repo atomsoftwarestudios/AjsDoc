@@ -30,7 +30,7 @@ namespace ajsdoc {
                     this._templatesLoaded(successfull);
                 },
                 [
-                    "/static/ajsdoc.html",
+                    "/static/templates/ajsdoc.html",
                 ],
                 ajs.resources.STORAGE_TYPE.LOCAL,
                 ajs.resources.CACHE_POLICY.PERMANENT
