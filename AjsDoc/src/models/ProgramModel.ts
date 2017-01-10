@@ -22,6 +22,8 @@ namespace ajsdoc {
 
     "use strict";
 
+    const PROGRAM_DATA: string = "/static/program.json";
+
     interface IKindMap {
         [key: string]: string;
     }
@@ -53,17 +55,64 @@ namespace ajsdoc {
         [index: number]: INode;
     }
 
-    export class DocModel {
+    export interface IProgramDataReadyData {
+        menuState?: IMenuState;
+        navBarState: INavBarItemsState;
+        articleState?: INode;
+    }
+
+    export class ProgramModel extends ajs.mvvm.model.Model {
 
         protected _jsonData: string;
         protected _data: INode;
         protected _itemsById: IItemsById;
 
-        constructor(data: string) {
+        public getMenu(path: string): void {
+            this._checkInitialized(
+                new Error("Program data loading timeout"),
+                () => { this._getMenu(path); }
+            );
+        }
+
+        public getNavBar(path: string): void {
+            this._checkInitialized(
+                new Error("Program data loading timeout"),
+                () => { this._getNavBar(path); }
+            );
+        }
+
+        public getContent(path: string): void {
+            this._checkInitialized(
+                new Error("Program data loading timeout"),
+                () => { this._getContent(path); }
+            );
+        }
+
+        protected _initialize(): void {
+            // load the program.json
+            ajs.Framework.resourceManager.load(
+                (successfull: boolean, url: string, resource: ajs.resources.IResource): void => {
+                    this._jsonLoaded(successfull, url, resource);
+                },
+                PROGRAM_DATA,
+                null,
+                RESOURCE_STORAGE_TYPE,
+                RESOURCE_STORAGE_POLICY
+            );
+        }
+
+        protected _jsonLoaded(successfull: boolean, url: string, resource: ajs.resources.IResource): void {
+            if (!successfull) {
+                throw "Failed to load the program data";
+            }
+
+            // parse loaded data and prepare internal structures
             this._itemsById = {};
-            this._jsonData = data;
-            this._data = JSON.parse(data);
+            this._jsonData = resource.data;
+            this._data = JSON.parse(this._jsonData);
             this._prepareData(this._data, null);
+
+            this._initialized = true;
         }
 
         // anotate the data with additional information
@@ -94,7 +143,7 @@ namespace ajsdoc {
             }
         }
 
-        public getMenu(navPath: string): IMenuState {
+        protected _getMenu(navPath: string): void {
 
             let node: INode = this._navigate(navPath, true);
 
@@ -144,10 +193,10 @@ namespace ajsdoc {
 
             }
 
-            return menu;
+            this._dataReadyNotifier.notify(this, { menuState: menu });
         }
 
-        public getNavBarItems(path: string): INavBarItemsState {
+        protected _getNavBar(path: string): void {
             let items: INavBarItemsState = [];
 
             let node: INode = this._navigate(path);
@@ -172,11 +221,11 @@ namespace ajsdoc {
                 items[0].firstItem = true;
             }
 
-            return items;
+            this._dataReadyNotifier.notify(this, { navBarState: items });
         }
 
-        public getContent(path: string): INode {
-            return this._navigate(path);
+        protected _getContent(path: string): void {
+            this._dataReadyNotifier.notify(this, { articleState: this._navigate(path) });
         }
 
         protected _getGroupIndex(menu: IMenuState, key: string): number {

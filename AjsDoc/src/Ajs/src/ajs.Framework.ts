@@ -86,10 +86,16 @@ namespace ajs {
         /** Returns the TemplateManager object */
         public static get templateManager(): ajs.templating.TemplateManager { return Framework._templateManager; }
 
+        /** Stores the ModelManager object instantiated automatically during the framework initialization */
+        protected static _modelManager: ajs.mvvm.model.ModelManager;
+        /** Returns the ModuleManager object */
+        public static get modelManager(): ajs.mvvm.model.ModelManager { return Framework._modelManager; }
+
         /** Stores the View object instantiated automatically during the framework intitialization */
         protected static _view: ajs.mvvm.View;
         /** Returns the View object */
         public static get view(): ajs.mvvm.View { return Framework._view; }
+
 
         /** Basic framework initialization is called automatically from the boot when window.onload event occurs */
         public static initialize(config: IAJSConfig): void {
@@ -104,6 +110,7 @@ namespace ajs {
             Framework._resourceManager = new ajs.resources.ResourceManager(config.resourceManagerConfig);
             Framework._templateManager = new ajs.templating.TemplateManager();
             Framework._viewComponentManager = new ajs.mvvm.viewmodel.ViewComponentManager();
+            Framework._modelManager = new ajs.mvvm.model.ModelManager();
             Framework._view = new ajs.mvvm.View(Framework._templateManager, Framework._viewComponentManager);
             Framework._router = new ajs.routing.Router(Framework._view, null, null);
             Framework._navigator = new ajs.navigation.Navigator(Framework._router);

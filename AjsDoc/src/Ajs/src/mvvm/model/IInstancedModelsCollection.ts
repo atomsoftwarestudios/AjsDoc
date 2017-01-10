@@ -18,12 +18,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-/**
- * Model View View Component Model namespace
- * asd
- */
 namespace ajs.mvvm.model {
 
     "use strict";
+
+    export interface IInstancedModelsCollection {
+        [index: string]: {
+            referenceCount: number;
+            model: Model;
+        }
+    }
 
 }

@@ -25,7 +25,8 @@ namespace ajsdoc {
     /**
      * Specifies where resources used by AjsDoc will be cached - MOVE TO APPLICATION CONFIG
      */
-    const RESOURCE_STORAGE_TYPE: ajs.resources.STORAGE_TYPE = ajs.resources.STORAGE_TYPE.SESSION;
+    export const RESOURCE_STORAGE_TYPE: ajs.resources.STORAGE_TYPE = ajs.resources.STORAGE_TYPE.SESSION;
+    export const RESOURCE_STORAGE_POLICY: ajs.resources.CACHE_POLICY = ajs.resources.CACHE_POLICY.LASTRECENTLYUSED;
 
     /**
      * Static resources to be loaded - MOVE TO APPLICATION CONFIG
@@ -36,14 +37,25 @@ namespace ajsdoc {
 
     export class AjsDoc extends ajs.mvvm.viewmodel.ViewComponent {
 
+        protected _initialized: boolean;
+
         /** Layout view component state */
         public ajsDocLayout: IAjsDocLayoutState;
 
         /** Program tree parsed from the JSON file generated with the TypeDoc */
-        protected _docModel: DocModel;
+        protected _progModel: ProgramModel;
+
+        /** Content model */
+        protected _contentModel: ContentModel;
 
         /** Listener to the browser navigation event */
-        protected _navigatedListener: ajs.mvvm.viewmodel.IComponentEventNotifyListener;
+        protected _navigatedListener: ajs.events.IListener;
+
+        /** Program data ready listener */
+        protected _programDataReady: ajs.events.IListener;
+
+        /** Content data ready listener */
+        protected _contentDataReady: ajs.events.IListener;
 
         /**
          * Synchronous initialization of the view component
@@ -54,14 +66,40 @@ namespace ajsdoc {
          */
         protected _initialize(): void {
 
+            this._initialized = false;
+
+            // create models
+            this._progModel = ajs.Framework.modelManager.getModelInstance(ProgramModel) as ProgramModel;
+            this._contentModel = ajs.Framework.modelManager.getModelInstance(ContentModel) as ContentModel;
+
             // subscribe to _navigated event
             this._navigatedListener = (sender: ajs.mvvm.viewmodel.ViewComponent) => {
-                this._navigated();
+                if (this._initialized) {
+                    this._navigated();
+                }
                 return true;
             };
             this._ajsView.navigationNotifier.subscribe(this._navigatedListener);
 
-            // load necessary template
+            // subscribe to program model data ready notifier
+            this._programDataReady = (sender: ProgramModel, data: IProgramDataReadyData) => {
+                if (this._initialized) {
+                    this._processProgramData(data);
+                }
+                return true;
+            };
+            this._progModel.dataReadyNotifier.subscribe(this._programDataReady);
+
+            // subscribe to content model data ready notifier
+            this._contentDataReady = (sender: ContentModel, data: IContentDataReadyData) => {
+                if (this._initialized) {
+                    this._processContentData(data);
+                }
+                return true;
+            };
+            this._contentModel.dataReadyNotifier.subscribe(this._contentDataReady);
+
+            // load necessary templates and continue with initAsync when the template is ready
             ajs.Framework.templateManager.loadTemplateFiles(
                 (successfull: boolean) => {
                     if (successfull) {
@@ -69,8 +107,8 @@ namespace ajsdoc {
                     }
                 },
                 staticResources,
-                ajs.resources.STORAGE_TYPE.LOCAL,
-                ajs.resources.CACHE_POLICY.LASTRECENTLYUSED
+                RESOURCE_STORAGE_TYPE,
+                RESOURCE_STORAGE_POLICY
             );
         }
 
@@ -81,32 +119,8 @@ namespace ajsdoc {
          */
         protected _initAsync(): void {
 
-            // default state of the component
-            this.setState({
-                ajsDocLayout: {
-                    ajsDocHeader: {},
-                    ajsDocMenu: {},
-                    ajsDocNavBar: {},
-                    ajsDocFooter: {}
-                }
-            });
-
-            // load the data
-            // #TODO: move this to DocModel
-            let resource: ajs.resources.IResource;
-            resource = ajs.Framework.resourceManager.getCachedResource(
-                "/static/program.json", RESOURCE_STORAGE_TYPE
-            );
-
-            if (resource === undefined || resource === null) {
-                throw new Error("Documentation definition not loaded");
-            }
-
-            // construct the DocModel object
-            this._docModel = new DocModel(resource.data);
-
-            // load the highlighting CSS file
-            resource = ajs.Framework.resourceManager.getCachedResource(
+            // !!!!!!!!!!!!!!!!!!!!!!!! MOVE THIS TO STYLESHEET MANAGER !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            let resource: ajs.resources.IResource = ajs.Framework.resourceManager.getCachedResource(
                 "/res/css/hljsvs.css", RESOURCE_STORAGE_TYPE
             );
 
@@ -119,16 +133,35 @@ namespace ajsdoc {
             style.setAttribute("type", "text/css");
             style.innerHTML = resource.data;
             document.head.appendChild(style);
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-            // perform initial state update (so set state through layout, not separate compoents)
-            this._updateView(true);
+            // default state of the layout component
+            this.setState({
+                ajsDocLayout: {
+                    ajsDocHeader: {},
+                    ajsDocMenu: {},
+                    ajsDocArticle: {},
+                    ajsDocNavBar: {},
+                    ajsDocFooter: {}
+                }
+            });
+
+            // initialization finished
+            this._initialized = true;
+
+            // initiate loading of the data for the current path
+            this._navigated();
         }
 
         /**
-         * Unregisters the component from notifiers
+         * Unsubscribe event listeners and frees models
          */
         protected _finalize(): void {
             this._ajsView.navigationNotifier.unsubscribe(this._navigatedListener);
+            this._progModel.dataReadyNotifier.unsubscribe(this._programDataReady);
+            this._contentModel.dataReadyNotifier.unsubscribe(this._contentDataReady);
+            ajs.Framework.modelManager.freeModelInstance(ProgramModel);
+            ajs.Framework.modelManager.freeModelInstance(ContentModel);
         }
 
         /**
@@ -140,51 +173,64 @@ namespace ajsdoc {
         }
 
         /**
-         * Updates the view based on the navigation path
+         * Called when the ProgramModel asynchronously prepares the state to be set
+         * @param data State to be set. Can be a menuState, navBarState or a contentState
+         */
+        protected _processProgramData(data: IProgramDataReadyData): void {
+
+            if (data.menuState) {
+                this.ajsDocLayout.ajsDocMenu.setState(data.menuState);
+            }
+
+            if (data.navBarState) {
+                let navBarState: any = {
+                    items: data.navBarState
+                };
+                this.ajsDocLayout.ajsDocNavBar.setState(navBarState);
+            }
+
+            if (data.articleState) {
+                let articleState: IAjsDocArticleStateSet = this._prepareArticleState(data.articleState as INode);
+                this.ajsDocLayout.ajsDocArticle.clearState(false);
+                this.ajsDocLayout.ajsDocArticle.setState(articleState);
+            }
+
+
+        }
+
+        /**
+         * Called when the ContentModel asynchronously prepares the state to be set
+         * @param data State to be set. Can be a menuState or a contentState
+         */
+        protected _processContentData(data: IContentDataReadyData): void {
+
+            if (data.menuState) {
+                this.ajsDocLayout.ajsDocMenu.setState(data.menuState);
+            }
+
+            if (data.articleState) {
+                /*let articleState: IAjsDocArticleStateSet = this._prepareArticleState(data.articleState);
+                this.ajsDocLayout.ajsDocArticle.clearState(false);
+                this.ajsDocLayout.ajsDocArticle.setState(articleState);*/
+            }
+
+        }
+
+
+        /**
+         * updates the view based on the navigation path
          * @param updateLayout Specifies if the full layout render should be performed at once or if separate components should be rendered
          */
         protected _updateView(updateLayout: boolean): void {
 
             let routeInfo: ajs.routing.IRouteInfo = ajs.Framework.router.currentRoute;
 
-            // get menu from model and update the menu view component state
-            let menu: IMenuState = this._docModel.getMenu(routeInfo.path);
+            this._progModel.getMenu(routeInfo.path);
+            this._progModel.getNavBar(routeInfo.path);
+            this._progModel.getContent(routeInfo.path);
 
-            let menuState: any = {
-                parentLabel: menu.parentLabel,
-                parentPath: menu.parentPath,
-                label: menu.label,
-                groups: menu.groups
-            };
-
-            // get navbar from model and update the navbar view component state
-            let navbarItems: INavBarItemsState = this._docModel.getNavBarItems(routeInfo.path);
-
-            let navBarState: any = {
-                items: navbarItems
-            };
-
-            // get content from the model and update the article state
-            let content: INode = this._docModel.getContent(routeInfo.path);
-
-            let articleState: IAjsDocArticleStateSet = this._prepareArticleState(content);
-
-            if (content.kindString !== undefined) {
-                articleState.members = content.children;
-            } else {
-                articleState = {};
-            }
-
-            // update state
-            if (updateLayout) {
-                this.ajsDocLayout.setState({ ajsDocMenu: menuState, ajsDocNavBar: navBarState, ajsDocArticle: articleState });
-            } else {
-                this.ajsDocLayout.ajsDocMenu.setState(menuState);
-                this.ajsDocLayout.ajsDocNavBar.setState(navBarState);
-
-                this.ajsDocLayout.ajsDocArticle.clearState(false);
-                this.ajsDocLayout.ajsDocArticle.setState(articleState);
-            }
+            this._contentModel.getMenu(routeInfo.path);
+            this._contentModel.getContent(routeInfo.path);
 
         }
 
@@ -197,11 +243,16 @@ namespace ajsdoc {
             let hierarchyNode: IHierarchyNode = this._buildHierarchy(node);
 
             let retVal: IAjsDocArticleStateSet = {};
-            retVal.caption = node.kindString + " " + node.name;
-            retVal.description = this._setupHTMLContent(this._getComment(node));
-            if (hierarchyNode) {
-                retVal.hierarchy = hierarchyNode;
+
+            if (node.id !== 0) {
+                retVal.caption = node.kindString + " " + node.name;
+                retVal.description = this._setupHTMLContent(this._getComment(node));
+                if (hierarchyNode) {
+                    retVal.hierarchy = hierarchyNode;
+                }
+                retVal.members = node.children;
             }
+
             return retVal;
         }
 
@@ -228,7 +279,7 @@ namespace ajsdoc {
                             let h: IHierarchyNode = hierarchyNode;
 
                             while (id !== 0) {
-                                node = this._docModel.getItemById(id);
+                                node = this._progModel.getItemById(id);
                                 if (node !== null) {
                                     h.extends = {
                                         path: node.path,
@@ -296,8 +347,11 @@ namespace ajsdoc {
                             let resource: ajs.resources.IResource;
                             resource = ajs.Framework.resourceManager.getCachedResource(
                                 staticResources[j],
-                                ajs.resources.STORAGE_TYPE.LOCAL
+                                RESOURCE_STORAGE_TYPE
                             );
+                            if (resource === null) {
+                                throw new Error("Example resource '" + staticResources[j] + "' not loaded");
+                            }
                             text = text.replace(new RegExp("#example " + example + ".*", "g"),
                                 "<pre class=\"ajsDocExample\"><code class=\"typescript\">" + resource.data + "</pre></code>");
                         }

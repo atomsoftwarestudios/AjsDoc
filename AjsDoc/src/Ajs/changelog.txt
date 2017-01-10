@@ -79,6 +79,7 @@ TODO:
 		   - This is idea now, not designed, how it should work
 	    - Support for render target.
 		   - Currently, only the main window document is supported so it will be hard to integrate to playgrounds
+		- View modifications queuing to prevent async operation fighting
 		- Revert setting of ajs attributes back to object, its faster than manipulating the DOM attributes
 		- CSS style management
 		   - LESS & reuired toolchain

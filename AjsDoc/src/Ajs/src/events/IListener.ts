@@ -18,12 +18,12 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-/**
- * Model View View Component Model namespace
- * asd
- */
-namespace ajs.mvvm.model {
+namespace ajs.events {
 
     "use strict";
+
+    export interface IListener {
+        (sender: any, data?: any): boolean;
+    }
 
 }

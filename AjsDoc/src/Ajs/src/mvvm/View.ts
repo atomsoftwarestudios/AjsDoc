@@ -88,11 +88,11 @@ namespace ajs.mvvm {
         public get appliedStyleSheets(): string[] { return this._appliedStyleSheets; }
 
 
-        protected _navigationNotifier: viewmodel.ComponentEventNotifier;
-        public get navigationNotifier(): viewmodel.ComponentEventNotifier { return this._navigationNotifier; }
+        protected _navigationNotifier: ajs.events.Notifier;
+        public get navigationNotifier(): ajs.events.Notifier { return this._navigationNotifier; }
 
-        protected _renderDoneNotifier: viewmodel.ComponentEventNotifier;
-        public get renderDoneNotifier(): viewmodel.ComponentEventNotifier { return this._renderDoneNotifier; }
+        protected _renderDoneNotifier: ajs.events.Notifier;
+        public get renderDoneNotifier(): ajs.events.Notifier { return this._renderDoneNotifier; }
 
         /**
          * Constructs a view. This constructor is called from the ajs.Framework during initialization
@@ -103,8 +103,8 @@ namespace ajs.mvvm {
          */
         public constructor(templateManager: TemplateManager, viewComponentManager: ViewComponentManager) {
 
-            this._navigationNotifier = new viewmodel.ComponentEventNotifier();
-            this._renderDoneNotifier = new viewmodel.ComponentEventNotifier();
+            this._navigationNotifier = new ajs.events.Notifier();
+            this._renderDoneNotifier = new ajs.events.Notifier();
 
             this._templateManager = templateManager;
             this._viewComponentManager = viewComponentManager;

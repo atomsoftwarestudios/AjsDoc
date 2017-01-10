@@ -30,16 +30,17 @@
     <Content Include="res\img\ajs-logo.png" />
     <Content Include="res\img\atom-logo.png" />
     <Content Include="res\css\hljsvs.css" />
-    <Content Include="static\content\01. Introduction.html" />
-    <Content Include="static\content\02. Design requirements.html" />
-    <Content Include="static\content\98. Special thanks.html" />
-    <Content Include="static\content\99. License.html" />
+    <Content Include="static\content\01 Introduction.html" />
+    <Content Include="static\content\02 Design requirements.html" />
+    <Content Include="static\content\04\05 View components.html" />
+    <Content Include="static\content\98 Special thanks.html" />
+    <Content Include="static\content\99 License.html" />
     <Content Include="static\templates\ajsdoc.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="static\program.json" />
-    <Content Include="static\content\04. How it works.html" />
+    <Content Include="static\content\04 How it works.html" />
     <Content Include="static\toc.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -55,11 +56,13 @@
     <TypeScriptCompile Include="src\AjsDocBrowser.ts" />
     <TypeScriptCompile Include="src\components\AjsDoc.ts" />
     <TypeScriptCompile Include="src\components\AjsDocMember.ts" />
-    <TypeScriptCompile Include="src\models\DocModel.ts" />
+    <TypeScriptCompile Include="src\models\ContentModel.ts" />
+    <TypeScriptCompile Include="src\models\ProgramModel.ts" />
     <TypeScriptCompile Include="src\Exceptions.ts" />
     <TypeScriptCompile Include="src\lib\hljs.ts" />
     <Content Include="static\examples\app_init.ts" />
     <TypeScriptCompile Include="src\states\IAjsDocLayoutState.ts" />
+    <TypeScriptCompile Include="src\states\IContentState.ts" />
     <TypeScriptCompile Include="src\states\IMenuState.ts" />
     <TypeScriptCompile Include="src\states\IMenuItemState.ts" />
     <TypeScriptCompile Include="src\states\IMenuItemGroupState.ts" />

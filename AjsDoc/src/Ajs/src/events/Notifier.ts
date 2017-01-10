@@ -18,36 +18,36 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.mvvm.viewmodel {
+namespace ajs.events {
 
     "use strict";
 
-    export class ComponentEventNotifier {
+    export class Notifier {
 
-        protected _listeners: IComponentEventNotifyListener[];
+        protected _listeners: IListener[];
 
-        public constructor(...listeners: IComponentEventNotifyListener[]) {
+        public constructor(...listeners: IListener[]) {
             this._listeners = [];
             for (let i: number = 0; i < listeners.length; i++) {
                 this._listeners.push(listeners[i]);
             }
         }
 
-        public subscribe(listener: IComponentEventNotifyListener): void {
+        public subscribe(listener: IListener): void {
             if (this._listeners.indexOf(listener) === -1) {
                 this._listeners.push(listener);
             }
         }
 
-        public unsubscribe(listener: IComponentEventNotifyListener): void {
+        public unsubscribe(listener: IListener): void {
             if (this._listeners.indexOf(listener) !== -1) {
                 this._listeners.splice(this._listeners.indexOf(listener));
             }
         }
 
-        public notify(sender: ViewComponent): void {
+        public notify(sender: any, data?: any): void {
             for (let i: number = 0; i < this._listeners.length; i++) {
-                let result: boolean = this._listeners[i](sender);
+                let result: boolean = this._listeners[i](sender, data);
                 if (!result) {
                     return;
                 }

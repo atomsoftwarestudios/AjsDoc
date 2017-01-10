@@ -40,7 +40,7 @@ namespace ajs.resources {
 
             let xhr: IResourceRequest = new XMLHttpRequest() as IResourceRequest;
 
-            xhr.open("GET", requestData.url);
+            xhr.open("GET", encodeURI(requestData.url));
             xhr.resourceRequestData = requestData;
 
             // ie9 does not support loadend event

@@ -62,7 +62,7 @@ namespace ajsdoc {
 
     export class AjsDocArticle extends ajs.mvvm.viewmodel.ViewComponent implements IAjsDocArticleStateSet, IAjsDocArticleStateGet {
 
-        protected _renderedListener: ajs.mvvm.viewmodel.IComponentEventNotifyListener;
+        protected _renderedListener: ajs.events.IListener;
 
         public caption: string;
         public description: string;

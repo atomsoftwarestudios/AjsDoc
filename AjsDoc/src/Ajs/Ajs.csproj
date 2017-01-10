@@ -21,9 +21,7 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\mvvm\model\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <TypeScriptCompile Include="src\!ajs.ts" />
     <TypeScriptCompile Include="src\ajs.Framework.Exceptions.ts" />
@@ -43,16 +41,20 @@
     <TypeScriptCompile Include="src\boot\IResourceLoadingInfo.ts" />
     <TypeScriptCompile Include="src\mvvm\!mvvm.ts" />
     <TypeScriptCompile Include="src\mvvm\Exceptions.ts" />
+    <TypeScriptCompile Include="src\mvvm\model\!model.ts" />
+    <TypeScriptCompile Include="src\mvvm\model\Exceptions.ts" />
+    <TypeScriptCompile Include="src\mvvm\model\IInstancedModelsCollection.ts" />
+    <TypeScriptCompile Include="src\mvvm\model\Model.ts" />
+    <TypeScriptCompile Include="src\mvvm\model\ModelManager.ts" />
     <TypeScriptCompile Include="src\mvvm\View.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\!viewmodel.ts" />
-    <TypeScriptCompile Include="src\mvvm\viewmodel\ComponentEventNotifier.ts" />
+    <TypeScriptCompile Include="src\events\Notifier.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IAttributeProcessor.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IAttributeProcessorCollection.ts" />
-    <TypeScriptCompile Include="src\mvvm\viewmodel\IComponentEventNotifierCollection.ts" />
-    <TypeScriptCompile Include="src\mvvm\viewmodel\IComponentEventNotifyListener.ts" />
+    <TypeScriptCompile Include="src\events\IListener.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IFilteredState.ts" />
-    <TypeScriptCompile Include="src\mvvm\viewmodel\IInstancedViewComponents.ts" />
-    <TypeScriptCompile Include="src\mvvm\viewmodel\IRegisteredViewComponents.ts" />
+    <TypeScriptCompile Include="src\mvvm\viewmodel\IInstancedViewComponentsCollection.ts" />
+    <TypeScriptCompile Include="src\mvvm\viewmodel\IRegisteredViewComponentsCollection.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IViewStateGet.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IViewStateSet.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\ViewComponent.ts" />
