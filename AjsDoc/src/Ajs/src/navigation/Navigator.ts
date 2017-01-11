@@ -27,6 +27,7 @@ namespace ajs.navigation {
     export class Navigator {
 
         protected _lastUrl: string;
+        public get lastUrl(): string { return this._lastUrl; }
 
         protected _router: Router;
         public get router(): Router { return this.router; }

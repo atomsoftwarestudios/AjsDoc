@@ -40,13 +40,13 @@
     <TypeScriptCompile Include="src\boot\IResourceLists.ts" />
     <TypeScriptCompile Include="src\boot\IResourceLoadingInfo.ts" />
     <TypeScriptCompile Include="src\mvvm\!mvvm.ts" />
-    <TypeScriptCompile Include="src\mvvm\Exceptions.ts" />
+    <TypeScriptCompile Include="src\mvvm\view\Exceptions.ts" />
     <TypeScriptCompile Include="src\mvvm\model\!model.ts" />
     <TypeScriptCompile Include="src\mvvm\model\Exceptions.ts" />
     <TypeScriptCompile Include="src\mvvm\model\IInstancedModelsCollection.ts" />
     <TypeScriptCompile Include="src\mvvm\model\Model.ts" />
     <TypeScriptCompile Include="src\mvvm\model\ModelManager.ts" />
-    <TypeScriptCompile Include="src\mvvm\View.ts" />
+    <TypeScriptCompile Include="src\mvvm\view\View.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\!viewmodel.ts" />
     <TypeScriptCompile Include="src\events\Notifier.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\Exceptions.ts" />

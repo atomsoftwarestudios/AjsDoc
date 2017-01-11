@@ -55,6 +55,7 @@
     <TypeScriptCompile Include="src\components\AjsDocArticle.ts" />
     <TypeScriptCompile Include="src\AjsDocBrowser.ts" />
     <TypeScriptCompile Include="src\components\AjsDoc.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocContextSwitcher.ts" />
     <TypeScriptCompile Include="src\components\AjsDocMember.ts" />
     <TypeScriptCompile Include="src\components\AjsDocMenu.ts" />
     <TypeScriptCompile Include="src\models\ContentModel.ts" />

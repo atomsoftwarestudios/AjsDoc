@@ -24,7 +24,7 @@ namespace ajs.routing {
 
     export class Router {
 
-        protected _view: ajs.mvvm.View;
+        protected _view: ajs.mvvm.view.View;
 
         protected _lastURL: string;
         protected _lastViewComponentName: string;
@@ -44,7 +44,7 @@ namespace ajs.routing {
         protected _currentRoute: IRouteInfo;
         public get currentRoute(): IRouteInfo { return this._currentRoute; }
 
-        public constructor(view: ajs.mvvm.View, defaultViewComponentName?: string, exceptionViewComponentName?: string) {
+        public constructor(view: ajs.mvvm.view.View, defaultViewComponentName?: string, exceptionViewComponentName?: string) {
 
             this._view = view;
 

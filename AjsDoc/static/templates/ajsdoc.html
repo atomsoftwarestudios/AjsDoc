@@ -103,7 +103,34 @@
         .ajsDocContentPlaceholder h5 {
             margin: 0; padding: 0;
         }
+
+        /* CONTEXT SWITCHER */
+
+        .ajsDocContextSwitcher {
+            background-color: white;
+            padding: 2px;
+            width: 340px;
+            white-space: nowrap
+        }
         
+        .ajsDocContextSwitcherButton {
+            display: inline-block;
+            width: 50%;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 0.25em;
+            border: none;
+            background-color: transparent;
+            outline: 0;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .ajsDocContextSwitcherButton[selected="true"] {
+            background-color: #EAF4F8;
+        }
+
+
         /* MENU */
 
         .ajsDocMenu {
@@ -234,9 +261,9 @@
         </div>
 
         <div class="ajsDocLayoutMenuContainer">
-            <div style="background-color: white; padding: 2px; width: 340px; white-space: nowrap">
-                <button class="ajsDocLink" style="display: inline-block; width: 50%; text-align: center; box-sizing: border-box; padding: 0.25em; border: none; background-color: #EAF4F8; outline: 0; font-family: inherit; font-size: inherit " href="/">Guide &amp; Examples</button>
-                <button class="ajsDocLink" style="display: inline-block; width: 50%; text-align: center; box-sizing: border-box; padding: 0.25em; border: none; background-color: transparent; outline: 0; font-family: inherit; font-size: inherit" href="/doc/ajs">Reference Guide</button>
+            <div component="AjsDocContextSwitcher" id="ajsDocContextSwitcher" class="ajsDocContextSwitcher">
+                <button class="ajsDocContextSwitcherButton" onclick="onGuidesClick">Guide &amp; Examples</button>
+                <button class="ajsDocContextSwitcherButton" onclick="onReferenceGuideClick">Reference Guide</button>
             </div>
 
             <ajsDocMenu id="ajsDocMenu"></ajsDocMenu>

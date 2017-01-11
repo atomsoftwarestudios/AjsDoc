@@ -28,7 +28,7 @@ namespace ajsdoc {
         protected _fadeoutState: number;
         protected _newWidth: number;
 
-        protected _initialize() {
+        protected _initialize(): void {
             this._fadeoutTimer = -1;
             this._ajsVisualStateTransition = true;
         }

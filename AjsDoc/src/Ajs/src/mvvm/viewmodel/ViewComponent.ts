@@ -24,13 +24,31 @@ namespace ajs.mvvm.viewmodel {
 
     import IVisualComponent = ajs.templating.IVisualComponent;
 
+    export interface IDomEventListenerInfo {
+        /** Indicates if the listener was added to the element */
+        registered: boolean;
+        /** Element in the main document or in the shadow DOM - if in shadow DOM its overwritten by View to document element */
+        element: Element;
+        /** Event type to be registered or registered already */
+        eventType: string;
+        /** Event listener */
+        listener: EventListener;
+    }
+
+    export interface IComponentElement extends Element {
+        ajsComponent?: ViewComponent;
+        ajsOwnerComponent?: ViewComponent;
+        ajsSkipUpdate?: boolean;
+        ajsEventListeners?: IDomEventListenerInfo[];
+    }
+
     export class ViewComponent {
 
         protected _ajsComponentId: number;
         public get ajsComponentId(): number { return this._ajsComponentId; }
 
-        protected _ajsView: View;
-        public get ajsview(): View { return this.ajsview; }
+        protected _ajsView: view.View;
+        public get ajsView(): view.View { return this._ajsView; }
 
         protected _ajsParentComponent: ViewComponent;
         public get ajsParentComponent(): ViewComponent { return this._ajsParentComponent; }
@@ -40,6 +58,9 @@ namespace ajs.mvvm.viewmodel {
 
         protected _ajsStateKeys: string[];
         public get ajsStateKeys(): string[] { return this._ajsStateKeys; }
+
+        protected _domEventListeners: IDomEventListenerInfo[];
+        public get domEventListeners(): IDomEventListenerInfo[] { return this._domEventListeners; }
 
         protected _ajsStateChanged: boolean;
         public get ajsStateChanged(): boolean { return this._ajsStateChanged; }
@@ -59,7 +80,7 @@ namespace ajs.mvvm.viewmodel {
         protected _ajsAttributeProcessors: IAttributeProcessorsCollection;
 
         public constructor(
-            view: View,
+            view: view.View,
             parentComponent: ViewComponent,
             visualComponent: ajs.templating.IVisualComponent,
             state?: IViewStateSet) {
@@ -69,7 +90,7 @@ namespace ajs.mvvm.viewmodel {
 
             // throw exception if the visual component was not assigned
             if (visualComponent === null) {
-                throw new VisualComponentNotRegisteredException(null);
+                throw new ajs.mvvm.view.VisualComponentNotRegisteredException(null);
             }
 
             // initialize properties
@@ -79,6 +100,7 @@ namespace ajs.mvvm.viewmodel {
             this._ajsVisualComponent = visualComponent;
             this._ajsElement = null;
             this._ajsStateKeys = [];
+            this._domEventListeners = [];
 
             this._ajsVisualStateTransition = false;
             this._ajsVisualStateTransitionRunning = false;
@@ -123,6 +145,16 @@ namespace ajs.mvvm.viewmodel {
         }
 
         protected _destroy(): void {
+            // unregister all event listeners
+            for (let i: number = 0; i < this._domEventListeners.length; i++) {
+                if (this._domEventListeners[i].registered) {
+                    this._domEventListeners[i].element.removeEventListener(
+                        this._domEventListeners[i].eventType,
+                        this._domEventListeners[i].listener
+                    )
+                }
+            }
+
             // remove all children components
             this.clearState(false);
 
@@ -182,7 +214,7 @@ namespace ajs.mvvm.viewmodel {
                     this[this._ajsStateKeys[0]]._destroy();
                 }
                 if (this[this._ajsStateKeys[0]] instanceof Array) {
-                    for (let i = 0; i < this[this._ajsStateKeys[0]].length; i++) {
+                    for (let i: number = 0; i < this[this._ajsStateKeys[0]].length; i++) {
                         if (this[this._ajsStateKeys[0]][i] instanceof ViewComponent) {
                             this[this._ajsStateKeys[0]][i]._destroy();
                         }
@@ -196,6 +228,16 @@ namespace ajs.mvvm.viewmodel {
                 this._ajsStateChanged = true;
                 this._ajsView._stateChangeEnd(this);
             }
+        }
+
+        public getDomEventListeners(element: Element) {
+            let listeners: IDomEventListenerInfo[] = [];
+            for (let i: number = 0; i < this._domEventListeners.length; i++) {
+                if (this._domEventListeners[i].element === element) {
+                    listeners.push(this._domEventListeners[i]);
+                }
+            }
+            return listeners;
         }
 
         /**
@@ -418,7 +460,7 @@ namespace ajs.mvvm.viewmodel {
             visualComponent = this._ajsView.templateManager.getVisualComponent(name);
 
             if (visualComponent === null) {
-                throw new VisualComponentNotRegisteredException(name);
+                throw new ajs.mvvm.view.VisualComponentNotRegisteredException(name);
             }
 
             return new viewComponentConstructor(this._ajsView, this, visualComponent, state);
@@ -441,17 +483,24 @@ namespace ajs.mvvm.viewmodel {
             this._ajsStateChanged = false;
 
             // if the render was not just because of reseting the state change flag
-            // set view component attributes and return the view component
+            // set view component data and return the view component
             if (!clearStateChangeOnly) {
                 if (node instanceof HTMLElement) {
 
-                    let componentName: string = this._ajsVisualComponent.component.getAttribute("name");
-
-                    (node as HTMLElement).setAttribute("ajscid", this._ajsComponentId.toString());
-                    (node as HTMLElement).setAttribute("ajscname", componentName);
+                    let componentElement: IComponentElement = node as Element;
+                    componentElement.ajsComponent = this;
+                    componentElement.ajsOwnerComponent = this;
 
                     if (!usingShadowDom) {
                         this._ajsElement = node as HTMLElement;
+
+                        for (let i: number = 0; i < this._domEventListeners.length; i++) {
+                            this._domEventListeners[i].element.addEventListener(
+                                this._domEventListeners[i].eventType,
+                                this._domEventListeners[i].listener
+                            )
+                            this._domEventListeners[i].registered = true;
+                        }
                     }
 
                     return node;
@@ -503,13 +552,13 @@ namespace ajs.mvvm.viewmodel {
                 }
 
                 // check if the node is root node of the view component and if the component and its
-                // children components didn't change, just render it with skip attribute and don't render
+                // children components didn't change, just render it with skip flag and don't render
                 // children tags
 
                 let skip: boolean = sourceNode === this._ajsVisualComponent.component && !this._ajsStateChanged;
 
                 if (addedNode !== null && skip) {
-                    (addedNode as HTMLElement).setAttribute("ajsskip", "true");
+                    (addedNode as IComponentElement).ajsSkipUpdate = true;
                 }
 
                 // if the node was added, go through all its children
@@ -542,7 +591,7 @@ namespace ajs.mvvm.viewmodel {
             let processedNode: Node = this._processNode(adoptedNode);
             if (processedNode && processedNode !== null) {
                 if (processedNode instanceof HTMLElement) {
-                    (processedNode as HTMLElement).setAttribute("ajscid", this._ajsComponentId.toString());
+                    (processedNode as IComponentElement).ajsOwnerComponent = this;
                 }
                 targetNode.appendChild(processedNode);
             }
@@ -667,11 +716,26 @@ namespace ajs.mvvm.viewmodel {
         protected _attrEventHandler(toRemove: string[], attr: Attr): boolean {
             toRemove.push(attr.nodeName);
             if (this[attr.nodeValue] !== undefined && typeof this[attr.nodeValue] === "function") {
+
                 let eventType: string = attr.nodeName.substring(2);
                 let eventHandlerName: string = attr.nodeValue;
-                attr.ownerElement.addEventListener(eventType, (e: Event) => {
-                    this[eventHandlerName](e);
-                });
+
+                let domEventListenerInfo: IDomEventListenerInfo = {
+                    registered: false,
+                    element: attr.ownerElement,
+                    eventType: eventType,
+                    listener: (e: Event): void => {
+                        this[eventHandlerName](e);
+                    }
+                };
+
+                this._domEventListeners.push(domEventListenerInfo);
+
+                let componentElement: IComponentElement = attr.ownerElement as IComponentElement;
+                if (!(componentElement.ajsEventListeners instanceof Array)) {
+                    componentElement.ajsEventListeners = [];
+                }
+                componentElement.ajsEventListeners.push(domEventListenerInfo);
             }
             return true;
         }
@@ -691,7 +755,7 @@ namespace ajs.mvvm.viewmodel {
             visualComponent = this._ajsView.templateManager.getVisualComponent(viewComponentName);
 
             if (visualComponent === null) {
-                throw new VisualComponentNotRegisteredException(viewComponentName);
+                throw new ajs.mvvm.view.VisualComponentNotRegisteredException(viewComponentName);
             }
 
             this._visualComponentInsertChild(placeholder, viewComponentName, id, index);

@@ -18,7 +18,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.mvvm {
+namespace ajs.mvvm.view {
 
     "use strict";
 
@@ -61,16 +61,16 @@ namespace ajs.mvvm {
         public set rootViewComponentName(value: string) { this._rootUpdated(value); }
 
         /** Root view component currently in use */
-        protected _rootViewComponent: viewmodel.ViewComponent;
+        protected _rootViewComponent: ajs.mvvm.viewmodel.ViewComponent;
         /** Returns root view component currently in use */
-        public get rootViewComponent(): viewmodel.ViewComponent { return this._rootViewComponent; }
+        public get rootViewComponent(): ajs.mvvm.viewmodel.ViewComponent { return this._rootViewComponent; }
 
         /** Specifies the root component for the current state change. 
          *  This component is then rendered (including its children) if neccessary
          */
-        protected _changeRootComponent: viewmodel.ViewComponent;
+        protected _changeRootComponent: ajs.mvvm.viewmodel.ViewComponent;
         /** Returns the current change root component. Valid when the stage change is in progress only */
-        public get changeRootComponent(): viewmodel.ViewComponent { return this._changeRootComponent; }
+        public get changeRootComponent(): ajs.mvvm.viewmodel.ViewComponent { return this._changeRootComponent; }
 
         /** Used for shadow rendering of the view component after the state change and it for comparing changes against the target DOM */
         protected _shadowDom: Document;
@@ -134,9 +134,9 @@ namespace ajs.mvvm {
             this.render(this._rootViewComponent);
         }
 
-        protected _createViewComponent(name: string): viewmodel.ViewComponent {
+        protected _createViewComponent(name: string): ajs.mvvm.viewmodel.ViewComponent {
 
-            let viewComponentConstructor: typeof viewmodel.ViewComponent;
+            let viewComponentConstructor: typeof ajs.mvvm.viewmodel.ViewComponent;
             viewComponentConstructor = this._viewComponentManager.getComponentConstructorByName(name);
 
             if (viewComponentConstructor === null) {
@@ -188,13 +188,13 @@ namespace ajs.mvvm {
             this._navigationNotifier.notify(null);
         }
 
-        public _stateChangeBegin(viewComponent: viewmodel.ViewComponent): void {
+        public _stateChangeBegin(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
             if (this._changeRootComponent === null) {
                 this._changeRootComponent = viewComponent;
             }
         }
 
-        public _stateChangeEnd(viewComponent: viewmodel.ViewComponent): void {
+        public _stateChangeEnd(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
             if (this._changeRootComponent === viewComponent) {
                 // render only if the root view component was rendered already
                 // initial rendering of the root component is ensured from the _rootUpdated method
@@ -206,7 +206,7 @@ namespace ajs.mvvm {
             }
         }
 
-        public notifyParentsChildrenStateChange(viewComponent: viewmodel.ViewComponent): void {
+        public notifyParentsChildrenStateChange(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
             if (viewComponent !== null && this._changeRootComponent !== null) {
                 while (viewComponent !== this._changeRootComponent.ajsParentComponent && viewComponent !== null) {
                     viewComponent.ajsSetStateChanged();
@@ -215,7 +215,7 @@ namespace ajs.mvvm {
             }
         }
 
-        public render(viewComponent: viewmodel.ViewComponent): void {
+        public render(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
 
             if (viewComponent.ajsElement !== null) {
 
@@ -247,15 +247,16 @@ namespace ajs.mvvm {
         }
 
         protected _isComponent(node: Node): boolean {
-            if (node !== undefined && node !== null) {
-                return node instanceof HTMLElement && node.hasAttribute("ajscname");
+            if (node !== undefined && node !== null && node instanceof Element) {
+                let componentElement: ajs.mvvm.viewmodel.IComponentElement = (node as ajs.mvvm.viewmodel.IComponentElement);
+                return componentElement.hasOwnProperty("ajsComponent") && componentElement.ajsComponent instanceof ajs.mvvm.viewmodel.ViewComponent;
             }
             return false;
         }
 
         protected _getComponentId(node: Node): number {
             if (this._isComponent(node)) {
-                return Number((node as HTMLElement).getAttribute("ajscid"));
+                return Number((node as ajs.mvvm.viewmodel.IComponentElement).ajsComponent.ajsComponentId);
             }
             return -1;
         }
@@ -289,12 +290,22 @@ namespace ajs.mvvm {
                     if (!componentFound) {
                         let clonedNode: Node = source.cloneNode(false);
                         let adoptedNode: Node = target.ownerDocument.adoptNode(clonedNode);
+                        this._copyComponentElementProperties(source, adoptedNode);
                         target.parentNode.insertBefore(adoptedNode, target);
-                        // if the node is component, update the component element
+                        // if the node is component update the component element
                         if (this._isComponent(source)) {
                             let id: number = this._getComponentId(source);
-                            let component: viewmodel.ViewComponent = this._viewComponentManager.getComponentInstance(id);
+                            let component: ajs.mvvm.viewmodel.ViewComponent = this._viewComponentManager.getComponentInstance(id);
                             component.ajsElement = adoptedNode as HTMLElement;
+
+                        }
+                        // if any register defined event listeners
+                        if ((source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners instanceof Array) {
+                            for (let i: number = 0; i < (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners.length; i++) {
+                                adoptedNode.addEventListener(
+                                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners[i].eventType,
+                                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners[i].listener);
+                            }
                         }
                         this._updateDom(source, adoptedNode);
                     }
@@ -315,12 +326,21 @@ namespace ajs.mvvm {
                                 // add node and continue with its tree
                                 let clonedNode: Node = source.childNodes.item(i).cloneNode(false);
                                 let adoptedNode: Node = target.ownerDocument.adoptNode(clonedNode);
+                                this._copyComponentElementProperties(source, adoptedNode);
                                 target.appendChild(adoptedNode);
-                                // if the node is component, update the component element
+                                // if the node is component, update the component element and register defined event listeners
                                 if (this._isComponent(source.childNodes.item(i))) {
                                     let id: number = this._getComponentId(source.childNodes.item(i));
-                                    let component: viewmodel.ViewComponent = ajs.Framework.viewComponentManager.getComponentInstance(id);
+                                    let component: ajs.mvvm.viewmodel.ViewComponent = ajs.Framework.viewComponentManager.getComponentInstance(id);
                                     component.ajsElement = adoptedNode as HTMLElement;
+                                }
+                                // if any register defined event listeners
+                                if ((source.childNodes.item(i) as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners instanceof Array) {
+                                    for (let i: number = 0; i < (source.childNodes.item(i) as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners.length; i++) {
+                                        adoptedNode.addEventListener(
+                                            (source.childNodes.item(i) as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners[i].eventType,
+                                            (source.childNodes.item(i) as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners[i].listener);
+                                    }
                                 }
 
                                 this._updateDom(source.childNodes.item(i), adoptedNode);
@@ -344,13 +364,21 @@ namespace ajs.mvvm {
 
         }
 
+        protected _copyComponentElementProperties(source: Node, target: Node): void {
+            if (source instanceof Element && target instanceof Element) {
+                (target as ajs.mvvm.viewmodel.IComponentElement).ajsComponent = (source as ajs.mvvm.viewmodel.IComponentElement).ajsComponent;
+                (target as ajs.mvvm.viewmodel.IComponentElement).ajsOwnerComponent = (source as ajs.mvvm.viewmodel.IComponentElement).ajsOwnerComponent;
+                (target as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners = (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners;
+            }
+        }
+
         protected _updateNode(source: Node, target: Node): boolean {
 
             if (source.nodeType === Node.ELEMENT_NODE) {
 
                 // check if the node is view component, is the same as the target and should be skipped
-                if (this._isComponent(source) && (source as HTMLElement).hasAttribute("ajsSkip")
-                    && this._isComponent(target) && this._getComponentId(source) === this._getComponentId(target)) {
+                if (this._isComponent(source) && (source as viewmodel.IComponentElement).ajsSkipUpdate === true &&
+                    this._isComponent(target) && this._getComponentId(source) === this._getComponentId(target)) {
                     return false;
                 }
 

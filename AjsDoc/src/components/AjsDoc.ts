@@ -68,6 +68,18 @@ namespace ajsdoc {
 
             this._initialized = false;
 
+            // set default state
+            this._applyState({
+                ajsDocLayout: {
+                    ajsDocHeader: {},
+                    ajsDocContextSwitcher: {},
+                    ajsDocMenu: {},
+                    ajsDocArticle: {},
+                    ajsDocNavBar: {},
+                    ajsDocFooter: {}
+                }
+            });
+
             // create models
             this._progModel = ajs.Framework.modelManager.getModelInstance(ProgramModel) as ProgramModel;
             this._contentModel = ajs.Framework.modelManager.getModelInstance(ContentModel) as ContentModel;
@@ -134,17 +146,6 @@ namespace ajsdoc {
             style.innerHTML = resource.data;
             document.head.appendChild(style);
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            // default state of the layout component
-            this.setState({
-                ajsDocLayout: {
-                    ajsDocHeader: {},
-                    ajsDocMenu: {},
-                    ajsDocArticle: {},
-                    ajsDocNavBar: {},
-                    ajsDocFooter: {}
-                }
-            });
 
             // initialization finished
             this._initialized = true;
