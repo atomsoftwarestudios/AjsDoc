@@ -49,6 +49,7 @@
     <TypeScriptCompile Include="src\mvvm\View.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\!viewmodel.ts" />
     <TypeScriptCompile Include="src\events\Notifier.ts" />
+    <TypeScriptCompile Include="src\mvvm\viewmodel\Exceptions.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IAttributeProcessor.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IAttributeProcessorCollection.ts" />
     <TypeScriptCompile Include="src\events\IListener.ts" />

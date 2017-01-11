@@ -18,13 +18,13 @@
         }
 
         .ajsDocLink:hover {
-            color: darkblue;
+            color: #16355D;
         }
 
         /* PAGE LAYOUT */
 
         .ajsDocLayoutHeaderContainer {
-            border-bottom: solid 1px #EEEEEE;
+            border-bottom: solid 1px #EAF4F8;
             margin: 3px;
             padding: 3px;
         }
@@ -42,20 +42,20 @@
             display: table-cell;
             width: 100%;
             vertical-align: top;
-            border-left: 1px solid #EEEEEE;
+            border-left: 1px solid #EAF4F8;
         }
 
         .ajsDocLayoutPageNavContainer {
             display: table-cell;
             vertical-align: top;
             padding: 3px;
-            border-left: 1px solid #EEEEEE;
+            border-left: 1px solid #EAF4F8;
         }
 
         /* NAVBAR */
 
         .ajsDocNavBar {
-            border-bottom: solid 1px #EEEEEE;
+            border-bottom: solid 1px #EAF4F8;
             margin: 0 3px 0 3px;
             padding-bottom: 3px;
         }
@@ -84,7 +84,7 @@
             text-align: center;
             font-size: 0.75em;
 
-            border-top: solid 1px #EEEEEE;
+            border-top: solid 1px #EAF4F8;
         }
 
         /* CONTENT */
@@ -96,7 +96,7 @@
         }
 
         .ajsDocContentPlaceholder pre {
-            border: solid 1px #EEEEEE;
+            border: solid 1px #EAF4F8;
             margin: 0;
         }
 
@@ -106,10 +106,19 @@
         
         /* MENU */
 
+        .ajsDocMenu {
+            background-color: #FEFEFE;
+            white-space: nowrap;
+            width: 350px;
+            overflow: hidden;
+        }
+
         .ajsDocMenuLabel {
-            font-weight: bold;
-            background-color: #EEEEEE;
-            text-align: center;
+            padding: 0.25em;
+            margin: 0.1em;
+            background-color: #EAF4F8;
+            border: solid 1px #EAF4F8;
+            text-align: center
         }
 
         .ajsDocMenuParent {
@@ -122,21 +131,41 @@
         .ajsDocMenuItemGroup {
             list-style: none;
             margin: 0;
-            padding: 0 0 0 1em;
+            padding: 0;
         }
 
         .ajsDocMenuItemGroupLabel {
             font-style: italic;
             font-weight: bold;
+            padding: 0.25em;
+            padding-left: 0;
         }
 
         .ajsDocMenuItem {
             list-style: none;
-            padding: 1px;
+        }
+
+        .ajsDocMenuItemLink {
+            display: block;
+            padding: 0.25em;
+            padding-left: 1em;
+        }
+
+        .ajsDocMenuItemLink:hover {
+            background-color: #EAF4F8;
+        }
+
+        .ajsDocMenuItemLinkParent {
+            display: block;
+            padding: 0.25em;
+        }
+
+        .ajsDocMenuItemLinkParent:hover {
+            background-color: #EAF4F8;
         }
 
         .ajsDocMenuItem[ajsselected="true"] a {
-            color: darkblue;
+            color: #16355D;
             font-weight: bold;
         }
 
@@ -148,7 +177,7 @@
         }
 
         .ajsDocExample {
-            border: solid 1px #EEEEEE;
+            border: solid 1px #EAF4F8;
             background-color: #FEFEFE;
         }
 
@@ -159,7 +188,7 @@
         }
 
         .ajsDocMember:hover, .ajsDocMember:hover .ajsDocStatement {
-            background-color: #EEEEEE;
+            background-color: #EAF4F8;
         }
 
 
@@ -182,7 +211,7 @@
             <div>
                 <h3 class="ajsDocHeaderLabel" style="display: inline; margin: 0; padding: 0">AJS Framework</h3>
                 <br />
-                Reference Guide
+                Developer's Guide
             </div>
         </div>
     </component>
@@ -205,6 +234,11 @@
         </div>
 
         <div class="ajsDocLayoutMenuContainer">
+            <div style="background-color: white; padding: 2px; width: 340px; white-space: nowrap">
+                <button class="ajsDocLink" style="display: inline-block; width: 50%; text-align: center; box-sizing: border-box; padding: 0.25em; border: none; background-color: #EAF4F8; outline: 0; font-family: inherit; font-size: inherit " href="/">Guide &amp; Examples</button>
+                <button class="ajsDocLink" style="display: inline-block; width: 50%; text-align: center; box-sizing: border-box; padding: 0.25em; border: none; background-color: transparent; outline: 0; font-family: inherit; font-size: inherit" href="/doc/ajs">Reference Guide</button>
+            </div>
+
             <ajsDocMenu id="ajsDocMenu"></ajsDocMenu>
         </div>
 
@@ -229,7 +263,7 @@
     <!-- NAV BAR COMPONENTS -->
 
     <component name="ajsDocNavBar">
-        <div class="ajsDocNavBar">
+        <div class="ajsDocNavBar" if="this.items">
             <span component="ajsDocNavBarItem" id="items">
                 <span if="!this.firstItem"> > </span>
                 <a class="ajsDocLink" href="/doc{itemPath}" style="white-space: nowrap">{itemType} {itemLabel}</a>
@@ -243,28 +277,29 @@
 
     <!-- MENU COMPONENTS -->
 
+    <div component="ajsDocMenu" class="ajsDocMenu">
 
-    <component name="ajsDocMenu">
-        <div class="ajsDocMenuLabel">{label}</div>
+        <div class="ajsDocMenuLabel">
+            {label}
+        </div>
 
         <div>
-            <a class="ajsDocLink" if="this.parentPath !== undefined && this.parentPath !== ''" href="/doc{parentPath}">...</a>
+            <a class="ajsDocLink ajsDocMenuItemLinkParent" if="this.parentPath !== undefined && this.parentPath !== ''" href="/doc{parentPath}">...</a>
             <span if="this.parentPath === undefined || this.parentPath === ''">{parentLabel}</span>
         </div>
 
         <component name="ajsDocMenuGroup" id="groups">
 
-            <span class="ajsDocMenuItemGroupLabel">{label}</span>
-            
+            <div class="ajsDocMenuItemGroupLabel" style="border-bottom: solid 1px #EAF4F8">{label}</div>
+
             <ul class="ajsDocMenuItemGroup">
-                <li component="ajsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}">
-                    <a class="ajsDocLink" href="/doc{path}">{label}</a>
+                <li component="ajsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}" style="border-bottom: solid 1px #EAF4F8">
+                    <a class="ajsDocLink ajsDocMenuItemLink" href="/doc{path}">{label}</a>
                 </li>
             </ul>
 
         </component>
-
-    </component>
+    </div>
 
     <!-- MENU COMPONENTS -->
 
@@ -272,25 +307,25 @@
 
     <!-- CODE TEMPLATES -->
 
-    <span component="ajsDataType">: <span class="hljs-built_in" if="this.name !==''">{name}</span><span class="hljs-built_in" if="this.name ===''">any</span></span>
+    <span component="ajsDocMemberDataType">: <span class="hljs-built_in" if="this.name !==''">{name}</span><span class="hljs-built_in" if="this.name ===''">any</span></span>
 
-    <component name="ajsDocFunctionParams"><!--
+    <component name="ajsDocMemberFunctionParams"><!--
         -->{name}<!--
         --><span if="this.flags.isOptional">?</span><!--
         --><span><!--
-            --><ajsDataType id="type"></ajsDataType><!--
+            --><ajsDocMemberDataType id="type"></ajsDocMemberDataType><!--
         --></span><!--
         --><span if="!this.isLast">, </span><!--
     --></component>
 
-    <component class="hljs-built_in" name="ajsDocExtends">{name}<span if="!this.isLast">, </span></component>
+    <component class="hljs-built_in" name="ajsDocMemberExtends">{name}<span if="!this.isLast">, </span></component>
 
-    <component name="ajsDocImplements">{name}<span if="!this.isLast">, </span></component>
+    <component name="ajsDocMemberImplements">{name}<span if="!this.isLast">, </span></component>
 
     <div component="ajsDocMember" class="ajsDocMember">
 
         <a class="ajsDocLink" href="/doc/{path}">
-            <div class="ajsDocStatement ">
+            <div class="ajsDocMemberStatement ">
                 <code>
                     <span class="hljs-keyword" if="this.exported">export</span>
                     <span class="hljs-keyword" if="this.isPublic">public</span>
@@ -299,14 +334,14 @@
                     <span class="hljs-keyword" if="this.flags.isStatic">static</span>
                     <span class="hljs-keyword" if="this.kindString !== 'property' && this.kindString !== 'method' && this.kindString !== 'variable'">{kindString}</span>
                     {name}<!--
-                    --><span class="hljs-keyword" if="this.extendedTypes"> extends <ajsDocExtends id="extendedTypes"></ajsDocExtends></span><!--
-                    --><span class="hljs-keyword" if="this.implementedTypes"> implements <ajsDocExtends id="implementedTypes"></ajsDocExtends></span><!--
+                    --><span class="hljs-keyword" if="this.extendedTypes"> extends <ajsDocMemberExtends id="extendedTypes"></ajsDocMemberExtends></span><!--
+                    --><span class="hljs-keyword" if="this.implementedTypes"> implements <ajsDocMemberImplements id="implementedTypes"></ajsDocMemberImplements></span><!--
                     --><span if="this.parameters"><!--
                         -->(<!--
-                        --><span if="this.parameters !== null && this.parameters.length > 0"><ajsDocFunctionParams id="parameters"></ajsDocFunctionParams></span><!--
+                        --><span if="this.parameters !== null && this.parameters.length > 0"><ajsDocMemberFunctionParams id="parameters"></ajsDocMemberFunctionParams></span><!--
                         -->)<!--
                     --></span><!--
-                    --><ajsDataType class="hljs-built_in" id="type"></ajsDataType>
+                    --><ajsDocMemberDataType class="hljs-built_in" id="type"></ajsDocMemberDataType>
                     <!--{body}-->
                 </code>
             </div>
@@ -314,7 +349,7 @@
                 <span if="!this.comment || !this.comment.shortText || this.comment.shortText.trim() === ''">
                     <strong>!!! DOCUMENTATION IS MISSING !!!</strong>
                 </span>
-                <span component="ajsDocDescription" id="comment">
+                <span component="ajsDocMemberDescription" id="comment">
                     <span if="this.shortText !== ''">{shortText}</span>
                 </span>
             </div>
@@ -332,14 +367,22 @@
             <h2 class="ajsDocArticleCaption">{caption}</h2>
 
             <div if="this.hasHierarchy">
-                <h3 class="ajsDocHierarchy">Hierarchy</h3>
-                <div style="display: inline-block;">
+                <h3>Hierarchy</h3>
+                <div style="border: solid 1px #EAF4F8; background-color: #FEFEFE; padding: 0.5em; padding-left: 0">
                     <ul component="ajsDocHierarchy" id="hierarchy" style="text-decoration: none; list-style: none; margin: 0; padding-left: 1em">
                         <li><a class="ajsDocLink" href="/doc{path}">{name}</a></li>
                         <ajsDocHierarchy id="extends"></ajsDocHierarchy>
                     </ul>
                 </div>
             </div>
+
+            <div if="this.implements">
+                <h3>Implements</h3>
+                <div style="border: solid 1px #EAF4F8; background-color: #FEFEFE; padding: 0.5em">
+                    <div component="ajsDocImplements" id="implements"><a class="ajsDocLink" href="/doc{path}">{name}</a></div>
+                </div>
+            </div>
+
 
             <p>{description}</p>
 

@@ -50,6 +50,12 @@ namespace ajs.mvvm.viewmodel {
         public get ajsElement(): HTMLElement { return this._ajsElement; }
         public set ajsElement(element: HTMLElement) { this._ajsElement = element; };
 
+        protected _ajsVisualStateTransition: boolean;
+        protected _ajsVisualStateTransitionRunning: boolean;
+        protected _ajsTransitionOldElement: HTMLElement;
+        protected _ajsTransitionNewElement: HTMLElement;
+        public get ajsVisualStateTransition(): boolean { return this._ajsVisualStateTransition; }
+
         protected _ajsAttributeProcessors: IAttributeProcessorsCollection;
 
         public constructor(
@@ -73,6 +79,9 @@ namespace ajs.mvvm.viewmodel {
             this._ajsVisualComponent = visualComponent;
             this._ajsElement = null;
             this._ajsStateKeys = [];
+
+            this._ajsVisualStateTransition = false;
+            this._ajsVisualStateTransitionRunning = false;
 
             // register instance to the ViewComponentManager for simple lookups
             ajs.Framework.viewComponentManager.registerComponentInstance(this);
@@ -139,6 +148,21 @@ namespace ajs.mvvm.viewmodel {
         }
 
         public setState(state: IViewStateSet): void {
+
+            if (this._ajsVisualStateTransition) {
+                if (this._ajsElement instanceof HTMLElement &&
+                    this._childElementExists(this._ajsElement.parentElement, this._ajsElement)) {
+
+                    if (this._ajsVisualStateTransitionRunning) {
+                        this._ajsVisualStateTransitionCancel();
+                    }
+
+                    this._ajsTransitionOldElement = this._ajsElement.cloneNode(true) as HTMLElement;
+                } else {
+                    this._ajsTransitionOldElement = null;
+                }
+            }
+
             this._ajsView._stateChangeBegin(this);
             this._applyState(state);
             this._ajsView._stateChangeEnd(this);
@@ -404,6 +428,7 @@ namespace ajs.mvvm.viewmodel {
          * render the ViewComponent to the target element (appenChild is used to add the element)
          * @param parentElement element to be used as a parent for the component
          * @param usingShadowDom information if the render is performed to the main DOM or shadow DOM
+         * @param clearStateChangeOnly informs renderer that rendering should not be done, just state changed flag should be cleared
          */
         public render(parentElement: HTMLElement, usingShadowDom: boolean, clearStateChangeOnly: boolean): HTMLElement {
 
@@ -731,6 +756,38 @@ namespace ajs.mvvm.viewmodel {
                 }
 
             }
+        }
+
+        public ajsVisualStateTransitionBegin(newElement: HTMLElement): void {
+
+            this._ajsVisualStateTransitionRunning = true;
+
+            this._ajsTransitionNewElement = newElement;
+
+        }
+
+        protected _ajsVisualStateTransitionCancel(): void {
+            throw new NotImplementedException();
+        }
+
+        protected _visualStateTransitionEnd(): void {
+            if (this._ajsTransitionOldElement instanceof HTMLElement &&
+                this._childElementExists(this._ajsTransitionOldElement.parentElement, this._ajsTransitionOldElement)) {
+
+                this._ajsTransitionOldElement.parentNode.removeChild(this._ajsTransitionOldElement);
+            }
+            this._ajsVisualStateTransitionRunning = false;
+        }
+
+        protected _childElementExists(parent: HTMLElement, child: HTMLElement): boolean {
+            if (parent instanceof HTMLElement) {
+                for (let i: number = 0; i < parent.childNodes.length; i++) {
+                    if (parent.childNodes.item(i) === child) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
     }

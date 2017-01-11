@@ -56,6 +56,7 @@
     <TypeScriptCompile Include="src\AjsDocBrowser.ts" />
     <TypeScriptCompile Include="src\components\AjsDoc.ts" />
     <TypeScriptCompile Include="src\components\AjsDocMember.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocMenu.ts" />
     <TypeScriptCompile Include="src\models\ContentModel.ts" />
     <TypeScriptCompile Include="src\models\ProgramModel.ts" />
     <TypeScriptCompile Include="src\Exceptions.ts" />

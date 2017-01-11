@@ -218,12 +218,19 @@ namespace ajs.mvvm {
         public render(viewComponent: viewmodel.ViewComponent): void {
 
             if (viewComponent.ajsElement !== null) {
+
                 // update the render of the component
                 this._shadowDom.body.innerHTML = "";
                 let componentElement: HTMLElement = viewComponent.render(this._shadowDom.body, true, false);
                 // if the component was rendered to shadow DOM, update the main DOM
                 if (componentElement !== null) {
+
                     this._updateDom(componentElement, viewComponent.ajsElement);
+
+                    if (viewComponent.ajsVisualStateTransition) {
+                        viewComponent.ajsVisualStateTransitionBegin(viewComponent.ajsElement);
+                    }
+
                 // otherwise remove the component root element from the DOM
                 } else {
                     viewComponent.ajsElement.parentElement.removeChild(viewComponent.ajsElement);

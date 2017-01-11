@@ -240,7 +240,7 @@ namespace ajsdoc {
          */
         protected _prepareArticleState(node: INode): IAjsDocArticleStateSet {
 
-            let hierarchyNode: IHierarchyNode = this._buildHierarchy(node);
+            let hierarchyNode: IHierarchyNodeState = this._buildHierarchy(node);
 
             let retVal: IAjsDocArticleStateSet = {};
 
@@ -249,6 +249,16 @@ namespace ajsdoc {
                 retVal.description = this._setupHTMLContent(this._getComment(node));
                 if (hierarchyNode) {
                     retVal.hierarchy = hierarchyNode;
+                }
+                if (node.implementedTypes) {
+                    retVal.implements = [];
+                    for (let i: number = 0; i < node.implementedTypes.length; i++) {
+                        retVal.implements.push({
+                            key: node.implementedTypes[i].id.toString(),
+                            name: node.implementedTypes[i].name,
+                            path: this._progModel.getItemById(node.implementedTypes[i].id).path
+                        });
+                    }
                 }
                 retVal.members = node.children;
             }
@@ -260,8 +270,8 @@ namespace ajsdoc {
          * Builds the hierarchy (for classes and interfaces) to be displayed under the article
          * @param node
          */
-        protected _buildHierarchy(node: INode): IHierarchyNode {
-            let hierarchyNode: IHierarchyNode;
+        protected _buildHierarchy(node: INode): IHierarchyNodeState {
+            let hierarchyNode: IHierarchyNodeState;
 
             if (node.kindString === "Class" || node.kindString === "Interface") {
                 if (node.extendedTypes) {
@@ -276,7 +286,7 @@ namespace ajsdoc {
 
                         if (id) {
 
-                            let h: IHierarchyNode = hierarchyNode;
+                            let h: IHierarchyNodeState = hierarchyNode;
 
                             while (id !== 0) {
                                 node = this._progModel.getItemById(id);
