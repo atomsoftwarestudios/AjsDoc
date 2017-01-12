@@ -163,7 +163,7 @@ namespace ajsdoc {
                 // Get path from INode tree
                 let path: string = "";
                 let pathBrowser: INode = state;
-                while (pathBrowser !== null) {
+                while (pathBrowser !== null && pathBrowser.parent !== null) {
                     if (pathBrowser.name) {
                         if (pathBrowser.parent !== null) {
                             path = "/" + path;
@@ -171,6 +171,10 @@ namespace ajsdoc {
                         path = pathBrowser.name + path;
                     }
                     pathBrowser = pathBrowser.parent;
+                }
+
+                if (path !== "" && path[path.length - 1] === "/") {
+                    path = path.substr(0, path.length - 1);
                 }
 
                 newState.path = path;
