@@ -73,8 +73,8 @@ namespace ajsdoc {
             const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
             const anyPath: string = "(\\/.*|.*)";
 
-            ajs.Framework.router.registerRoute([{ base: "^\/doc", params: anyPath + allParamsAndHashes }], "AjsDoc");
-            ajs.Framework.router.registerRoute([{ base: "^\/.*", params: "" }], "AjsDoc");
+            // ajs.Framework.router.registerRoute([{ base: "^\/doc", params: anyPath + allParamsAndHashes }], "AjsDoc");
+            ajs.Framework.router.registerRoute([{ base: ".*", params: "" }], "AjsDoc");
 
             this._initDone();
 

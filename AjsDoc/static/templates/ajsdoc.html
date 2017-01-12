@@ -262,8 +262,8 @@
 
         <div class="ajsDocLayoutMenuContainer">
             <div component="AjsDocContextSwitcher" id="ajsDocContextSwitcher" class="ajsDocContextSwitcher">
-                <button class="ajsDocContextSwitcherButton" onclick="onGuidesClick">Guide &amp; Examples</button>
-                <button class="ajsDocContextSwitcherButton" onclick="onReferenceGuideClick">Reference Guide</button>
+                <button class="ajsDocContextSwitcherButton" selected="{guides}" onmousedown="onGuidesClick">Guide &amp; Examples</button>
+                <button class="ajsDocContextSwitcherButton" selected="{references}" onmousedown="onReferenceGuideClick">Reference Guide</button>
             </div>
 
             <ajsDocMenu id="ajsDocMenu"></ajsDocMenu>
@@ -293,7 +293,7 @@
         <div class="ajsDocNavBar" if="this.items">
             <span component="ajsDocNavBarItem" id="items">
                 <span if="!this.firstItem"> > </span>
-                <a class="ajsDocLink" href="/doc{itemPath}" style="white-space: nowrap">{itemType} {itemLabel}</a>
+                <a class="ajsDocLink" href="/ref{itemPath}" style="white-space: nowrap">{itemType} {itemLabel}</a>
             </span>
         </div>
     </component>
@@ -308,10 +308,11 @@
 
         <div class="ajsDocMenuLabel">
             {label}
+            <span if="!this.label">{defaultLabel}</span>
         </div>
 
         <div>
-            <a class="ajsDocLink ajsDocMenuItemLinkParent" if="this.parentPath !== undefined && this.parentPath !== ''" href="/doc{parentPath}">...</a>
+            <a class="ajsDocLink ajsDocMenuItemLinkParent" if="this.parentPath !== undefined && this.parentPath !== ''" href="/ref{parentPath}">...</a>
             <span if="this.parentPath === undefined || this.parentPath === ''">{parentLabel}</span>
         </div>
 
@@ -321,7 +322,7 @@
 
             <ul class="ajsDocMenuItemGroup">
                 <li component="ajsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}" style="border-bottom: solid 1px #EAF4F8">
-                    <a class="ajsDocLink ajsDocMenuItemLink" href="/doc{path}">{label}</a>
+                    <a class="ajsDocLink ajsDocMenuItemLink" href="/ref{path}">{label}</a>
                 </li>
             </ul>
 
@@ -351,7 +352,7 @@
 
     <div component="ajsDocMember" class="ajsDocMember">
 
-        <a class="ajsDocLink" href="/doc/{path}">
+        <a class="ajsDocLink" href="/ref/{path}">
             <div class="ajsDocMemberStatement ">
                 <code>
                     <span class="hljs-keyword" if="this.exported">export</span>
@@ -397,7 +398,7 @@
                 <h3>Hierarchy</h3>
                 <div style="border: solid 1px #EAF4F8; background-color: #FEFEFE; padding: 0.5em; padding-left: 0">
                     <ul component="ajsDocHierarchy" id="hierarchy" style="text-decoration: none; list-style: none; margin: 0; padding-left: 1em">
-                        <li><a class="ajsDocLink" href="/doc{path}">{name}</a></li>
+                        <li><a class="ajsDocLink" href="/ref{path}">{name}</a></li>
                         <ajsDocHierarchy id="extends"></ajsDocHierarchy>
                     </ul>
                 </div>
@@ -406,7 +407,7 @@
             <div if="this.implements">
                 <h3>Implements</h3>
                 <div style="border: solid 1px #EAF4F8; background-color: #FEFEFE; padding: 0.5em">
-                    <div component="ajsDocImplements" id="implements"><a class="ajsDocLink" href="/doc{path}">{name}</a></div>
+                    <div component="ajsDocImplements" id="implements"><a class="ajsDocLink" href="/ref{path}">{name}</a></div>
                 </div>
             </div>
 

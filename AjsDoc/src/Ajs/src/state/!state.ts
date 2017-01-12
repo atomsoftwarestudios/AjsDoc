@@ -1,6 +1,6 @@
-/* *************************************************************************
+﻿/*! ************************************************************************
 The MIT License (MIT)
-Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
+Copyright (c)2016 Atom Software Studios. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -18,26 +18,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.resources {
+namespace ajs.state {
 
     "use strict";
-
-    /** Function is not implemented (probably must be implemented in derived class */
-    export class NotImplementedException extends Error { }
-
-    /** The required storage type is not supported by the browser */
-    export class StorageTypeNotSupportedException extends Error { }
-
-    /** Storage type requested is not valid */
-    export class InvalidStorageTypeException extends Error { }
-
-    /** If the storage is chosen the caching policy must be set */
-    export class CachePolicyMustBeSetException extends Error { }
-
-    /** Resource was not found in the storage */
-    export class ResourceNotFoundException extends Error { }
-
-    /** Storage is out of space or the resource can't fit the storage */
-    export class NotEnoughSpaceInStorageException extends Error { }
 
 }

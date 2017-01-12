@@ -46,7 +46,7 @@ namespace ajs.resources {
             if (this._supported) {
                 this._storageProvider = window.localStorage;
                 this._usedSpace = 0;
-                this._resources = this._getResourcesInfoFromLocalStorage();
+                this._resources = this._getResourcesInfo();
             }
         }
     }

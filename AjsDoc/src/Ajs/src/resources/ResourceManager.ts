@@ -198,7 +198,7 @@ namespace ajs.resources {
             }
 
             // if resource is expected to be cached, try to load it from cache first
-            resource = this.getCachedResource(url, storageType);
+            resource = this.getResource(url, storageType);
 
             // setup resource info anyway, even if the resource was not in cache or is not a cached resource
             if (resource === null) {
@@ -279,11 +279,11 @@ namespace ajs.resources {
         }
 
         /**
-         * Returns cached resource
+         * Returns a cached resource as IResource type
          * @param url Url of the cached resource
          * @param storageType type of the storage to be used for lookup
          */
-        public getCachedResource(url: string, storageType: STORAGE_TYPE): IResource {
+        public getResource(url: string, storageType: STORAGE_TYPE): IResource {
             let storage: AjsStorage = this._getStorageFromType(storageType);
             if (storage !== null) {
                 let cachedResource: ICachedResource = storage.getResource(url);
@@ -299,8 +299,59 @@ namespace ajs.resources {
                     };
                     return resource;
                 }
+                return null;
             }
-            return null;
+            throw new InvalidStorageTypeException();
+        }
+
+        /**
+         * Returns a cached resource
+         * @param url
+         * @param storageType
+         */
+        public getCachedResource(url: string, storageType: STORAGE_TYPE): ICachedResource {
+            let storage: AjsStorage = this._getStorageFromType(storageType);
+            if (storage !== null) {
+                return storage.getResource(url);
+            } else {
+                throw new InvalidStorageTypeException();
+            }
+        }
+
+        /**
+         * Creates or updates existing cached resource
+         * @param url
+         * @param data
+         * @param storageType
+         * @param cachePolicy
+         */
+        public setCachedResource(url: string, data: any, storageType: STORAGE_TYPE, cachePolicy: CACHE_POLICY): void {
+            let storage: AjsStorage = this._getStorageFromType(storageType);
+            if (storage !== null) {
+                let resource: ICachedResource = {
+                    url: url,
+                    data: data,
+                    cachePolicy: cachePolicy,
+                    lastModified: new Date()
+                };
+                storage.updateResource(resource);
+            } else {
+                throw new InvalidStorageTypeException();
+            }
+        }
+
+        /**
+         * Rmoves existing cached resource
+         * @param resource Resource to be created or updated
+         * @param storageType Type of the storage to be used
+         */
+        public removeCachedResource(url: string, storageType: STORAGE_TYPE): void {
+            let storage: AjsStorage = this._getStorageFromType(storageType);
+            if (storage !== null) {
+                storage.removeResource(url);
+            } else {
+                throw new InvalidStorageTypeException();
+            }
         }
 
         /**

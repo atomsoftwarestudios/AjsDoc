@@ -132,7 +132,7 @@ namespace ajsdoc {
         protected _initAsync(): void {
 
             // !!!!!!!!!!!!!!!!!!!!!!!! MOVE THIS TO STYLESHEET MANAGER !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            let resource: ajs.resources.IResource = ajs.Framework.resourceManager.getCachedResource(
+            let resource: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
                 "/res/css/hljsvs.css", RESOURCE_STORAGE_TYPE
             );
 
@@ -224,14 +224,24 @@ namespace ajsdoc {
          */
         protected _updateView(updateLayout: boolean): void {
 
+            let path: string;
             let routeInfo: ajs.routing.IRouteInfo = ajs.Framework.router.currentRoute;
 
-            this._progModel.getMenu(routeInfo.path);
-            this._progModel.getNavBar(routeInfo.path);
-            this._progModel.getContent(routeInfo.path);
+            if (routeInfo.base.substr(0, 3) === "ref") {
 
-            this._contentModel.getMenu(routeInfo.path);
-            this._contentModel.getContent(routeInfo.path);
+                if (routeInfo.base.substr(3, 1) === "/") {
+                    path = routeInfo.base.substr(4);
+                } else {
+                    path = routeInfo.base.substr(3);
+                }
+
+                this._progModel.getMenu(path);
+                this._progModel.getNavBar(path);
+                this._progModel.getContent(path);
+            } else {
+                this._contentModel.getMenu(routeInfo.path);
+                this._contentModel.getContent(routeInfo.path);
+            }
 
         }
 
@@ -245,7 +255,7 @@ namespace ajsdoc {
 
             let retVal: IAjsDocArticleStateSet = {};
 
-            if (node.id !== 0) {
+            // if (node.id !== 0) {
                 retVal.caption = node.kindString + " " + node.name;
                 retVal.description = this._setupHTMLContent(this._getComment(node));
                 if (hierarchyNode) {
@@ -262,7 +272,7 @@ namespace ajsdoc {
                     }
                 }
                 retVal.members = node.children;
-            }
+            // }
 
             return retVal;
         }
@@ -356,7 +366,7 @@ namespace ajsdoc {
                     for (let j: number = 0; j < staticResources.length; j++) {
                         if (staticResources[j].indexOf(example) !== -1) {
                             let resource: ajs.resources.IResource;
-                            resource = ajs.Framework.resourceManager.getCachedResource(
+                            resource = ajs.Framework.resourceManager.getResource(
                                 staticResources[j],
                                 RESOURCE_STORAGE_TYPE
                             );

@@ -110,6 +110,12 @@ namespace ajsdoc {
             this._itemsById = {};
             this._jsonData = resource.data;
             this._data = JSON.parse(this._jsonData);
+            this._data.kindString = "Reference";
+            this._data.name = "Guide";
+            this._data.comment = { shortText: "<span></span>" };
+            this._data.kind = -1;
+
+
             this._prepareData(this._data, null);
 
             this._initialized = true;
@@ -117,6 +123,7 @@ namespace ajsdoc {
 
         // anotate the data with additional information
         protected _prepareData(node: INode, parent: INode): void {
+
             node.parent = parent;
             if (node.id !== undefined) {
                 this._itemsById[node.id] = node;
@@ -129,7 +136,7 @@ namespace ajsdoc {
                 node.path = node.path && node.name ? node.path += "/" + node.name : node.path = "/" + node.name;
 
             } else {
-                if (node.name) {
+                if (node !== this._data && node.name) {
                     node.path = "/" + node.name;
                 } else {
                     node.path = "";
@@ -150,7 +157,16 @@ namespace ajsdoc {
             let parentLabel: string = node.parent !== null && node.parent.kind !== 0 ?
                 node.parent.kindString + " " + node.parent.name : null;
 
-            let parentPath: string = node.parent !== null ? node.parent.path : "";
+            let parentPath: string;
+            if (node.parent !== null) {
+                if (node.parent === this._data) {
+                    parentPath = "/";
+                } else {
+                    parentPath = node.parent.path;
+                }
+            } else {
+                parentPath = "";
+            }
 
             let label: string = node.kind !== 0 ? node.kindString + " " + node.name : null;
 
@@ -247,6 +263,10 @@ namespace ajsdoc {
 
             if (path === "") {
                 return node;
+            }
+
+            if (path[path.length - 1] === "/") {
+                path = path.substr(0, path.length - 1);
             }
 
             let names: string[] = path.split("/");

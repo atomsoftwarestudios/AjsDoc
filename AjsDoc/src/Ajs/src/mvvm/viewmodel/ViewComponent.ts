@@ -114,6 +114,8 @@ namespace ajs.mvvm.viewmodel {
                 "component": <IAttributeProcessor>this._attrComponent,
                 "if": <IAttributeProcessor>this._attrIf,
                 "onclick": <IAttributeProcessor>this._attrEventHandler,
+                "onmousedown": <IAttributeProcessor>this._attrEventHandler,
+                "onmouseup": <IAttributeProcessor>this._attrEventHandler,
                 "onkeydown": <IAttributeProcessor>this._attrEventHandler,
                 "onkeyup": <IAttributeProcessor>this._attrEventHandler,
                 "onchange": <IAttributeProcessor>this._attrEventHandler,
@@ -151,7 +153,7 @@ namespace ajs.mvvm.viewmodel {
                     this._domEventListeners[i].element.removeEventListener(
                         this._domEventListeners[i].eventType,
                         this._domEventListeners[i].listener
-                    )
+                    );
                 }
             }
 
@@ -230,7 +232,7 @@ namespace ajs.mvvm.viewmodel {
             }
         }
 
-        public getDomEventListeners(element: Element) {
+        public getDomEventListeners(element: Element): IDomEventListenerInfo[] {
             let listeners: IDomEventListenerInfo[] = [];
             for (let i: number = 0; i < this._domEventListeners.length; i++) {
                 if (this._domEventListeners[i].element === element) {
@@ -498,7 +500,7 @@ namespace ajs.mvvm.viewmodel {
                             this._domEventListeners[i].element.addEventListener(
                                 this._domEventListeners[i].eventType,
                                 this._domEventListeners[i].listener
-                            )
+                            );
                             this._domEventListeners[i].registered = true;
                         }
                     }

@@ -71,6 +71,9 @@ TODO:
 		   - creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
 		   - multiple calls of getResource during single operation can be optimized
 		   - review cycles
+		- Implement state management
+			- Implement application state resource storage
+			- Implement session state resource storage
 
 	- View, View Components, Visual Components
 	    - Don't render the component tag to the output
@@ -80,15 +83,15 @@ TODO:
 	    - Support for render target.
 		   - Currently, only the main window document is supported so it will be hard to integrate to playgrounds
 		- View modifications queuing to prevent async operation fighting
-		- Revert setting of ajs attributes back to object, its faster than manipulating the DOM attributes
 		- CSS style management
 		   - LESS & reuired toolchain
 		- ViewComponent._getState -> implement function to collect the state information from the view component tree
 		- Dynamic View Component -> implement a component allowing to set the view component programatically, not just from template
 		- Static content view component
-		- Event subscriptions
-		- View Component Finalization
+		- Event subscriptions (component to component, DOM is implemented already)
 		- Refactor ViewComponent state management to look nicer
+		- Refactor ViewComponent rendering functions to look nicer
+
 
 	- Data
 		- JSON API

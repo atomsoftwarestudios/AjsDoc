@@ -66,6 +66,11 @@ namespace ajs {
         /** Returns the ResourceManager object */
         public static get resourceManager(): ajs.resources.ResourceManager { return Framework._resourceManager; }
 
+        /** Stores the StateManager object instantiated automatically during the framework intitialization */
+        protected static _stateManager: ajs.state.StateManager;
+        /** Returns the StateManager object */
+        public static get stateManager(): ajs.state.StateManager { return Framework._stateManager; }
+
         /** Stores the ResourceManager object instantiated automatically during the framework intitialization */
         protected static _router: ajs.routing.Router;
         /** Returns the ResourceManager object */
@@ -108,6 +113,7 @@ namespace ajs {
             Framework._application = null;
 
             Framework._resourceManager = new ajs.resources.ResourceManager(config.resourceManagerConfig);
+            Framework._stateManager = new ajs.state.StateManager(Framework._resourceManager);
             Framework._templateManager = new ajs.templating.TemplateManager();
             Framework._viewComponentManager = new ajs.mvvm.viewmodel.ViewComponentManager();
             Framework._modelManager = new ajs.mvvm.model.ModelManager();

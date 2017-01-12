@@ -86,6 +86,8 @@
     <TypeScriptCompile Include="src\routing\IRoutes.ts" />
     <TypeScriptCompile Include="src\routing\Router.ts" />
     <TypeScriptCompile Include="src\routing\RouterExceptions.ts" />
+    <TypeScriptCompile Include="src\state\!state.ts" />
+    <TypeScriptCompile Include="src\state\StateManager.ts" />
     <TypeScriptCompile Include="src\templating\!templating.ts" />
     <TypeScriptCompile Include="src\templating\Exceptions.ts" />
     <TypeScriptCompile Include="src\templating\ITemplatesCollection.ts" />

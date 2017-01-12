@@ -234,7 +234,7 @@ namespace ajs.resources {
         /**
          * Loads information about resources in the storage
          */
-        protected _getResourcesInfoFromLocalStorage(): ICachedResource[] {
+        protected _getResourcesInfo(): ICachedResource[] {
             let resources: ICachedResource[] = [];
             let cachedResourcesInfoStr: string = this._storageProvider.getItem(STORAGE_INFO_KEY);
 
