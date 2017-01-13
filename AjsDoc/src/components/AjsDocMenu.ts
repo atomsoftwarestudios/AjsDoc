@@ -22,14 +22,33 @@ namespace ajsdoc {
 
     "use strict";
 
+    enum TransitionType {
+        NONE,
+        FADE,
+        LTR,
+        RTL
+    }
+
+    const MENU_DONT_EXPAND: string[] = [
+        "Class",
+        "Interface",
+        "Variable",
+        "Enumeration",
+        "Object literal",
+        "Function"
+    ];
+
     class AjsDocMenu extends ajs.mvvm.viewmodel.ViewComponent {
 
-        protected _fadeoutTimer: number;
-        protected _fadeoutState: number;
-        protected _newWidth: number;
+        protected _programModel: ProgramModel;
+
+        protected _previousContext: string;
+        protected _previousRefNode: INode;
 
         protected _initialize(): void {
-            this._fadeoutTimer = -1;
+            this._programModel = ajs.Framework.modelManager.getModelInstance(ProgramModel) as ProgramModel;
+            this._previousContext = null;
+            this._previousRefNode = null;
             this._ajsVisualStateTransition = true;
         }
 
@@ -37,50 +56,116 @@ namespace ajsdoc {
 
             super.ajsVisualStateTransitionBegin(newElement);
 
-            if (this._ajsTransitionOldElement instanceof HTMLElement) {
-                this._ajsTransitionNewElement.style.position = "absolute";
-                this._ajsTransitionOldElement.style.position = "absolute";
-                this._ajsTransitionOldElement.style.filter = "brightness(85%)";
-                this._ajsTransitionNewElement.parentNode.insertBefore(this._ajsTransitionOldElement, this._ajsTransitionNewElement);
-                let rectOld: ClientRect = this._ajsTransitionOldElement.getBoundingClientRect();
-                this._ajsTransitionOldElement.style.top = rectOld.top + "px";
-                let rectNew: ClientRect = this._ajsTransitionNewElement.getBoundingClientRect();
-                this._newWidth = rectNew.width;
-                this._ajsTransitionNewElement.style.width = 0 + "px";
-
-                this._ajsTransitionOldElement.style.height = rectNew.height + "px";
-
-                this._fadeoutState = rectOld.width;
-
-                this._fadeoutTimer = setInterval(
-                    () => {
-                        this._fadeoutState -= 20;
-                        if (this._fadeoutState <= 0) {
-                            clearInterval(this._fadeoutTimer);
-                            this._fadeoutTimer = -1;
-                            this._ajsTransitionOldElement.style.width = "0";
-                            this._ajsTransitionNewElement.style.left = "0";
-                            this._ajsTransitionNewElement.style.width = this._newWidth + "px";
-                            this._visualStateTransitionEnd();
-                        } else {
-                            this._ajsTransitionOldElement.style.width = this._fadeoutState + "px";
-                            this._ajsTransitionNewElement.style.left = this._fadeoutState + "px";
-                            this._ajsTransitionNewElement.style.width = this._newWidth - this._fadeoutState + "px";
-                        }
-                    }
-                    , 25);
+            let animationEndListener: EventListener = (e: Event) => {
+                this._ajsTransitionOldElement.style.animationDuration = "";
+                this._ajsTransitionNewElement.style.animationDuration = "";
+                this._ajsTransitionNewElement.classList.remove("ajsDocMenuLtrNew");
+                this._ajsTransitionNewElement.classList.remove("ajsDocMenuRtlNew");
+                this._visualStateTransitionEnd();            
             }
+
+            let transitionType: TransitionType = this._getTransitionType();
+
+            switch (transitionType) {
+                case TransitionType.LTR:
+                    this._ajsTransitionOldElement.addEventListener("animationend", animationEndListener);
+                    this._ajsTransitionNewElement.classList.add("ajsDocMenuLtrNew");
+                    this._ajsTransitionOldElement.classList.add("ajsDocMenuLtrOld");
+                    this._ajsTransitionNewElement.parentElement.insertBefore(
+                        this._ajsTransitionOldElement,
+                        this._ajsTransitionNewElement
+                    );
+                    break;
+                case TransitionType.RTL:
+                    this._ajsTransitionOldElement.addEventListener("animationend", animationEndListener);
+                    this._ajsTransitionNewElement.classList.add("ajsDocMenuRtlNew");
+                    this._ajsTransitionOldElement.classList.add("ajsDocMenuRtlOld");
+                    this._ajsTransitionNewElement.parentElement.insertBefore(
+                        this._ajsTransitionOldElement,
+                        this._ajsTransitionNewElement
+                    );
+                    break;
+                default:
+                    this._visualStateTransitionEnd();
+                    return;
+            }
+
         }
 
         protected _ajsVisualStateTransitionCancel(): void {
-            if (this._fadeoutTimer !== -1) {
-                clearInterval(this._fadeoutTimer);
-                this._fadeoutTimer = -1;
-                this._ajsTransitionOldElement.style.width = "0";
-                this._ajsTransitionNewElement.style.left = "0";
-                this._ajsTransitionNewElement.style.width = this._newWidth + "px";
-                this._visualStateTransitionEnd();
+            this._ajsTransitionOldElement.style.animationDuration = "1ms";
+            this._ajsTransitionNewElement.style.animationDuration = "1ms";
+        }
+
+        protected _getTransitionType(): TransitionType {
+
+            let transitionType: TransitionType = TransitionType.NONE;
+
+            let path = ajs.Framework.router.currentRoute.base;
+
+            if (path.substr(0, 3) === "ref") {
+
+                if (this._previousContext === "") {
+                    transitionType = TransitionType.FADE;
+                } else {
+                    transitionType = this._getTransitionTypeRef(path.substr(4))
+                }
+
+                this._previousContext = "ref";
+
+            } else {
+
+                if (this._previousContext === "ref") {
+                    transitionType = TransitionType.FADE;
+                } else {
+                    transitionType = this._getTransitionTypeDoc(path)
+                }
+
+                this._previousContext = "";
+
             }
+
+            return transitionType;
+        }
+
+        protected _getTransitionTypeDoc(path: string): TransitionType {
+            return TransitionType.NONE;
+        }
+
+        protected _getTransitionTypeRef(path: string): TransitionType {
+
+            let transitionType: TransitionType = TransitionType.NONE;
+
+            let currentNode = this._programModel.navigate(path);
+
+            if (this._previousRefNode !== null) {
+
+                if (currentNode === this._previousRefNode.parent) {
+                    transitionType = TransitionType.LTR;
+                }
+
+                if (currentNode.parent === this._previousRefNode && MENU_DONT_EXPAND.indexOf(currentNode.kindString) === -1) {
+                    transitionType = TransitionType.RTL;
+                }
+
+            }
+
+            if (MENU_DONT_EXPAND.indexOf(currentNode.kindString) === -1) {
+                this._previousRefNode = currentNode;
+            } else {
+                if (this._previousRefNode === null) {
+                    let node: INode = currentNode.parent;
+                    while (node.parent !== null) {
+                        if (MENU_DONT_EXPAND.indexOf(node.kindString) === -1) {
+                            this._previousRefNode = node;
+                            break;
+                        }
+                        node = node.parent;
+                    }
+                }
+            }
+
+            return transitionType;
         }
 
     }

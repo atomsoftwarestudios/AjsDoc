@@ -28,7 +28,7 @@ namespace ajsdoc {
         [key: string]: string;
     }
 
-    const kindMap: IKindMap = {
+    const KIND_MAP: IKindMap = {
         Module: "Modules",
         Class: "Classes",
         Interface: "Interfaces",
@@ -42,7 +42,7 @@ namespace ajsdoc {
         Constructor: "Constructor"
     };
 
-    const menuDontExpand: string[] = [
+    const MENU_DONT_EXPAND: string[] = [
         "Class",
         "Interface",
         "Variable",
@@ -152,7 +152,7 @@ namespace ajsdoc {
 
         protected _getMenu(navPath: string): void {
 
-            let node: INode = this._navigate(navPath, true);
+            let node: INode = this.navigate(navPath, true);
 
             let parentLabel: string = node.parent !== null && node.parent.kind !== 0 ?
                 node.parent.kindString + " " + node.parent.name : null;
@@ -182,8 +182,8 @@ namespace ajsdoc {
                 for (let i: number = 0; i < node.children.length; i++) {
 
                     let kindMapped: string = "Unknown [" + node.children[i].kindString + "]";
-                    if (kindMap.hasOwnProperty(node.children[i].kindString.replace(" ", "_"))) {
-                        kindMapped = kindMap[node.children[i].kindString.replace(" ", "_")];
+                    if (KIND_MAP.hasOwnProperty(node.children[i].kindString.replace(" ", "_"))) {
+                        kindMapped = KIND_MAP[node.children[i].kindString.replace(" ", "_")];
                     }
 
                     let itemGroupIndex: number = this._getGroupIndex(menu, kindMapped);
@@ -215,7 +215,7 @@ namespace ajsdoc {
         protected _getNavBar(path: string): void {
             let items: INavBarItemsState = [];
 
-            let node: INode = this._navigate(path);
+            let node: INode = this.navigate(path);
 
             let key: number = 0;
             while (node !== null) {
@@ -241,7 +241,7 @@ namespace ajsdoc {
         }
 
         protected _getContent(path: string): void {
-            this._dataReadyNotifier.notify(this, { articleState: this._navigate(path) });
+            this._dataReadyNotifier.notify(this, { articleState: this.navigate(path) });
         }
 
         protected _getGroupIndex(menu: IMenuState, key: string): number {
@@ -257,7 +257,7 @@ namespace ajsdoc {
             return true;
         }
 
-        protected _navigate(path: string, dontExpandAll?: boolean): INode {
+        public navigate(path: string, dontExpandAll?: boolean): INode {
 
             let node: INode = this._data;
 
@@ -287,7 +287,7 @@ namespace ajsdoc {
                 }
             }
 
-            if (dontExpandAll && menuDontExpand.indexOf(node.kindString) !== -1) {
+            if (dontExpandAll && MENU_DONT_EXPAND.indexOf(node.kindString) !== -1) {
                 return node.parent;
             }
 

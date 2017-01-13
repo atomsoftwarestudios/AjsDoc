@@ -24,25 +24,33 @@
         /* PAGE LAYOUT */
 
         .ajsDocLayoutHeaderContainer {
-            border-bottom: solid 1px #EAF4F8;
-            margin: 3px;
+            background: linear-gradient(-3deg, #EAF4F8, white);
+            text-align: center;
             padding: 3px;
+            height: 54px;
+            box-sizing: border-box;
         }
 
         .ajsDocLayoutMenuContainer {
-            display: table-cell;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            bottom: 0px;
             vertical-align: top;
-            min-width: 200px;
-            margin: 0px 3px 0px 3px;
-            padding-right: 3px;
-            padding-left: 3px;
+            width: 350px;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .ajsDocLayoutContentContainer {
-            display: table-cell;
-            width: 100%;
+            position: absolute;
+            left: 350px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
             vertical-align: top;
             border-left: 1px solid #EAF4F8;
+            overflow: auto;
         }
 
         .ajsDocLayoutPageNavContainer {
@@ -62,20 +70,23 @@
 
         /* HEADER */
 
+        .ajsDocHeaderLabelContainer {
+            display: table-cell;
+            height: 48px;
+            vertical-align: middle;
+            padding-left: 0.5em
+        }
+
         .ajsDocHeaderLabel {
+            display: inline;
             margin: 0px;
             padding: 0px;
         }
 
         .ajsDocAjsLogo {
+            display: table-cell;
+            width: 48px;
             height: 48px;
-            float: left;
-            margin-right: 5px;
-        }
-
-        .ajsDocAtomLogo {
-            height: 48px;
-            float: right;
         }
 
         /* FOOTER */
@@ -108,9 +119,9 @@
 
         .ajsDocContextSwitcher {
             background-color: white;
-            padding: 2px;
-            width: 340px;
-            white-space: nowrap
+            white-space: nowrap;
+            height: 40px;
+            box-sizing: border-box;
         }
         
         .ajsDocContextSwitcherButton {
@@ -118,7 +129,7 @@
             width: 50%;
             text-align: center;
             box-sizing: border-box;
-            padding: 0.25em;
+            height: 100%;
             border: none;
             background-color: transparent;
             outline: 0;
@@ -127,25 +138,75 @@
         }
 
         .ajsDocContextSwitcherButton[selected="true"] {
-            background-color: #EAF4F8;
+            background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8)
+            /*background-color: #EAF4F8;*/
         }
 
 
         /* MENU */
 
+        @keyframes ajsDocMenuOldAnimationRtl {
+            from { width: 350px; }
+            to { width: 0px; }
+        }
+
+        @keyframes ajsDocMenuNewAnimationRtl {
+            from { left: 350px; width: 0px; }
+            to { left: 0px; width: 350px; }
+        }
+
+        @keyframes ajsDocMenuOldAnimationLtr {
+            from { left: 0px; width: 350px; }
+            to { left: 350px; width: 0px; }
+        }
+
+        @keyframes ajsDocMenuNewAnimationLtr {
+            from { width: 0px; }
+            to { width: 350px; }
+        }
+
         .ajsDocMenu {
-            background-color: #FEFEFE;
+            background: linear-gradient(-90deg, white, #FAFCFD);
             white-space: nowrap;
-            width: 350px;
-            overflow: hidden;
+            overflow: auto;
+            position: absolute;
+            top: 94px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+        }
+
+        .ajsDocMenuRtlOld {
+            filter: brightness(95%);
+            animation-name: ajsDocMenuOldAnimationRtl;
+            animation-duration: 300ms;
+        }
+
+        .ajsDocMenuRtlNew {
+            animation-name: ajsDocMenuNewAnimationRtl;
+            animation-duration: 300ms;
+        }
+
+        .ajsDocMenuLtrOld {
+            filter: brightness(95%);
+            animation-name: ajsDocMenuOldAnimationLtr;
+            animation-duration: 300ms;
+        }
+
+        .ajsDocMenuLtrNew {
+            animation-name: ajsDocMenuNewAnimationLtr;
+            animation-duration: 300ms;
         }
 
         .ajsDocMenuLabel {
-            padding: 0.25em;
-            margin: 0.1em;
-            background-color: #EAF4F8;
-            border: solid 1px #EAF4F8;
-            text-align: center
+            display: table-cell;
+            width: 350px;
+            height: 40px;
+            background: linear-gradient(-3deg, #FAFCFD, #EAF4F8);
+            /*background-color: #EAF4F8;*/
+            /*background-color: #FAFCFD;*/
+            text-align: center;
+            vertical-align: middle;
         }
 
         .ajsDocMenuParent {
@@ -205,7 +266,7 @@
 
         .ajsDocExample {
             border: solid 1px #EAF4F8;
-            background-color: #FEFEFE;
+            background-color: #FAFCFD;
         }
 
         /* CODE TEMPLATES */
@@ -232,14 +293,13 @@
     </component>
 
     <component name="ajsDocHeader">
-        <div style="height: 48px">
-            <img class="ajsDocAjsLogo" src="/res/img/ajs-logo.png" alt="ajsLogo" />
-            <img class="ajsDocAtomLogo" src="/res/img/atom-logo.png" alt="atomLogo" />
-            <div>
-                <h3 class="ajsDocHeaderLabel" style="display: inline; margin: 0; padding: 0">AJS Framework</h3>
-                <br />
-                Developer's Guide
-            </div>
+        <div class="ajsDocAjsLogo">
+            <img class="ajsDocAjsLogo" src="/res/img/ajs-logo.png" alt="ajs" />
+        </div>
+        <div class="ajsDocHeaderLabelContainer">
+            <h3 class="ajsDocHeaderLabel">AJS Framework</h3>
+            <br />
+            Developer's Guide
         </div>
     </component>
 
@@ -256,31 +316,35 @@
     <!-- LAYOUT COMPONENT -->
 
     <component name="ajsDocLayout">
-        <div class="ajsDocLayoutHeaderContainer">
-            <ajsDocHeader id="ajsDocHeader"></ajsDocHeader>
-        </div>
 
         <div class="ajsDocLayoutMenuContainer">
+            <div class="ajsDocLayoutHeaderContainer">
+                <ajsDocHeader id="ajsDocHeader"></ajsDocHeader>
+            </div>
+
             <div component="AjsDocContextSwitcher" id="ajsDocContextSwitcher" class="ajsDocContextSwitcher">
-                <button class="ajsDocContextSwitcherButton" selected="{guides}" onmousedown="onGuidesClick">Guide &amp; Examples</button>
-                <button class="ajsDocContextSwitcherButton" selected="{references}" onmousedown="onReferenceGuideClick">Reference Guide</button>
+                <button class="ajsDocContextSwitcherButton" selected="{guides}" onmousedown="onGuidesClick">Guide &amp; Examples</button><!--
+                --><button class="ajsDocContextSwitcherButton" selected="{references}" onmousedown="onReferenceGuideClick">Reference Guide</button>
             </div>
 
             <ajsDocMenu id="ajsDocMenu"></ajsDocMenu>
         </div>
 
         <div class="ajsDocLayoutContentContainer">
+            <!--<div class="ajsDocLayoutPageNavContainer">
+                PageNav
+            </div>-->
+
             <ajsDocNavBar id="ajsDocNavBar"></ajsDocNavBar>
             <ajsDocArticle id="ajsDocArticle"></ajsDocArticle>
+
+
+            <div class="ajsDocLayoutFooterContainer">
+                <ajsDocFooter id="ajsDocFooter"></ajsDocFooter>
+            </div>
         </div>
 
-        <div class="ajsDocLayoutPageNavContainer">
-            PageNav
-        </div>
 
-        <div class="ajsDocLayoutFooterContainer">
-            <ajsDocFooter id="ajsDocFooter"></ajsDocFooter>
-        </div>
     </component>
 
     <!-- LAYOUT COMPONENT -->
@@ -393,7 +457,7 @@
 
             <div if="this.hasHierarchy">
                 <h3>Hierarchy</h3>
-                <div style="border: solid 1px #EAF4F8; background-color: #FEFEFE; padding: 0.5em; padding-left: 0">
+                <div style="border: solid 1px #EAF4F8; background-color: #FAFCFD; padding: 0.5em; padding-left: 0">
                     <ul component="ajsDocHierarchy" id="hierarchy" style="text-decoration: none; list-style: none; margin: 0; padding-left: 1em">
                         <li><a class="ajsDocLink" href="/ref{path}">{name}</a></li>
                         <ajsDocHierarchy id="extends"></ajsDocHierarchy>
@@ -403,7 +467,7 @@
 
             <div if="this.implements">
                 <h3>Implements</h3>
-                <div style="border: solid 1px #EAF4F8; background-color: #FEFEFE; padding: 0.5em">
+                <div style="border: solid 1px #EAF4F8; background-color: #FAFCFD; padding: 0.5em">
                     <div component="ajsDocImplements" id="implements"><a class="ajsDocLink" href="/ref{path}">{name}</a></div>
                 </div>
             </div>

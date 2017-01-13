@@ -34,7 +34,7 @@ namespace ajs.navigation {
 
         public constructor(router: Router) {
             this._router = router;
-            this._lastUrl = "";
+            this._lastUrl = null;
             window.addEventListener("popstate", (event: PopStateEvent) => { this._onPopState(event); });
             window.addEventListener("hashchange", (event: HashChangeEvent) => { this._onHashChange(event); });
         }
@@ -47,8 +47,8 @@ namespace ajs.navigation {
         }
 
         public navigate(url: string): void {
-            if (url !== this._lastUrl) {
-                this._lastUrl = url;
+            if (window.location.href !== this._lastUrl) {
+                this._lastUrl = window.location.href;
                 window.history.pushState({}, "", url);
                 this._router.route();
             }
