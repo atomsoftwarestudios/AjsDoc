@@ -27,9 +27,16 @@
     <Content Include="js\ajs.js" />
     <Content Include="js\ajsdocbrowser.js" />
     <Content Include="js\highlight.pack.js" />
+    <Content Include="res\css\content.css" />
     <Content Include="res\img\ajs-logo.png" />
     <Content Include="res\img\atom-logo.png" />
     <Content Include="res\css\hljsvs.css" />
+    <Content Include="res\img\chrome.png" />
+    <Content Include="res\img\edge.png" />
+    <Content Include="res\img\firefox.png" />
+    <Content Include="res\img\ie.png" />
+    <Content Include="res\img\opera.png" />
+    <Content Include="res\img\safari.png" />
     <Content Include="static\content\01 Introduction.html" />
     <Content Include="static\content\02 Design requirements.html" />
     <Content Include="static\content\04\05 View components.html" />
@@ -64,7 +71,6 @@
     <TypeScriptCompile Include="src\lib\hljs.ts" />
     <Content Include="static\examples\app_init.ts" />
     <TypeScriptCompile Include="src\states\IAjsDocLayoutState.ts" />
-    <TypeScriptCompile Include="src\states\IContentState.ts" />
     <TypeScriptCompile Include="src\states\IMenuState.ts" />
     <TypeScriptCompile Include="src\states\IMenuItemState.ts" />
     <TypeScriptCompile Include="src\states\IMenuItemGroupState.ts" />

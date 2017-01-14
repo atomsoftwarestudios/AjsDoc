@@ -26,7 +26,8 @@ namespace ajsdoc {
         parentLabel: string;
         parentPath: string;
         label: string;
-        groups: IMenuItemGroupState[];
+        groups?: IMenuItemGroupState[];
+        items?: IMenuItemState[];
     }
 
 }

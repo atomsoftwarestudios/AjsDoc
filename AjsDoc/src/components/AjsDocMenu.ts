@@ -30,12 +30,15 @@ namespace ajsdoc {
     }
 
     const MENU_DONT_EXPAND: string[] = [
-        "Class",
         "Interface",
         "Variable",
         "Enumeration",
         "Object literal",
-        "Function"
+        "Function",
+        "Constructor",
+        "Method",
+        "Property",
+        "Accessor"
     ];
 
     class AjsDocMenu extends ajs.mvvm.viewmodel.ViewComponent {
@@ -59,8 +62,12 @@ namespace ajsdoc {
             let animationEndListener: EventListener = (e: Event) => {
                 this._ajsTransitionOldElement.style.animationDuration = "";
                 this._ajsTransitionNewElement.style.animationDuration = "";
+                this._ajsTransitionOldElement.classList.remove("ajsDocMenuLtrOld");
+                this._ajsTransitionOldElement.classList.remove("ajsDocMenuRtlOld");
+                this._ajsTransitionOldElement.classList.remove("ajsDocMenuFadeOld");
                 this._ajsTransitionNewElement.classList.remove("ajsDocMenuLtrNew");
                 this._ajsTransitionNewElement.classList.remove("ajsDocMenuRtlNew");
+                this._ajsTransitionNewElement.classList.remove("ajsDocMenuFadeNew");
                 this._visualStateTransitionEnd();            
             }
 
@@ -68,7 +75,7 @@ namespace ajsdoc {
 
             switch (transitionType) {
                 case TransitionType.LTR:
-                    this._ajsTransitionOldElement.addEventListener("animationend", animationEndListener);
+                    this._ajsTransitionNewElement.addEventListener("animationend", animationEndListener);
                     this._ajsTransitionNewElement.classList.add("ajsDocMenuLtrNew");
                     this._ajsTransitionOldElement.classList.add("ajsDocMenuLtrOld");
                     this._ajsTransitionNewElement.parentElement.insertBefore(
@@ -77,13 +84,22 @@ namespace ajsdoc {
                     );
                     break;
                 case TransitionType.RTL:
-                    this._ajsTransitionOldElement.addEventListener("animationend", animationEndListener);
+                    this._ajsTransitionNewElement.addEventListener("animationend", animationEndListener);
                     this._ajsTransitionNewElement.classList.add("ajsDocMenuRtlNew");
                     this._ajsTransitionOldElement.classList.add("ajsDocMenuRtlOld");
                     this._ajsTransitionNewElement.parentElement.insertBefore(
                         this._ajsTransitionOldElement,
                         this._ajsTransitionNewElement
                     );
+                    break;
+                case TransitionType.FADE:
+                    this._ajsTransitionNewElement.parentElement.insertBefore(
+                        this._ajsTransitionOldElement,
+                        this._ajsTransitionNewElement.nextSibling
+                    );
+                    this._ajsTransitionNewElement.addEventListener("animationend", animationEndListener);
+                    this._ajsTransitionNewElement.classList.add("ajsDocMenuFadeNew");
+                    this._ajsTransitionOldElement.classList.add("ajsDocMenuFadeOld");
                     break;
                 default:
                     this._visualStateTransitionEnd();
@@ -129,7 +145,7 @@ namespace ajsdoc {
         }
 
         protected _getTransitionTypeDoc(path: string): TransitionType {
-            return TransitionType.NONE;
+            return TransitionType.FADE;
         }
 
         protected _getTransitionTypeRef(path: string): TransitionType {
@@ -137,8 +153,15 @@ namespace ajsdoc {
             let transitionType: TransitionType = TransitionType.NONE;
 
             let currentNode = this._programModel.navigate(path);
+            if (!(currentNode.children instanceof Array) || currentNode.children.length === 0) {
+                currentNode = currentNode.parent;
+            }
 
             if (this._previousRefNode !== null) {
+
+                if (currentNode.parent !== this._previousRefNode) {
+                    transitionType = TransitionType.FADE;
+                }
 
                 if (currentNode === this._previousRefNode.parent) {
                     transitionType = TransitionType.LTR;
@@ -148,6 +171,8 @@ namespace ajsdoc {
                     transitionType = TransitionType.RTL;
                 }
 
+            } else {
+                transitionType = TransitionType.FADE;
             }
 
             if (MENU_DONT_EXPAND.indexOf(currentNode.kindString) === -1) {

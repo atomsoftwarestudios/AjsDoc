@@ -52,6 +52,7 @@ namespace ajsdoc {
                 },
                 [
                     "/res/css/hljsvs.css",
+                    "/res/css/content.css",
                     "/static/program.json"
                 ],
                 null,

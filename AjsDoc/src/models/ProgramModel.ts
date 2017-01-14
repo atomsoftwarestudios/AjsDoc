@@ -43,12 +43,15 @@ namespace ajsdoc {
     };
 
     const MENU_DONT_EXPAND: string[] = [
-        "Class",
         "Interface",
         "Variable",
         "Enumeration",
         "Object literal",
-        "Function"
+        "Function",
+        "Constructor",
+        "Method",
+        "Property",
+        "Accessor"
     ];
 
     export interface IItemsById {
@@ -153,6 +156,9 @@ namespace ajsdoc {
         protected _getMenu(navPath: string): void {
 
             let node: INode = this.navigate(navPath, true);
+            if (!(node.children instanceof Array) || node.children.length === 0) {
+                node = node.parent;
+            }
 
             let parentLabel: string = node.parent !== null && node.parent.kind !== 0 ?
                 node.parent.kindString + " " + node.parent.name : null;
@@ -160,9 +166,9 @@ namespace ajsdoc {
             let parentPath: string;
             if (node.parent !== null) {
                 if (node.parent === this._data) {
-                    parentPath = "/";
+                    parentPath = "/ref";
                 } else {
-                    parentPath = node.parent.path;
+                    parentPath = "/ref" + node.parent.path;
                 }
             } else {
                 parentPath = "";
@@ -174,7 +180,8 @@ namespace ajsdoc {
                 parentLabel: parentLabel,
                 parentPath: parentPath,
                 label: label,
-                groups: []
+                groups: [],
+                items: []
             };
 
             if (node.children) {
@@ -200,9 +207,12 @@ namespace ajsdoc {
                     if (this._includeInMenu(node.children[i].kindString)) {
                         menu.groups[itemGroupIndex].items.push({
                             key: node.children[i].id.toString(),
-                            path: node.children[i].path,
+                            path: "/ref" + node.children[i].path,
                             label: node.children[i].name,
-                            selected: node.children[i].path === ("/" + navPath)
+                            selected: node.children[i].path === ("/" + navPath),
+                            expandable: node.children[i].children instanceof Array &&
+                                node.children[i].children.length > 0 && 
+                                MENU_DONT_EXPAND.indexOf(node.children[i].kindString) === -1
                         });
                     }
                 }

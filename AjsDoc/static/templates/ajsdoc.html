@@ -131,15 +131,15 @@
             box-sizing: border-box;
             height: 100%;
             border: none;
-            background-color: transparent;
+            background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);
             outline: 0;
             font-family: inherit;
             font-size: inherit;
         }
 
         .ajsDocContextSwitcherButton[selected="true"] {
-            background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8)
-            /*background-color: #EAF4F8;*/
+            background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8);
+            color: white;
         }
 
 
@@ -165,6 +165,16 @@
             to { width: 350px; }
         }
 
+        @keyframes ajsDocMenuNewFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1;}
+        }
+
+        @keyframes ajsDocMenuOldFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0;}
+        }
+
         .ajsDocMenu {
             background: linear-gradient(-90deg, white, #FAFCFD);
             white-space: nowrap;
@@ -177,25 +187,29 @@
         }
 
         .ajsDocMenuRtlOld {
-            filter: brightness(95%);
-            animation-name: ajsDocMenuOldAnimationRtl;
-            animation-duration: 300ms;
+            /*filter: brightness(95%);*/
+            animation: ajsDocMenuOldAnimationRtl 300ms forwards;
         }
 
         .ajsDocMenuRtlNew {
-            animation-name: ajsDocMenuNewAnimationRtl;
-            animation-duration: 300ms;
+            animation: ajsDocMenuNewAnimationRtl 300ms forwards;
         }
 
         .ajsDocMenuLtrOld {
-            filter: brightness(95%);
-            animation-name: ajsDocMenuOldAnimationLtr;
-            animation-duration: 300ms;
+            /*filter: brightness(95%);*/
+            animation: ajsDocMenuOldAnimationLtr 300ms forwards;
         }
 
         .ajsDocMenuLtrNew {
-            animation-name: ajsDocMenuNewAnimationLtr;
-            animation-duration: 300ms;
+            animation: ajsDocMenuNewAnimationLtr 300ms forwards;
+        }
+
+        .ajsDocMenuFadeNew {
+            animation: ajsDocMenuNewFadeIn 300ms forwards;
+        }
+
+        .ajsDocMenuFadeOld {
+            animation: ajsDocMenuOldFadeOut 300ms forwards;
         }
 
         .ajsDocMenuLabel {
@@ -203,8 +217,6 @@
             width: 350px;
             height: 40px;
             background: linear-gradient(-3deg, #FAFCFD, #EAF4F8);
-            /*background-color: #EAF4F8;*/
-            /*background-color: #FAFCFD;*/
             text-align: center;
             vertical-align: middle;
         }
@@ -281,7 +293,7 @@
 
 
         .ajsDocStatement {
-            background-color: #FAFAFA; /*font-family: 'Courier New'; font-size: 0.9em; margin: 0 1em 0 1em;*/
+            background-color: #FAFAFA;
         }
 
     </style>
@@ -372,11 +384,11 @@
 
         <div class="ajsDocMenuLabel">
             {label}
-            <span if="!this.label">{defaultLabel}</span>
+            <span if="!this.label">{defaultLabel}</span>            
         </div>
 
         <div>
-            <a class="ajsDocLink ajsDocMenuItemLinkParent" if="this.parentPath !== undefined && this.parentPath !== ''" href="/ref{parentPath}">...</a>
+            <a class="ajsDocLink ajsDocMenuItemLinkParent" if="this.parentPath !== undefined && this.parentPath !== ''" href="{parentPath}">...</a>
             <span if="this.parentPath === undefined || this.parentPath === ''">{parentLabel}</span>
         </div>
 
@@ -386,11 +398,16 @@
 
             <ul class="ajsDocMenuItemGroup">
                 <li component="ajsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}" style="border-bottom: solid 1px #EAF4F8">
-                    <a class="ajsDocLink ajsDocMenuItemLink" href="/ref{path}">{label}</a>
+                    <a class="ajsDocLink ajsDocMenuItemLink" href="{path}">
+                        <span if="this.expandable" style="float: right">&gt;</span>
+                        {label}
+                    </a>
                 </li>
             </ul>
 
         </component>
+
+        <ajsDocMenuItem id="items"></ajsDocMenuItem>
     </div>
 
     <!-- MENU COMPONENTS -->
@@ -412,7 +429,7 @@
 
     <component class="hljs-built_in" name="ajsDocMemberExtends">{name}<span if="!this.isLast">, </span></component>
 
-    <component name="ajsDocMemberImplements">{name}<span if="!this.isLast">, </span></component>
+    <component class="hljs-built_in" name="ajsDocMemberImplements">{name}<span if="!this.isLast">, </span></component>
 
     <div component="ajsDocMember" class="ajsDocMember">
 
@@ -451,7 +468,7 @@
 
     <component name="ajsDocArticle">
 
-        <div style="padding: 0.5em">
+        <div style="padding-left: 0.5em; padding-right: 0.5em">
 
             <h2 class="ajsDocArticleCaption">{caption}</h2>
 

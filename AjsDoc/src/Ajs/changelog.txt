@@ -55,6 +55,9 @@ TODO:
 		    - Finish the code documentation for the existing code
 			- Get rid of all errors reported by the Visual Studio Intellisense
 
+	- Routing
+		- implement redirect
+
 	- Browser Application Caching
 		- Only index.html, ajs.js and ajs.boot.js need to be cached
 		- Tool to update the manifest if the index.html, ajs.js or ajs.boot.js will change

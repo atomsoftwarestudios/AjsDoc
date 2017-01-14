@@ -27,6 +27,7 @@ namespace ajsdoc {
         path: string;
         label: string;
         selected: boolean;
+        expandable: boolean;
     }
 
 }

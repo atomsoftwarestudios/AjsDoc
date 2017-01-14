@@ -39,12 +39,12 @@ namespace ajsdoc {
 
             this._lastGuidePath = ajs.Framework.stateManager.getSessionState(sessionStateGuidePath);
             if (this._lastGuidePath === null) {
-                this._lastGuidePath = "/";
+                this._lastGuidePath = "";
             }
 
             this._lastReferencePath = ajs.Framework.stateManager.getSessionState(sessionStateReferencePath);
             if (this._lastReferencePath === null) {
-                this._lastReferencePath = "/ref";
+                this._lastReferencePath = "ref";
             }
 
             this._navigatedListener = (sender: ajs.mvvm.viewmodel.ViewComponent) => {
@@ -83,13 +83,13 @@ namespace ajsdoc {
 
         public onGuidesClick(e: Event): void {
             if (this.references) {
-                ajs.Framework.navigator.navigate(this._lastGuidePath !== "" ? this._lastGuidePath : "/");
+                ajs.Framework.navigator.navigate(this._lastGuidePath !== "" ? "/" + this._lastGuidePath : "/");
             }
         }
 
         public onReferenceGuideClick(e: Event): void {
             if (this.guides) {
-                ajs.Framework.navigator.navigate(this._lastReferencePath !== "" ? this._lastReferencePath : "/ref");
+                ajs.Framework.navigator.navigate(this._lastReferencePath !== "" ? "/" + this._lastReferencePath : "/ref");
             }
         }
 

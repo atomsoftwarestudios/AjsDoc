@@ -1,46 +1,148 @@
 <h1>Introduction</h1>
 
-Another (Atom) JavaScript Frontend Framework
-pronounce /aɪs/
+<p>
+    <strong>PLEASE NOTE THE FRAMEWORK IS STILL UNDER HEAVY DEVELOPMENT AND THE REFERENCE IS SUBJECT TO CHANGE</strong>
+</p>
 
-<strong>PLEASE NOTE THE FRAMEWORK IS STILL UNDER DEVELOPMENT AND REFERENCE IS SUBJECT TO CHANGE</strong>
-
-if another JavaScript Single Page Application framework. Why when there are plenty of them? For many reasons. 
-Main main reasons and requirements are mentioned in the  <a href="/doc/03. Design Reqirements">Design requirements</a> section.
-Another one was a challenge to develop something bigger than a few scripts.
+<p>
+    (Another) (Atom) (Application) JavaScript Frontend Framework (pronounce /aɪs/) is JavaScript Single Page Application framework written in TypeScript.
+</p>
 
 <h2>Features</h2>
 
-<h4>Offline Application Support</h4>
+<div class="feature">
+    <h4>Browser Support</h4>
 
-    <li>AJS Framework is designed to fully support the Offline Web Applications</li>
-    <li>The Application Cache HTML5 is used</li>
-    <li>Only the index.html, ajs.js, ajs.boot.js and favicon.ico (if required) need to be cached in the Application cache</li>
-    <li>The rest of application resources are managed and cached by the framework in the Local Storage, Session Storage and Memory Storages</li>
-    <li>Limitation is the size of the cache which is big enough to fit the application code and a few of the data and / or other resources such as images so the application need to be designed carefully and with taking care of these limitations</li>
+    <ul>
+        <li>AJS Framework is designed to fully support major Web Browsers</li>
+    </ul>
 
-<h4>Boot Process Control</h4>
-    <li>Simple initial index.html page</li>
-    <li>AJS Framework Configuration</li>
-    <li>Custom Application Configuration</li>
-    
-<h4>Resource Management & Caching</h4>
 
-    <li>Resources are loaded from the server using AJAX requests</li>
-    <li>Resources can be cached in one of available storages – Local, Session or Memory</li>
-    <li>Automatic script evaluation</li>
-    <li>Callback system to notify the caller the resource/s was/were loaded.</li>
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="ie"></td>
+            <td class="edge"></td>
+            <td class="chrome"></td>
+            <td class="firefox"></td>
+            <td class="opera"></td>
+            <td class="safari"></td>
+        </tr>
+        <tr>
+            <td class="browser">IE 10+</td>
+            <td class="browser">Edge</td>
+            <td class="browser">Chrome 4+</td>
+            <td class="browser">Firefox 2+</td>
+            <td class="browser">Safari 3.1+</td>
+            <td class="browser">Opera 9+</td>
 
-<h4>Model View ViewModel architecture</h4>
-    <li>Inspired by the .Net Framework Windows Forms & React.js approach to view components</li>
-    <li>View Components are based on the logic-less templates called Visual Components. Almost. The IF statement was not avoided yet</li>
-    <li>Event based notification about user actions through the tree of components</li>
-    <li>Automatic DOM rendering and updating based on template and the view component state</li>
+        </tr>
+    </table>
+</div>
 
-<h4>HTML Visual Components and Templating</h4>
+<div class="feature">
+    <h4>Offline Application Support</h4>
 
-<h4>Navigation &amp; Routing management</h4>
+    <ul>
+        <li>Designed to fully support the Offline Web Applications</li>
+        <li>The Application Cache HTML5 is used</li>
+        <li>Only the basic resources need to be cached in the Application cache</li>
+        <li>Application resources can be managed and cached using the framework</li>
+    </ul>
+</div>
 
-<h4>Language &amp; Translation</h4>
+<div class="feature">
+    <h4>Boot Process Control</h4>
 
-<h4>Data Management &amp; Caching</h4>
+    <ul>
+        <li>Simple initial index.html page</li>
+        <li>AJS Framework Configuration</li>
+        <li>Custom Application Configuration</li>
+    </ul>
+</div>
+
+<div class="feature">
+    <h4>Navigation &amp; Routing &amp; Redirection management</h4>
+
+    <ul></ul>
+</div>
+
+
+<div class="feature">
+    <h4>Resource Management & Caching</h4>
+
+    <ul>
+        <li>Resources are loaded from the server using AJAX requests</li>
+        <li>Resources can be cached in one of available storages – Local, Session or Memory</li>
+        <li>Automatic script evaluation</li>
+        <li>Callback system to notify the caller the resource/s was/were loaded.</li>
+    </ul>
+</div>
+
+<div class="feature">
+    <h4>MVVM Architecture</h4>
+
+    <ul>
+        <li>Model View View Model architecture</li>
+        <li>Innovative approach to Veiw with the Visual and View Components</li>
+        <li>View Component (ViewModel) drives the flow through the application</li>
+    </ul>
+</div>
+
+<div class="feature">
+    <h4>Visual Component, View Component, View Model, View</h4>
+
+    <ul>
+        <li>Inspired by react.js approach to view components</li>
+        <li>View Components are completely based on the logic-less templates called Visual Components</li>
+        <li>Event based notification about user actions through the tree of components</li>
+        <li>Automatic DOM rendering and updating based on template and the view component state</li>
+    </ul>
+</div>
+
+<div class="feature">
+    <h4>Data Management &amp; Caching</h4>
+
+    <ul>
+        <li>
+            <strong>Under development</strong>
+        </li>
+    </ul>
+</div>
+
+<div class="feature">
+    <h4>Language &amp; Translation</h4>
+
+    <ul>
+        <li>
+            <strong>Under development</strong>
+        </li>
+    </ul>
+</div>
+
+<div class="feature">
+    <h4>Utilities</h4>
+
+    <ul>
+        <li>
+            <strong>Under development</strong>
+        </li>
+    </ul>
+</div>
+
+<div class="feature">
+    <h4>Development tools</h4>
+
+    <ul>
+        <li>
+            <strong>Under development</strong>
+        </li>
+    </ul>
+</div>
+
+
+<div class="clear"></div>
+
+<p>
+    See <a href="/Design-requirements">Design requirements</a> section for more details under which conditions it was developed and which considerations were made.
+</p>
+

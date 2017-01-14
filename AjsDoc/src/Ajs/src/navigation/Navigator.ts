@@ -47,8 +47,8 @@ namespace ajs.navigation {
         }
 
         public navigate(url: string): void {
-            if (window.location.href !== this._lastUrl) {
-                this._lastUrl = window.location.href;
+            if (window.location.href !== url) {
+                this._lastUrl = url;
                 window.history.pushState({}, "", url);
                 this._router.route();
             }

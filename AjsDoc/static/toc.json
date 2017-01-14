@@ -1,15 +1,18 @@
 {
-  "default": "/static/content/01 Introduction.html",
-  "toc": [
-    { "article": "/static/content/01 Introduction.html" },
-    { "article": "/static/content/02 Design requirements.html" },
-    {
-      "article": "/static/content/04 How it works.html",
-      "children": [
-        { "article": "/static/content/04/05 View components.html" }
-      ]
-    },
-    { "article": "/static/content/98 Special thanks.html" },
-    { "article": "/static/content/99 License.html" }
-  ]
+  "defaultPath": "/static/content/01 Introduction.html",
+  "toc": {
+    "children": [
+      { "path": "/static/content/01 Introduction.html" },
+      { "path": "/static/content/02 Design requirements.html" },
+      {
+        "path": "/static/content/04 How it works.html",
+        "children": [
+          { "path": "/static/content/04/05 View components.html" }
+        ]
+      },
+      { "path": "/static/content/98 Special thanks.html" },
+      { "path": "/static/content/99 License.html" }
+    ]
+  }
+
 }

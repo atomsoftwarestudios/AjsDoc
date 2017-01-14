@@ -145,6 +145,21 @@ namespace ajsdoc {
             style.setAttribute("type", "text/css");
             style.innerHTML = resource.data;
             document.head.appendChild(style);
+
+
+            resource = ajs.Framework.resourceManager.getResource(
+                "/res/css/content.css", RESOURCE_STORAGE_TYPE
+            );
+
+            if (resource === undefined || resource === null) {
+                throw new Error("Code style sheet not loaded");
+            }
+
+            // register the style to the web page (ajsStyle manager is not implemented yet)
+            style = document.createElement("style");
+            style.setAttribute("type", "text/css");
+            style.innerHTML = resource.data;
+            document.head.appendChild(style);
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             // initialization finished
@@ -210,6 +225,15 @@ namespace ajsdoc {
             }
 
             if (data.articleState) {
+
+                let articleState: IAjsDocArticleStateSet = {                    
+                    caption: "",
+                    description: this._setupHTMLContent("<div class=\"ajsDocArticleContent\">" + (data.articleState as string) + "</div>")
+                };
+                
+                this.ajsDocLayout.ajsDocArticle.clearState(false);
+                this.ajsDocLayout.ajsDocArticle.setState(articleState);
+
                 /*let articleState: IAjsDocArticleStateSet = this._prepareArticleState(data.articleState);
                 this.ajsDocLayout.ajsDocArticle.clearState(false);
                 this.ajsDocLayout.ajsDocArticle.setState(articleState);*/
@@ -239,8 +263,8 @@ namespace ajsdoc {
                 this._progModel.getNavBar(path);
                 this._progModel.getContent(path);
             } else {
-                this._contentModel.getMenu(routeInfo.path);
-                this._contentModel.getContent(routeInfo.path);
+                this._contentModel.getMenu(routeInfo.base);
+                this._contentModel.getContent(routeInfo.base);
             }
 
         }
