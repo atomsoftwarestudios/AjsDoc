@@ -44,14 +44,18 @@ namespace ajsdoc {
     class AjsDocMenu extends ajs.mvvm.viewmodel.ViewComponent {
 
         protected _programModel: ProgramModel;
+        protected _contentModel: ContentModel;
 
         protected _previousContext: string;
         protected _previousRefNode: INode;
+        protected _previousArticle: IArticleData;
 
         protected _initialize(): void {
+            this._contentModel = ajs.Framework.modelManager.getModelInstance(ContentModel) as ContentModel;
             this._programModel = ajs.Framework.modelManager.getModelInstance(ProgramModel) as ProgramModel;
             this._previousContext = null;
             this._previousRefNode = null;
+            this._previousArticle = null;
             this._ajsVisualStateTransition = true;
         }
 
@@ -68,8 +72,8 @@ namespace ajsdoc {
                 this._ajsTransitionNewElement.classList.remove("ajsDocMenuLtrNew");
                 this._ajsTransitionNewElement.classList.remove("ajsDocMenuRtlNew");
                 this._ajsTransitionNewElement.classList.remove("ajsDocMenuFadeNew");
-                this._visualStateTransitionEnd();            
-            }
+                this._visualStateTransitionEnd();
+            };
 
             let transitionType: TransitionType = this._getTransitionType();
 
@@ -117,14 +121,14 @@ namespace ajsdoc {
 
             let transitionType: TransitionType = TransitionType.NONE;
 
-            let path = ajs.Framework.router.currentRoute.base;
+            let path: string = ajs.Framework.router.currentRoute.base;
 
             if (path.substr(0, 3) === "ref") {
 
                 if (this._previousContext === "") {
                     transitionType = TransitionType.FADE;
                 } else {
-                    transitionType = this._getTransitionTypeRef(path.substr(4))
+                    transitionType = this._getTransitionTypeRef(path.substr(4));
                 }
 
                 this._previousContext = "ref";
@@ -134,7 +138,7 @@ namespace ajsdoc {
                 if (this._previousContext === "ref") {
                     transitionType = TransitionType.FADE;
                 } else {
-                    transitionType = this._getTransitionTypeDoc(path)
+                    transitionType = this._getTransitionTypeDoc(path);
                 }
 
                 this._previousContext = "";
@@ -145,14 +149,61 @@ namespace ajsdoc {
         }
 
         protected _getTransitionTypeDoc(path: string): TransitionType {
-            return TransitionType.FADE;
+            let transitionType: TransitionType = TransitionType.NONE;
+
+            let currentArticle: IArticleData = this._contentModel.navigate(path);
+            /*if (!(currentArticle.children instanceof Array) || currentArticle.children.length === 0) {
+                currentArticle = currentArticle.parent;
+            }*/
+
+            if (this._previousArticle !== null) {
+
+                if (currentArticle.parent === this._previousArticle.parent) {
+                    if (currentArticle.children && currentArticle.children.length > 0) {
+                        transitionType = TransitionType.RTL;
+                    } else {
+                        if (this._previousArticle.children && this._previousArticle.children.length > 0) {
+                            transitionType = TransitionType.LTR;
+                        }
+                    }
+                }
+
+                if (currentArticle.parent === this._previousArticle) {
+                    if (currentArticle.children && currentArticle.children.length > 0) {
+                        transitionType = TransitionType.RTL;
+                    }
+                }
+
+                if (currentArticle.parent === this._previousArticle) {
+                    if (currentArticle.children && currentArticle.children.length > 0) {
+                        transitionType = TransitionType.RTL;
+                    }
+                }
+
+                if (currentArticle === this._previousArticle.parent) {
+                    if (this._previousArticle.children && this._previousArticle.children.length > 0) {
+                        transitionType = TransitionType.LTR;
+                    }
+                }
+
+                if (currentArticle === this._previousArticle.parent.parent) {
+                    transitionType = TransitionType.LTR;
+                }
+
+            } else {
+                transitionType = TransitionType.FADE;
+            }
+
+            this._previousArticle = currentArticle;
+
+            return transitionType;
         }
 
         protected _getTransitionTypeRef(path: string): TransitionType {
 
             let transitionType: TransitionType = TransitionType.NONE;
 
-            let currentNode = this._programModel.navigate(path);
+            let currentNode: INode = this._programModel.navigate(path);
             if (!(currentNode.children instanceof Array) || currentNode.children.length === 0) {
                 currentNode = currentNode.parent;
             }

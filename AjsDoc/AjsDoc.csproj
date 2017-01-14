@@ -39,7 +39,10 @@
     <Content Include="res\img\safari.png" />
     <Content Include="static\content\01 Introduction.html" />
     <Content Include="static\content\02 Design requirements.html" />
-    <Content Include="static\content\04\05 View components.html" />
+    <Content Include="static\content\04\01\01 View.html" />
+    <Content Include="static\content\04\01\03 View Components.html" />
+    <Content Include="static\content\04\01\02 Visual Components.html" />
+    <Content Include="static\content\04\01 View and its components.html" />
     <Content Include="static\content\98 Special thanks.html" />
     <Content Include="static\content\99 License.html" />
     <Content Include="static\templates\ajsdoc.html" />

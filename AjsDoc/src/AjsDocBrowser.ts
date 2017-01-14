@@ -71,11 +71,11 @@ namespace ajsdoc {
 
         protected _setupRoutesAndRedirs(): void {
 
-            const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
-            const anyPath: string = "(\\/.*|.*)";
+            // const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
+            // const anyPath: string = "(\\/.*|.*)";
 
-            ajs.Framework.navigator.registerRedirection("", "/Introduction");
-            ajs.Framework.navigator.registerRedirection("/", "/Introduction");
+            ajs.Framework.navigator.registerRedirection("", "/01-Introduction");
+            ajs.Framework.navigator.registerRedirection("/", "/01-Introduction");
             ajs.Framework.navigator.registerRedirection("/ref", "/ref/ajs");
             ajs.Framework.navigator.registerRedirection("/ref/", "/ref/ajs");
 

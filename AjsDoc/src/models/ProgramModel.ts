@@ -211,7 +211,7 @@ namespace ajsdoc {
                             label: node.children[i].name,
                             selected: node.children[i].path === ("/" + navPath),
                             expandable: node.children[i].children instanceof Array &&
-                                node.children[i].children.length > 0 && 
+                                node.children[i].children.length > 0 &&
                                 MENU_DONT_EXPAND.indexOf(node.children[i].kindString) === -1
                         });
                     }

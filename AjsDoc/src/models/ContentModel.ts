@@ -22,7 +22,7 @@ namespace ajsdoc {
 
     "use strict";
 
-    const CONTENT_DATA = "/static/toc.json";
+    const CONTENT_DATA: string = "/static/toc.json";
 
     export interface IArticleData {
         parent: IArticleData;
@@ -71,9 +71,7 @@ namespace ajsdoc {
             );
         }
 
-        
-
-        protected _initialize() {
+        protected _initialize(): void {
             // load the toc.json
             ajs.Framework.resourceManager.load(
                 (successfull: boolean, url: string, resource: ajs.resources.IResource) => {
@@ -133,7 +131,7 @@ namespace ajsdoc {
             this._initialized = true;
         }
 
-        protected _prepareData(article?: IArticleData, parent?: IArticleData, key?: string) {
+        protected _prepareData(article?: IArticleData, parent?: IArticleData, key?: string): void {
 
             if (article === undefined) {
                 this._prepareData(this._data.toc, null, "0");
@@ -143,6 +141,7 @@ namespace ajsdoc {
                 article.label = this._getLabel(article);
                 article.navPath = parent && parent !== null ? parent.navPath + "/" : "";
                 article.navPath += article.label.replace(/ /g, "-");
+                article.label = article.label.substr(article.label.indexOf(" ") + 1);
 
                 if (article.children instanceof Array) {
                     for (let i: number = 0; i < article.children.length; i++) {
@@ -165,22 +164,8 @@ namespace ajsdoc {
                 return "";
             }
 
-            resource = ajs.Framework.resourceManager.getResource(path, RESOURCE_STORAGE_TYPE);
-            if (resource === null) {
-                throw "Resource " + path + " was not loaded";
-            }
-
-            label = resource.data;
-            label = label.substr(0, label.indexOf("\n"));
-            let rr: RegExpExecArray = /<h1>(.*?)<\/h1>/.exec(label);
-
-            if (rr instanceof Array && rr.length > 0) {
-                label = rr[1];
-            }
-
-            if (label === "") {
-                label = "!!! Invalid article label !!!";
-            }
+            label = path.substr(path.lastIndexOf("/") + 1);
+            label = label.substr(0, label.lastIndexOf("."));
 
             return label;
         }
@@ -208,7 +193,7 @@ namespace ajsdoc {
                     path: article.children[i].navPath,
                     selected: article.children[i].navPath === ("/" + navPath),
                     expandable: article.children[i].children instanceof Array && article.children[i].children.length > 0
-                }
+                };
 
                 menu.label = article.label || "Guide & Examples";
                 menu.parentPath = article.parent && article.parent !== null ?
@@ -284,11 +269,13 @@ namespace ajsdoc {
                     break;
                 } else {
                     let newArticle: IArticleData = null;
-                    for (let i = 0; i < article.children.length; i++) {
-                        let artPath: string = article.children[i].navPath
-                        if (path.substr(0, artPath.length) === artPath) {
-                            newArticle = article.children[i];
-                            break;
+                    if (article.children) {
+                        for (let i: number = 0; i < article.children.length; i++) {
+                            let artPath: string = article.children[i].navPath;
+                            if (path.substr(0, artPath.length) === artPath) {
+                                newArticle = article.children[i];
+                                break;
+                            }
                         }
                     }
                     article = newArticle;

@@ -233,11 +233,11 @@ namespace ajsdoc {
 
             if (data.articleState) {
 
-                let articleState: IAjsDocArticleStateSet = {                    
+                let articleState: IAjsDocArticleStateSet = {
                     caption: "",
                     description: this._setupHTMLContent("<div class=\"ajsDocArticleContent\">" + (data.articleState as string) + "</div>")
                 };
-                
+
                 this.ajsDocLayout.ajsDocArticle.clearState(false);
                 this.ajsDocLayout.ajsDocArticle.setState(articleState);
 
