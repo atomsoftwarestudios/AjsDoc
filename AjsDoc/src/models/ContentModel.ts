@@ -41,6 +41,7 @@ namespace ajsdoc {
 
     export interface IContentDataReadyData {
         menuState?: IMenuState;
+        navBarState: INavBarItemsState;
         articleState?: INode | string;
     }
 
@@ -56,12 +57,21 @@ namespace ajsdoc {
             );
         }
 
+        public getNavBar(path: string): void {
+            this._checkInitialized(
+                new Error("Program data loading timeout"),
+                () => { this._getNavBar(path); }
+            );
+        }
+
         public getContent(path: string): void {
             this._checkInitialized(
                 new Error("Documentation contents loading timeout"),
                 () => { this._getContent(path); }
             );
         }
+
+        
 
         protected _initialize() {
             // load the toc.json
@@ -177,7 +187,7 @@ namespace ajsdoc {
 
         protected _getMenu(navPath: string): void {
 
-            let article: IArticleData = this._navigate(navPath);
+            let article: IArticleData = this.navigate(navPath);
 
             if (article.children === undefined || article.children.length === 0) {
                 article = article.parent;
@@ -215,7 +225,7 @@ namespace ajsdoc {
 
         protected _getContent(path: string): void {
 
-            let article: IArticleData = this._navigate(path);
+            let article: IArticleData = this.navigate(path);
 
             let desc: string = "";
             if (article.path) {
@@ -229,7 +239,35 @@ namespace ajsdoc {
             this._dataReadyNotifier.notify(this, { articleState: desc } );
         }
 
-        protected _navigate(path: string): IArticleData {
+        protected _getNavBar(path: string): void {
+            let items: INavBarItemsState = [];
+
+            let adata: IArticleData = this.navigate(path);
+
+            let key: number = 0;
+            while (adata !== null) {
+                let navBarItem: INavBarItemState = {
+                    key: key.toString(),
+                    firstItem: false,
+                    itemPath: adata.navPath,
+                    itemType: "",
+                    itemLabel: adata.label
+                };
+                if (adata.parent !== null) {
+                    items.unshift(navBarItem);
+                    key++;
+                }
+                adata = adata.parent;
+            }
+
+            if (items.length > 0) {
+                items[0].firstItem = true;
+            }
+
+            this._dataReadyNotifier.notify(this, { navBarState: items });
+        }
+
+        public navigate(path: string): IArticleData {
 
             let article: IArticleData = this._data.toc;
 

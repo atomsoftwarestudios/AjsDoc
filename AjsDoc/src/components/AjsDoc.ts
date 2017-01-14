@@ -224,6 +224,13 @@ namespace ajsdoc {
                 this.ajsDocLayout.ajsDocMenu.setState(data.menuState);
             }
 
+            if (data.navBarState) {
+                let navBarState: any = {
+                    items: data.navBarState
+                };
+                this.ajsDocLayout.ajsDocNavBar.setState(navBarState);
+            }
+
             if (data.articleState) {
 
                 let articleState: IAjsDocArticleStateSet = {                    
@@ -264,6 +271,7 @@ namespace ajsdoc {
                 this._progModel.getContent(path);
             } else {
                 this._contentModel.getMenu(routeInfo.base);
+                this._contentModel.getNavBar(routeInfo.base);
                 this._contentModel.getContent(routeInfo.base);
             }
 

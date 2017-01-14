@@ -113,8 +113,8 @@ namespace ajsdoc {
             this._itemsById = {};
             this._jsonData = resource.data;
             this._data = JSON.parse(this._jsonData);
-            this._data.kindString = "Reference";
-            this._data.name = "Guide";
+            this._data.kindString = "";
+            this._data.name = "";
             this._data.comment = { shortText: "<span></span>" };
             this._data.kind = -1;
 
@@ -166,7 +166,7 @@ namespace ajsdoc {
             let parentPath: string;
             if (node.parent !== null) {
                 if (node.parent === this._data) {
-                    parentPath = "/ref";
+                    parentPath = "";
                 } else {
                     parentPath = "/ref" + node.parent.path;
                 }
@@ -232,11 +232,11 @@ namespace ajsdoc {
                 let navBarItem: INavBarItemState = {
                     key: key.toString(),
                     firstItem: false,
-                    itemPath: node.path,
+                    itemPath: "/ref" + node.path,
                     itemType: node.kindString,
                     itemLabel: node.name
                 };
-                if (node.kind !== 0) {
+                if (node.kind !== -1) {
                     items.unshift(navBarItem);
                     key++;
                 }
