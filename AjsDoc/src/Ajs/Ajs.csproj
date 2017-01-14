@@ -81,6 +81,7 @@
     <TypeScriptCompile Include="src\resources\StorageLocal.ts" />
     <TypeScriptCompile Include="src\resources\StorageMemory.ts" />
     <TypeScriptCompile Include="src\resources\StorageSession.ts" />
+    <TypeScriptCompile Include="src\navigation\IRedirection.ts" />
     <TypeScriptCompile Include="src\routing\IRoute.ts" />
     <TypeScriptCompile Include="src\routing\IRouteInfo.ts" />
     <TypeScriptCompile Include="src\routing\IRoutes.ts" />

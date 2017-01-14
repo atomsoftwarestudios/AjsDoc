@@ -29,20 +29,33 @@ namespace ajs.navigation {
         protected _lastUrl: string;
         public get lastUrl(): string { return this._lastUrl; }
 
+        protected _redirections: IRedirection[];
+        public get redirections(): IRedirection[] { return this._redirections; }
+
         protected _router: Router;
         public get router(): Router { return this.router; }
 
         public constructor(router: Router) {
             this._router = router;
             this._lastUrl = null;
+            this._redirections = [];
             window.addEventListener("popstate", (event: PopStateEvent) => { this._onPopState(event); });
             window.addEventListener("hashchange", (event: HashChangeEvent) => { this._onHashChange(event); });
+        }
+
+        public registerRedirection(path: string, target: string) {
+            this._redirections.push({
+                path: path,
+                target: target
+            });
         }
 
         public navigated(): void {
             if (window.location.href !== this._lastUrl) {
                 this._lastUrl = window.location.href;
-                this._router.route();
+                if (!this._redirect(window.location.pathname)) {
+                    this._router.route();
+                }
             }
         }
 
@@ -50,7 +63,10 @@ namespace ajs.navigation {
             if (window.location.href !== url) {
                 this._lastUrl = url;
                 window.history.pushState({}, "", url);
-                this._router.route();
+
+                if (!this._redirect(url)) {
+                    this._router.route();
+                }
             }
         }
 
@@ -60,6 +76,21 @@ namespace ajs.navigation {
 
         protected _onHashChange(event: HashChangeEvent): void {
             this.navigated();
+        }
+
+        protected _redirect(url: string): boolean {
+            let redirected: boolean = false;
+
+            for (let i: number = 0; i < this._redirections.length; i++) {
+                if (this._redirections[i].path === url) {
+                    window.history.pushState({}, "", this._redirections[i].target);
+                    redirected = true;
+                    this._router.route();
+                    break;
+                }
+            }
+
+            return redirected;
         }
 
     }

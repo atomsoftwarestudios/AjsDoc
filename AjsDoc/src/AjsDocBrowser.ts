@@ -63,18 +63,22 @@ namespace ajsdoc {
 
         protected _resourcesLoaded(succesfull: Boolean): void {
             if (succesfull) {
-                this._setupRoutes();
+                this._setupRoutesAndRedirs();
             } else {
                 throw new Error("Failed to load resources.");
             }
         }
 
-        protected _setupRoutes(): void {
+        protected _setupRoutesAndRedirs(): void {
 
             const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
             const anyPath: string = "(\\/.*|.*)";
 
-            // ajs.Framework.router.registerRoute([{ base: "^\/doc", params: anyPath + allParamsAndHashes }], "AjsDoc");
+            ajs.Framework.navigator.registerRedirection("", "/Introduction");
+            ajs.Framework.navigator.registerRedirection("/", "/Introduction");
+            ajs.Framework.navigator.registerRedirection("/ref", "/ref/ajs");
+            ajs.Framework.navigator.registerRedirection("/ref/", "/ref/ajs");
+
             ajs.Framework.router.registerRoute([{ base: ".*", params: "" }], "AjsDoc");
 
             this._initDone();
