@@ -175,7 +175,7 @@ namespace ajs.mvvm.view {
                 this.appliedStyleSheets.push(template.styleSheets[i]);
                 let style: HTMLElement = document.createElement("style");
                 style.setAttribute("type", "text/css");
-                style.innerText = this._processStyleSheet(styleSheets[i]);
+                style.textContent = this._processStyleSheet(styleSheets[i]);
                 document.head.appendChild(style);
             }
 
@@ -189,7 +189,7 @@ namespace ajs.mvvm.view {
                         let styleSheetData: string = styleSheet.innerText;
                         let style: HTMLElement = document.createElement("style");
                         style.setAttribute("type", "text/css");
-                        style.innerText = this._processStyleSheet(styleSheetData);
+                        style.textContent = this._processStyleSheet(styleSheetData);
                         document.head.appendChild(style);
                     }
                 }
