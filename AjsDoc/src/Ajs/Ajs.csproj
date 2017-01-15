@@ -110,8 +110,6 @@
     <TypeScriptCompile Include="src\utils\Utils.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\ajs.csproj" />
-    <Content Include="src\ajs.csproj.user" />
     <Content Include="changelog.txt" />
     <Content Include="license.txt" />
   </ItemGroup>
