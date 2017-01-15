@@ -23,34 +23,68 @@ namespace ajs.boot {
     "use strict";
 
     getResourceLists = function(): IResourceLists {
+
         return {
             localPermanent: [
                 "/js/ajsdocbrowser.js",
-                "/js/highlight.pack.js"
             ]
         };
+
     };
 
     getAjsConfig = function(): IAJSConfig {
+
+        // const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
+        // const anyPath: string = "(\\/.*|.*)";
 
         return {
             debug: true,
             logErrors: true,
             showErrors: true,
 
-            resourceManagerConfig: {
+            resourceManager: {
                 memoryCacheSize: 20 * 1024 * 1024,
                 removeResourcesOlderThan: ajs.utils.maxDate()
             },
+
+            navigator: [
+                { path: "", target: "/01-Introduction" },
+                { path: "/", target: "/01-Introduction" },
+                { path: "/ref", target: "/ref/ajs" },
+                { path: "/ref/", target: "/ref/ajs" }
+            ],
+
+            router: [
+                {
+                    paths: [{ base: ".*", params: "" }],
+                    viewComponentName: "AjsDoc"
+                }
+            ]
+
         };
 
     };
 
-    getApplicationConfig = function (): ajs.app.IApplicationConfig {
+
+    getApplicationConfig = function(): ajs.app.IApplicationConfig {
+
+        let userConfig: ajsdoc.IAjsDocBrowserConfig = {
+            storageType: ajs.resources.STORAGE_TYPE.LOCAL,
+            articlesStoragePolicy: ajs.resources.CACHE_POLICY.LASTRECENTLYUSED,
+            libraries: ["/js/lib/highlight.pack.js"],
+            templateList: "/static/templates.json",
+            resourceList: "/static/appresources.json",
+            dataSources: {
+                toc: "/static/toc.json",
+                program: "/static/program.json"
+            }
+        };
+
         return {
             appConstructor: ajsdoc.AjsDocBrowser,
-            userConfig: null
+            userConfig: userConfig
         };
+
     };
 
 }

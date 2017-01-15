@@ -27,16 +27,24 @@ namespace ajs.templating {
         protected _name: string;
         public get name(): string { return this._name; }
 
+        protected _storageType: resources.STORAGE_TYPE;
+        public get storageType(): resources.STORAGE_TYPE { return this._storageType; }
+
+        protected _styleSheets: string[];
+        public get styleSheets(): string[] { return this._styleSheets; }
+
         protected _template: Document;
         public get template(): Document { return this._template; }
 
         protected _visualComponents: IVisualComponentCollection;
         public get visualComponents(): IVisualComponentCollection { return this._visualComponents; }
 
-        public constructor(name: string, html: string) {
+        public constructor(name: string, html: string, stylesheets: string[], storageType: resources.STORAGE_TYPE) {
             this._name = name;
+            this._storageType = storageType;
             this._template = document.implementation.createHTMLDocument(name);
             this._template.body.innerHTML = html;
+            this._styleSheets = stylesheets;
             this._visualComponents = this._getVisualComponents();
         }
 
@@ -104,7 +112,7 @@ namespace ajs.templating {
                             childrenComponents[id] = {
                                 tagName: node.nodeName.toUpperCase(),
                                 nameAttribute: nameAttribute
-                            }
+                            };
                         }
                     } else
                         if ((node as HTMLElement).hasAttribute("component") && (node as HTMLElement).hasAttribute("id")) {
@@ -113,7 +121,7 @@ namespace ajs.templating {
                             childrenComponents[id] = {
                                 tagName: cn,
                                 nameAttribute: null
-                            }
+                            };
                         } else {
                             this._getChildrenComponents(node as HTMLElement, childrenComponents);
                         }
@@ -121,10 +129,6 @@ namespace ajs.templating {
             }
 
             return childrenComponents;
-
-        }
-
-        protected _isChildrenComponent() {
 
         }
 

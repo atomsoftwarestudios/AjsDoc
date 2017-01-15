@@ -22,4 +22,9 @@ namespace ajsdoc {
 
     "use strict";
 
+    /** The pplication configuration will be available globally after application initialization */
+    export let config: IAjsDocBrowserConfig = null;
+
+    export let resources: string[] = [];
+
 }

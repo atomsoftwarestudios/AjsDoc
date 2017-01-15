@@ -35,4 +35,8 @@ namespace ajs.mvvm.view {
             this.message = componentName;
         }
     }
+
+    export class CSSInvalidResourceSpecificationException extends Error { }
+
+    export class CSSRequiredResourceNotLoadedException extends Error { }
 }

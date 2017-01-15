@@ -37,6 +37,11 @@ namespace ajs.resources {
         /** Returns approximate total size of all resources stored in the storage in bytes */
         public get usedSpace(): number { return this._usedSpace; }
 
+        /** Returns type of the storage */
+        public get type(): STORAGE_TYPE {
+            throw new NotImplementedException();
+        }
+
         /**
          * Completely clears the storage
          * MUST BE OVERRIDEN IN INHERITED CLASS

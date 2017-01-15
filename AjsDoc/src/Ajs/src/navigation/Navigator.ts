@@ -35,10 +35,10 @@ namespace ajs.navigation {
         protected _router: Router;
         public get router(): Router { return this.router; }
 
-        public constructor(router: Router) {
+        public constructor(router: Router, redirections?: IRedirection[]) {
             this._router = router;
             this._lastUrl = null;
-            this._redirections = [];
+            this._redirections = redirections || [];
             window.addEventListener("popstate", (event: PopStateEvent) => { this._onPopState(event); });
             window.addEventListener("hashchange", (event: HashChangeEvent) => { this._onHashChange(event); });
         }

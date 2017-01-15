@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -23,17 +23,9 @@ namespace ajs.app {
     "use strict";
 
     /**
-     * TODO: This is not defined yet. At least name of the error
-     * view component should be defined here
+     * User configuration of the application
      */
-    export interface IApplicationConfig {
-
-        /** Constructor of the user application class derived from the ajs.app.Application class */
-        appConstructor: typeof ajs.app.Application;
-
-        /** User configuration of the application */
-        userConfig?: IApplicationUserConfig;
-
+    export interface IApplicationUserConfig {
     }
 
 }

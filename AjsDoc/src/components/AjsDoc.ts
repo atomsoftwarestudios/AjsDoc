@@ -22,19 +22,6 @@ namespace ajsdoc {
 
     "use strict";
 
-    /**
-     * Specifies where resources used by AjsDoc will be cached - MOVE TO APPLICATION CONFIG
-     */
-    export const RESOURCE_STORAGE_TYPE: ajs.resources.STORAGE_TYPE = ajs.resources.STORAGE_TYPE.SESSION;
-    export const RESOURCE_STORAGE_POLICY: ajs.resources.CACHE_POLICY = ajs.resources.CACHE_POLICY.LASTRECENTLYUSED;
-
-    /**
-     * Static resources to be loaded - MOVE TO APPLICATION CONFIG
-     */
-    const staticResources: string[] = [
-        "/static/examples/app_init.ts",
-    ];
-
     export class AjsDoc extends ajs.mvvm.viewmodel.ViewComponent {
 
         protected _initialized: boolean;
@@ -110,57 +97,6 @@ namespace ajsdoc {
                 return true;
             };
             this._contentModel.dataReadyNotifier.subscribe(this._contentDataReady);
-
-            // load necessary templates and continue with initAsync when the template is ready
-            ajs.Framework.templateManager.loadTemplateFiles(
-                (successfull: boolean) => {
-                    if (successfull) {
-                        this._initAsync();
-                    }
-                },
-                staticResources,
-                RESOURCE_STORAGE_TYPE,
-                RESOURCE_STORAGE_POLICY
-            );
-        }
-
-        /**
-         * Called when templates are loaded to finish initialization of the view component
-         * Loads the highlighting style
-         * TODO: Move loading of the JSON resource to the DocModel to follow layer separation
-         */
-        protected _initAsync(): void {
-
-            // !!!!!!!!!!!!!!!!!!!!!!!! MOVE THIS TO STYLESHEET MANAGER !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            let resource: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
-                "/res/css/hljsvs.css", RESOURCE_STORAGE_TYPE
-            );
-
-            if (resource === undefined || resource === null) {
-                throw new Error("Code style sheet not loaded");
-            }
-
-            // register the style to the web page (ajsStyle manager is not implemented yet)
-            let style: HTMLStyleElement = document.createElement("style");
-            style.setAttribute("type", "text/css");
-            style.innerHTML = resource.data;
-            document.head.appendChild(style);
-
-
-            resource = ajs.Framework.resourceManager.getResource(
-                "/res/css/content.css", RESOURCE_STORAGE_TYPE
-            );
-
-            if (resource === undefined || resource === null) {
-                throw new Error("Code style sheet not loaded");
-            }
-
-            // register the style to the web page (ajsStyle manager is not implemented yet)
-            style = document.createElement("style");
-            style.setAttribute("type", "text/css");
-            style.innerHTML = resource.data;
-            document.head.appendChild(style);
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             // initialization finished
             this._initialized = true;
@@ -395,15 +331,15 @@ namespace ajsdoc {
                 for (let i: number = 0; i < examples.length; i++) {
                     let example: string = examples[i].substring(9, examples[i].length);
 
-                    for (let j: number = 0; j < staticResources.length; j++) {
-                        if (staticResources[j].indexOf(example) !== -1) {
+                    for (let j: number = 0; j < resources.length; j++) {
+                        if (resources[j].indexOf(example) !== -1) {
                             let resource: ajs.resources.IResource;
                             resource = ajs.Framework.resourceManager.getResource(
-                                staticResources[j],
-                                RESOURCE_STORAGE_TYPE
+                                resources[j],
+                                config.storageType
                             );
                             if (resource === null) {
-                                throw new Error("Example resource '" + staticResources[j] + "' not loaded");
+                                throw new Error("Example resource '" + resources[j] + "' not loaded");
                             }
                             text = text.replace(new RegExp("#example " + example + ".*", "g"),
                                 "<pre class=\"ajsDocExample\"><code class=\"typescript\">" + resource.data + "</pre></code>");

@@ -24,6 +24,7 @@ namespace ajs.resources {
 
     export interface IResourceRequestData {
         url: string;
+        isBinary: boolean;
         userData: any;
         lastModified: Date;
         startTime: Date;

@@ -1,6 +1,6 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
-Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
+Copyright (c)2017 Atom Software Studios. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -18,22 +18,20 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.app {
+namespace ajsdoc {
 
     "use strict";
 
-    /**
-     * TODO: This is not defined yet. At least name of the error
-     * view component should be defined here
-     */
-    export interface IApplicationConfig {
-
-        /** Constructor of the user application class derived from the ajs.app.Application class */
-        appConstructor: typeof ajs.app.Application;
-
-        /** User configuration of the application */
-        userConfig?: IApplicationUserConfig;
-
+    export interface IAjsDocBrowserConfig extends ajs.app.IApplicationUserConfig {
+        storageType: ajs.resources.STORAGE_TYPE;
+        articlesStoragePolicy: ajs.resources.CACHE_POLICY;
+        libraries: string[];
+        templateList: string;
+        resourceList: string;
+        dataSources: {
+            toc: string;
+            program: string;
+        };
     }
 
 }

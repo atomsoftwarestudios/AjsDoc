@@ -82,7 +82,7 @@ namespace ajs.mvvm.view {
          */
         public get getComponentId(): number { this._lastComponentId++; return this._lastComponentId; }
 
-        /** Holds style sheets (template names) applied to the current view */
+        /** Holds style sheets (template names / StyleSheet URIs) applied to the current view */
         protected _appliedStyleSheets: string[];
         /** Returns style sheets (template names) applied to the current view */
         public get appliedStyleSheets(): string[] { return this._appliedStyleSheets; }
@@ -150,7 +150,7 @@ namespace ajs.mvvm.view {
                 throw new VisualComponentNotRegisteredException(name);
             }
 
-            this.applyStylesheetFromTemplate(visualComponent.template);
+            this.applyStyleSheetsFromTemplate(visualComponent.template);
 
             return new viewComponentConstructor(this, null, visualComponent);
 
@@ -161,23 +161,36 @@ namespace ajs.mvvm.view {
             let styleSheets: NodeListOf<HTMLStyleElement> = document.head.getElementsByTagName("style");
             for (let i: number = 0; i < styleSheets.length; i++) {
                 if (styleSheets.item(i).hasAttribute("id") &&
-                    this._appliedStyleSheets.indexOf(styleSheets.item(i).getAttribute("id")) !== -1)
-                document.head.removeChild(styleSheets.item(i));
+                    this._appliedStyleSheets.indexOf(styleSheets.item(i).getAttribute("id")) !== -1) {
+                    document.head.removeChild(styleSheets.item(i));
+                }
             }
             this._appliedStyleSheets = [];
         }
 
-        public applyStylesheetFromTemplate(template: ajs.templating.Template): void {
+        public applyStyleSheetsFromTemplate(template: ajs.templating.Template): void {
+            // styleSheets defined in the stylesheets attribute of the template
+            let styleSheets: string[] = this.templateManager.getTemplateStyleSheetsData(template);
+            for (let i: number = 0; i < template.styleSheets.length; i++) {
+                this.appliedStyleSheets.push(template.styleSheets[i]);
+                let style: HTMLElement = document.createElement("style");
+                style.setAttribute("type", "text/css");
+                style.innerText = this._processStyleSheet(styleSheets[i]);
+                document.head.appendChild(style);
+            }
+
+            // styleSheets defied as tags in the template
             if (this._appliedStyleSheets.indexOf(template.name) === -1) {
                 let styleSheets: NodeListOf<HTMLStyleElement> = template.template.getElementsByTagName("style");
                 for (let i: number = 0; i < styleSheets.length; i++) {
                     let styleSheet: HTMLStyleElement = styleSheets.item(i);
                     if (styleSheet.hasAttribute("type") && styleSheet.getAttribute("type") === "text/css") {
                         this._appliedStyleSheets.push(template.name);
-                        let clonedStyleSheet: HTMLStyleElement = (styleSheet.cloneNode(true)) as HTMLStyleElement;
-                        let adoptedStyleSheet: HTMLStyleElement = document.adoptNode(clonedStyleSheet) as HTMLStyleElement;
-                        adoptedStyleSheet.setAttribute("id", template.name);
-                        document.head.appendChild(adoptedStyleSheet);
+                        let styleSheetData: string = styleSheet.innerText;
+                        let style: HTMLElement = document.createElement("style");
+                        style.setAttribute("type", "text/css");
+                        style.innerText = this._processStyleSheet(styleSheetData);
+                        document.head.appendChild(style);
                     }
                 }
 
@@ -249,7 +262,8 @@ namespace ajs.mvvm.view {
         protected _isComponent(node: Node): boolean {
             if (node !== undefined && node !== null && node instanceof Element) {
                 let componentElement: ajs.mvvm.viewmodel.IComponentElement = (node as ajs.mvvm.viewmodel.IComponentElement);
-                return componentElement.hasOwnProperty("ajsComponent") && componentElement.ajsComponent instanceof ajs.mvvm.viewmodel.ViewComponent;
+                return componentElement.hasOwnProperty("ajsComponent") &&
+                    componentElement.ajsComponent instanceof ajs.mvvm.viewmodel.ViewComponent;
             }
             return false;
         }
@@ -366,9 +380,14 @@ namespace ajs.mvvm.view {
 
         protected _copyComponentElementProperties(source: Node, target: Node): void {
             if (source instanceof Element && target instanceof Element) {
-                (target as ajs.mvvm.viewmodel.IComponentElement).ajsComponent = (source as ajs.mvvm.viewmodel.IComponentElement).ajsComponent;
-                (target as ajs.mvvm.viewmodel.IComponentElement).ajsOwnerComponent = (source as ajs.mvvm.viewmodel.IComponentElement).ajsOwnerComponent;
-                (target as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners = (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners;
+                (target as ajs.mvvm.viewmodel.IComponentElement).ajsComponent =
+                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsComponent;
+
+                (target as ajs.mvvm.viewmodel.IComponentElement).ajsOwnerComponent =
+                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsOwnerComponent;
+
+                (target as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners =
+                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners;
             }
         }
 
@@ -415,6 +434,26 @@ namespace ajs.mvvm.view {
             }
 
             return true;
+        }
+
+        protected _processStyleSheet(styleSheet: string): string {
+
+            styleSheet = styleSheet.replace(/resource\(.*\)/gm, (str: string): string => {
+                let tmp: RegExpExecArray = (/'(.*)'/g).exec(str);
+                if (tmp.length > 1) {
+                    let resource: ajs.resources.IResource = this._templateManager.resourceManager.getResource(tmp[1], resources.STORAGE_TYPE.LOCAL);
+                    if (resource !== null) {
+                        return "url(data:image;base64," + resource.data + ")";
+                    } else {
+                        throw new CSSRequiredResourceNotLoadedException();
+                    }
+
+                } else {
+                    throw new CSSInvalidResourceSpecificationException();
+                }
+            });
+
+            return styleSheet;
         }
 
     }

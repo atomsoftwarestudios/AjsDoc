@@ -24,13 +24,17 @@ namespace ajs.templating {
 
     export class TemplateManager {
 
+        protected _resourceManager: ajs.resources.ResourceManager;
+        public get resourceManager(): ajs.resources.ResourceManager { return this._resourceManager; }
+
         protected _templates: ITemplatesCollection;
         public get templates(): ITemplatesCollection { return this._templates; }
 
         protected _visualComponents: IVisualComponentCollection;
         public get VisualComponents(): IVisualComponentCollection { return this._visualComponents; }
 
-        public constructor() {
+        public constructor(resourceManager: ajs.resources.ResourceManager) {
+            this._resourceManager = resourceManager;
             this._templates = {};
             this._visualComponents = {};
         }
@@ -39,21 +43,45 @@ namespace ajs.templating {
             templatesCreatedCallback: ITemplatesLoadEndHandler,
             paths: string[],
             storageType?: ajs.resources.STORAGE_TYPE,
-            cachePolicy?: ajs.resources.CACHE_POLICY
         ): void {
-            ajs.Framework.resourceManager.loadMultiple(
+
+            this._resourceManager.loadMultiple(
                 (allLoaded: boolean, resources: ajs.resources.IResource[]) => {
                     this._templateFilesLoaded(allLoaded, resources, templatesCreatedCallback);
                 },
                 paths,
                 null,
                 storageType,
-                cachePolicy
+                resources.CACHE_POLICY.PERMANENT
             );
         }
 
-        public loadTemplatesFromResource(resource: ajs.resources.IResource): void {
-            this._parseTemplate(resource.data);
+        public loadTemplatesFromResource(
+            resource: ajs.resources.IResource,
+            templatesCreatedCallback: ITemplatesLoadEndHandler
+        ): void {
+
+            let template: Template = this._parseTemplate(resource.data, resource.storage.type);
+            this._loadTemplatesStyleSheets(
+                template.styleSheets,
+                resource.storage.type,
+                templatesCreatedCallback
+            );
+
+        }
+
+        public getTemplateStyleSheetsData(template: Template): string[] {
+            let styleSheets: string[] = [];
+
+            for (let i: number = 0; i < template.styleSheets.length; i++) {
+                let styleSheet: string = this._resourceManager.getResource(
+                    template.styleSheets[i],
+                    template.storageType
+                ).data;
+                styleSheets.push(styleSheet);
+            }
+
+            return styleSheets;
         }
 
         protected _templateFilesLoaded (
@@ -62,31 +90,76 @@ namespace ajs.templating {
             templatesCreatedCallback: ITemplatesLoadEndHandler): void {
 
             if (allLoaded) {
+                let styleSheets: string[] = [];
                 for (let i: number = 0; i < resources.length; i++) {
-                    let data: string = resources[i].data;
-                    this._parseTemplatesFile(data);
+                    styleSheets = styleSheets.concat(
+                        this._parseTemplatesFile(resources[i].data, resources[i].storage.type)
+                    );
                 }
-                templatesCreatedCallback(allLoaded);
+                if (styleSheets.length > 0) {
+                    this._loadTemplatesStyleSheets(
+                        styleSheets,
+                        resources[0].storage.type,
+                        templatesCreatedCallback
+                    );
+                }
+            } else {
+                throw new FailedToLoadTemplatesException();
             }
         }
 
-        protected _parseTemplatesFile(html: string): void {
+        protected _loadTemplatesStyleSheets(
+            styleSheets: string[],
+            storageType: ajs.resources.STORAGE_TYPE,
+            templatesCreatedCallback: ITemplatesLoadEndHandler
+        ): void {
+
+            this._resourceManager.loadMultiple(
+                (allLoaded: boolean) => {
+                    if (allLoaded) {
+                        templatesCreatedCallback(allLoaded);
+                    } else {
+                        throw new FailedToLoadTemplateStyleSheetsException();
+                    }
+                },
+                styleSheets,
+                null,
+                storageType,
+                ajs.resources.CACHE_POLICY.PERMANENT
+            );
+
+        }
+
+        protected _parseTemplatesFile(html: string, storageType: resources.STORAGE_TYPE): string[] {
             let doc: Document = document.implementation.createHTMLDocument("templates");
             doc.body.innerHTML = html;
 
+            let styleSheets: string[] = [];
             let templateTags: NodeListOf<HTMLElement> = doc.getElementsByTagName("template");
             for (let i: number = 0; i < templateTags.length; i++) {
-                this._parseTemplate(templateTags.item(i));
+                let template: Template = this._parseTemplate(templateTags.item(i), storageType);
+                styleSheets = styleSheets.concat(template.styleSheets);
             }
+
+            return styleSheets;
         }
 
-        protected _parseTemplate(templateTag: HTMLElement): void {
+        protected _parseTemplate(templateTag: HTMLElement, storageType: resources.STORAGE_TYPE): Template {
             let templateName: string = "";
+            let stylesheets: string[] = [];
+
             if (templateTag.hasAttribute("name")) {
-                templateName = templateTag.attributes.getNamedItem("name").value;
+                templateName = templateTag.getAttribute("name");
             }
 
-            let template: Template = new Template(templateName, templateTag.innerHTML);
+            if (templateTag.hasAttribute("stylesheets")) {
+                stylesheets = templateTag.getAttribute("stylesheets").split(";");
+                for (let i: number = 0; i < stylesheets.length; i++) {
+                    stylesheets[i] = stylesheets[i].trim();
+                }
+            }
+
+            let template: Template = new Template(templateName, templateTag.innerHTML, stylesheets, storageType);
             this._templates[templateName] = template;
 
             for (var visualComponentName in template.visualComponents) {
@@ -94,6 +167,8 @@ namespace ajs.templating {
                     this._visualComponents[visualComponentName] = template.visualComponents[visualComponentName];
                 }
             }
+
+            return template;
         }
 
         public getTemplate(name: string): Template {

@@ -22,69 +22,144 @@ namespace ajsdoc {
 
     "use strict";
 
+    /**
+     * The AjsDocBrowser application
+     */
     export class AjsDocBrowser extends ajs.app.Application {
 
+        /**
+         * Starts application intitalization by loading template list file defined in the config
+         */
         public initialize(): void {
-            ajs.Framework.templateManager.loadTemplateFiles(
+
+            config = this._config as IAjsDocBrowserConfig;
+
+            ajs.Framework.resourceManager.load(
                 (successfull: boolean) => {
-                    this._templatesLoaded(successfull);
+                    this._templateListLoaded(successfull);
                 },
-                [
-                    "/static/templates/ajsdoc.html",
-                ],
-                ajs.resources.STORAGE_TYPE.LOCAL,
+                config.templateList,
+                null,
+                config.storageType,
                 ajs.resources.CACHE_POLICY.PERMANENT
             );
         }
 
+        protected _templateListLoaded(successfull: boolean): void {
+            if (successfull) {
+                this._loadTemplates();
+            } else {
+                throw new Error("Failed to load template list.");
+            }
+        }
+
+        /**
+         * Initiate loading of templates defined in the template list
+         */
+        protected _loadTemplates(): void {
+
+            // get list of templates to be loaded
+            let res: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
+                config.templateList,
+                config.storageType
+            );
+
+            let templates: string[] = JSON.parse(res.data);
+
+            ajs.Framework.templateManager.loadTemplateFiles(
+                (successfull: boolean) => {
+                    this._templatesLoaded(successfull);
+                },
+                templates,
+                config.storageType
+            );
+        }
+
+        /**
+         * Checks if loading of templates was successful and continues by loading of
+         * the resource list file
+         * @param successfull Information from template manager if templates were loaded successfully
+         */
         protected _templatesLoaded(successfull: boolean): void {
             if (successfull) {
-                this._loadResources();
+                this._loadResourceList();
             } else {
                 throw new Error("Failed to load templates.");
             }
         }
 
+        /**
+         * Initiates loading of the resources list file
+         */
+        protected _loadResourceList(): void {
+
+            ajs.Framework.resourceManager.load(
+                (successfull: boolean) => {
+                    this._resourcesConfigLoaded(successfull);
+                },
+                config.resourceList,
+                null,
+                config.storageType,
+                ajs.resources.CACHE_POLICY.PERMANENT
+            );
+
+        }
+
+        /**
+         * Checks if loading of the resources file was successfull
+         * @param successfull Information from resource manager if resources list was loaded successfully
+         */
+        protected _resourcesConfigLoaded(successfull: boolean): void {
+            if (successfull) {
+                this._loadResources();
+            } else {
+                throw new Error("Failed to load resources configuration");
+            }
+        }
+
+        /**
+         * Initiates loading of libraries (config file) and resources specified in the resources list file
+         */
         protected _loadResources(): void {
+
+            // get list of resources to be loaded
+            let res: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
+                config.resourceList,
+                config.storageType
+            );
+
+            resources = config.libraries.concat(JSON.parse(res.data));
+            resources.push(config.dataSources.program);
+            resources.push(config.dataSources.toc);
+
+            // load resources
             ajs.Framework.resourceManager.loadMultiple(
                 (successfull: boolean) => {
                     this._resourcesLoaded(successfull);
                 },
-                [
-                    "/res/css/hljsvs.css",
-                    "/res/css/content.css",
-                    "/static/program.json"
-                ],
+                resources,
                 null,
-                ajs.resources.STORAGE_TYPE.SESSION,
+                config.storageType,
                 ajs.resources.CACHE_POLICY.PERMANENT
             );
+
         }
 
-        protected _resourcesLoaded(succesfull: Boolean): void {
-            if (succesfull) {
-                this._setupRoutesAndRedirs();
+        /**
+         * Check if loading of all resources was sucessfull and finishes initialization of the application if so
+         * @param successfull
+         */
+        protected _resourcesLoaded(successfull: Boolean): void {
+            if (successfull) {
+                this._initDone();
             } else {
                 throw new Error("Failed to load resources.");
             }
         }
 
-        protected _setupRoutesAndRedirs(): void {
-
-            // const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
-            // const anyPath: string = "(\\/.*|.*)";
-
-            ajs.Framework.navigator.registerRedirection("", "/01-Introduction");
-            ajs.Framework.navigator.registerRedirection("/", "/01-Introduction");
-            ajs.Framework.navigator.registerRedirection("/ref", "/ref/ajs");
-            ajs.Framework.navigator.registerRedirection("/ref/", "/ref/ajs");
-
-            ajs.Framework.router.registerRoute([{ base: ".*", params: "" }], "AjsDoc");
-
-            this._initDone();
-
-        }
-
+        /**
+         * Finalizes the application when the browser tab is about to be closed
+         */
         protected _finalize(): void {
             console.warn("IMPLEMENT: AjsDocBrowser.application.finalize");
         }

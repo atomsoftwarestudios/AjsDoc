@@ -22,8 +22,6 @@ namespace ajsdoc {
 
     "use strict";
 
-    const CONTENT_DATA: string = "/static/toc.json";
-
     export interface IArticleData {
         parent: IArticleData;
         key: string;
@@ -47,7 +45,6 @@ namespace ajsdoc {
 
     export class ContentModel extends ajs.mvvm.model.Model {
 
-        protected _jsonData: string;
         protected _data: IContentData;
 
         public getMenu(path: string): void {
@@ -72,26 +69,17 @@ namespace ajsdoc {
         }
 
         protected _initialize(): void {
-            // load the toc.json
-            ajs.Framework.resourceManager.load(
-                (successfull: boolean, url: string, resource: ajs.resources.IResource) => {
-                    this._jsonLoaded(successfull, url, resource);
-                },
-                CONTENT_DATA,
-                null,
-                RESOURCE_STORAGE_TYPE,
-                RESOURCE_STORAGE_POLICY
-            );
-        }
 
-        protected _jsonLoaded(successfull: boolean, url: string, resource: ajs.resources.IResource): void {
-            if (!successfull) {
-                throw "Failed to load the TOC";
+            let res: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
+                config.dataSources.toc,
+                config.storageType
+            );
+
+            if (res === null) {
+                throw new Error("TOC resource not loaded");
             }
 
-            // parse loaded data
-            this._jsonData = resource.data;
-            this._data = JSON.parse(this._jsonData);
+            this._data = JSON.parse(res.data);
 
             // get all links from the data
             let contents: string[] = [];
@@ -105,8 +93,8 @@ namespace ajsdoc {
                 },
                 contents,
                 null,
-                RESOURCE_STORAGE_TYPE,
-                RESOURCE_STORAGE_POLICY
+                config.storageType,
+                config.articlesStoragePolicy
             );;
         }
 
@@ -156,7 +144,6 @@ namespace ajsdoc {
 
             let path: string;
             let label: string;
-            let resource: ajs.resources.IResource;
 
             if (article.hasOwnProperty("path")) {
                 path = (article as IArticleData).path;
@@ -214,7 +201,7 @@ namespace ajsdoc {
 
             let desc: string = "";
             if (article.path) {
-                let resource: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(article.path, RESOURCE_STORAGE_TYPE);
+                let resource: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(article.path, config.storageType);
                 if (resource === null) {
                     throw "Resource " + path + " was not loaded";
                 }

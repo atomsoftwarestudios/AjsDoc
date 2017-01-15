@@ -31,6 +31,7 @@
     <TypeScriptCompile Include="src\app\Application.ts" />
     <TypeScriptCompile Include="src\app\Exceptions.ts" />
     <TypeScriptCompile Include="src\app\IApplicationConfig.ts" />
+    <TypeScriptCompile Include="src\app\IApplicationUserConfig.ts" />
     <TypeScriptCompile Include="src\boot\!boot.ts" />
     <TypeScriptCompile Include="src\boot\boot.ts" />
     <TypeScriptCompile Include="src\boot\Exceptions.ts" />

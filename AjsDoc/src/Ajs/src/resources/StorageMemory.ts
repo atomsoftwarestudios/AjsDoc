@@ -48,6 +48,9 @@ namespace ajs.resources {
         /** Returns the maximum size of the storage in bytes */
         public get maxSize(): number { return this._maxSize; }
 
+        /** Returns type of the storage */
+        public get type(): STORAGE_TYPE { return STORAGE_TYPE.MEMORY; }
+
         /**
          * Construct the StorageMemory object
          * @param size The maximum size of the memory storage

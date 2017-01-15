@@ -37,6 +37,10 @@ namespace ajs.resources {
      */
     export class StorageSession extends StorageBrowser {
 
+
+        /** Returns type of the storage */
+        public get type(): STORAGE_TYPE { return STORAGE_TYPE.SESSION; }
+
         /**
          * Construct the StorageSession object
          */

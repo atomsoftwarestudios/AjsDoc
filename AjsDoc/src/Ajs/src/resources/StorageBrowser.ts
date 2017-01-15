@@ -65,10 +65,18 @@ namespace ajs.resources {
                 return;
             }
 
+            let data: string;
+            let dataSize: number;
+
             // prepare necessary variables
-            let data: string = JSON.stringify(resource.data);
+            if (resource.data instanceof Uint8Array) {
+                data = JSON.stringify(btoa(String.fromCharCode.apply(null, resource.data)));
+            } else {
+                data = JSON.stringify(resource.data);
+            }
+
             let oldInfoSize: number = this._storageProvider.getItem(STORAGE_INFO_KEY).length;
-            let dataSize: number = data.length;
+            dataSize = data.length;
 
             // try to add the resource data to the storage
             try {
@@ -125,8 +133,8 @@ namespace ajs.resources {
                     this._storageProvider.setItem(STORAGE_INFO_KEY, info);
 
                     // prepare data
-                    let dataStr: string = this._storageProvider.getItem(STORAGE_RESOURCE_KEY_PREFIX + url);
-                    let data: any = JSON.parse(dataStr);
+                    let dataStr: string = JSON.parse(this._storageProvider.getItem(STORAGE_RESOURCE_KEY_PREFIX + url));
+                    let data: any = dataStr;
 
                     // compose the ICachedResource
                     let resource: ICachedResource = {
@@ -286,7 +294,7 @@ namespace ajs.resources {
                 });
 
                 // remove oldest resources from the storage until the required space is created
-                let enoughSpace: boolean;
+                let enoughSpace: boolean = true;
                 let i: number = 0;
 
                 // try to remove LRU resources from the storage until there is enough

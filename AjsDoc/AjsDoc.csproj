@@ -22,12 +22,14 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="favicon.ico" />
+    <Content Include="favicon.png" />
     <Content Include="index.html" />
     <Content Include="js\ajs.boot.config.js" />
     <Content Include="js\ajs.js" />
     <Content Include="js\ajsdocbrowser.js" />
-    <Content Include="js\highlight.pack.js" />
-    <Content Include="res\css\content.css" />
+    <Content Include="js\lib\highlight.pack.js" />
+    <Content Include="static\templates\content.css" />
     <Content Include="res\img\ajs-logo.png" />
     <Content Include="res\img\atom-logo.png" />
     <Content Include="res\css\hljsvs.css" />
@@ -52,6 +54,7 @@
     <Content Include="static\program.json" />
     <Content Include="static\content\04 How it works.html" />
     <Content Include="static\toc.json" />
+    <Content Include="static\appresources.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -61,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="js\ajs.d.ts" />
+    <TypeScriptCompile Include="src\IAjsDocBrowserConfig.ts" />
     <TypeScriptCompile Include="src\!ajsdoc.ts" />
     <TypeScriptCompile Include="src\components\AjsDocArticle.ts" />
     <TypeScriptCompile Include="src\AjsDocBrowser.ts" />
@@ -84,6 +88,8 @@
     <TypeScriptCompile Include="src\program\INode.ts" />
     <TypeScriptCompile Include="src\program\IType.ts" />
     <TypeScriptCompile Include="static\examples\viewComponent_placeholder.ts" />
+    <Content Include="static\templates\ajsdoc.css" />
+    <None Include="static\templates.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="src\Ajs\Ajs.csproj">

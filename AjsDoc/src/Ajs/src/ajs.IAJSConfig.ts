@@ -35,7 +35,13 @@ namespace ajs {
 
 
         /** Configuration of resource pools */
-        resourceManagerConfig?: ajs.resources.IResourceManagerConfig;
+        resourceManager?: ajs.resources.IResourceManagerConfig;
+
+        /** Navigator configuration - redirections */
+        navigator?: ajs.navigation.IRedirection[];
+
+        /** Router configuration - routed */
+        router?: ajs.routing.IRoutes[];
     }
 
 }

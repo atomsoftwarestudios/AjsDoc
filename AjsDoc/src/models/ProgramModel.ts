@@ -22,8 +22,6 @@ namespace ajsdoc {
 
     "use strict";
 
-    const PROGRAM_DATA: string = "/static/program.json";
-
     interface IKindMap {
         [key: string]: string;
     }
@@ -92,26 +90,19 @@ namespace ajsdoc {
         }
 
         protected _initialize(): void {
-            // load the program.json
-            ajs.Framework.resourceManager.load(
-                (successfull: boolean, url: string, resource: ajs.resources.IResource): void => {
-                    this._jsonLoaded(successfull, url, resource);
-                },
-                PROGRAM_DATA,
-                null,
-                RESOURCE_STORAGE_TYPE,
-                RESOURCE_STORAGE_POLICY
-            );
-        }
 
-        protected _jsonLoaded(successfull: boolean, url: string, resource: ajs.resources.IResource): void {
-            if (!successfull) {
-                throw "Failed to load the program data";
+            let res: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
+                config.dataSources.program,
+                config.storageType
+            );
+
+            if (res === null) {
+                throw new Error("Program data not loaded");
             }
 
             // parse loaded data and prepare internal structures
             this._itemsById = {};
-            this._jsonData = resource.data;
+            this._jsonData = res.data;
             this._data = JSON.parse(this._jsonData);
             this._data.kindString = "";
             this._data.name = "";

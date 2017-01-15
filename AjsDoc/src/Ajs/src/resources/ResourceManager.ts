@@ -225,6 +225,7 @@ namespace ajs.resources {
             this._resourceLoader.loadResource(
                 (response: IResourceResponseData) => { this._loadEnd(response); },
                 url,
+                resource.type === RESOURCE_TYPE.BINARY,
                 resourceLoadingInfo,
                 resource.lastModified
             );
@@ -367,11 +368,19 @@ namespace ajs.resources {
 
             // loaded successfully, update resource and also cache if necessary
             if (response.httpStatus === 200) {
-                loadingInfo.resource.data = response.data;
+
+                switch (loadingInfo.resource.type) {
+                    case RESOURCE_TYPE.BINARY:
+                        loadingInfo.resource.data = new Uint8Array(response.data);
+                        break;
+                    default:
+                        loadingInfo.resource.data = response.data;
+                }
+
                 if (loadingInfo.resource.storage !== null) {
                     let cachedResource: ICachedResource = {
                         url: loadingInfo.resource.url,
-                        data: response.data,
+                        data: loadingInfo.resource.data,
                         cachePolicy: loadingInfo.resource.cachePolicy,
                         lastModified: new Date()
                     };

@@ -112,14 +112,14 @@ namespace ajs {
             Framework._appConfig = null;
             Framework._application = null;
 
-            Framework._resourceManager = new ajs.resources.ResourceManager(config.resourceManagerConfig);
+            Framework._resourceManager = new ajs.resources.ResourceManager(config.resourceManager);
             Framework._stateManager = new ajs.state.StateManager(Framework._resourceManager);
-            Framework._templateManager = new ajs.templating.TemplateManager();
+            Framework._templateManager = new ajs.templating.TemplateManager(Framework._resourceManager);
             Framework._viewComponentManager = new ajs.mvvm.viewmodel.ViewComponentManager();
             Framework._modelManager = new ajs.mvvm.model.ModelManager();
             Framework._view = new ajs.mvvm.view.View(Framework._templateManager, Framework._viewComponentManager);
-            Framework._router = new ajs.routing.Router(Framework._view, null, null);
-            Framework._navigator = new ajs.navigation.Navigator(Framework._router);
+            Framework._router = new ajs.routing.Router(Framework._view, Framework._config.router);
+            Framework._navigator = new ajs.navigation.Navigator(Framework._router, Framework._config.navigator);
         }
 
         /**
@@ -143,7 +143,7 @@ namespace ajs {
             }
 
             if (typeof (Framework._appConfig.appConstructor) === typeof (Function)) {
-                Framework._application = new Framework._appConfig.appConstructor(Framework._appConfig);
+                Framework._application = new Framework._appConfig.appConstructor(Framework._appConfig.userConfig);
                 Framework._application.initialize();
             } else {
                 throw new AppConstructorMustBeAFunctionException();
@@ -166,8 +166,8 @@ namespace ajs {
             if (msg instanceof Error) {
                 text = ajs.utils.getClassName(error) + ": " + msg.message;
                 err = "<br />name: " + error.name +
-                      "<br />message: " + error.message +
-                      "<br />stacktrace:<br /> " + error.stack.replace(new RegExp("\n", "gm"), "<br />")
+                    "<br />message: " + error.message +
+                    "<br />stacktrace:<br /> " + error.stack.replace(new RegExp("\n", "gm"), "<br />");
             } else {
                 text = msg;
             }

@@ -30,9 +30,9 @@ namespace ajs.app {
     export class Application {
 
         /** Stores the configuration passed to the application from the boot config */
-        protected _applicationConfig: IApplicationConfig;
+        protected _config: IApplicationUserConfig;
         /** Returns the application configuration */
-        public get applicationConfig(): IApplicationConfig { return this._applicationConfig; }
+        public get config(): IApplicationUserConfig { return this._config; }
 
         /** Indicates if the application was succesfully initialized.
          *  _initDone should be called when the user application initialization routines finishes
@@ -47,8 +47,8 @@ namespace ajs.app {
          * going out of the page
          * @param config Application configuration. TODO: Not in use now. It can be used by the user application
          */
-        public constructor(config: IApplicationConfig) {
-            this._applicationConfig = config;
+        public constructor(config: IApplicationUserConfig) {
+            this._config = config;
             window.addEventListener("beforeunload", (e: Event) => {
                 this._finalize();
             });

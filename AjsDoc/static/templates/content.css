@@ -1,0 +1,110 @@
+﻿.ajsDocArticleContent {
+    text-align: left;
+}
+
+.ajsDocArticleContent a {
+    color: black;
+    font-style: oblique;
+}
+
+.ajsDocArticleContent .ajs-logo {
+    display: inline-block;
+    width: 110px;
+    height: 108px;
+    background-size: cover;
+    background-image: resource('/res/img/ajs-logo.png');
+}
+
+.ajsDocArticleContent .atom-logo {
+    display: inline-block;
+    width: 130px;
+    height: 85px;
+    background-size: cover;
+    background-image: resource('/res/img/atom-logo.png');
+}
+
+.ajsDocArticleContent .edge {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: resource('/res/img/edge.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .firefox {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: resource('/res/img/firefox.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .chrome {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: resource('/res/img/chrome.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .ie {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: resource('/res/img/ie.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .opera {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: resource('/res/img/opera.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .safari {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: resource('/res/img/safari.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .feature {
+    background: linear-gradient(-3deg, #FAFCFD, #EAF4F8, #FAFCFD);
+    margin-left: 1%;
+    margin-bottom: 1%;
+    padding: 0.5em;
+    text-align: left;
+    width: 48%;
+    min-width: 480px;
+    min-height: 150px;
+    float: left;
+    box-sizing: border-box;
+}
+
+.ajsDocArticleContent .feature table {
+    text-align: center;
+    margin-left: 1em;
+}
+
+.ajsDocArticleContent .feature h4 {
+    margin: 0;
+}
+
+.ajsDocArticleContent .browser {
+    font-size: 0.75em;
+    white-space: nowrap;
+    width: 60px
+}
+
+.ajsDocArticleContent .clear {
+    clear: both;
+}

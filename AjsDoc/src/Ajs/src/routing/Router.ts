@@ -33,22 +33,14 @@ namespace ajs.routing {
         protected _routes: IRoutes[];
         public get routes(): IRoutes[] { return this._routes; }
 
-        protected _defaultViewComponentName: string;
-        public get defaultViewComponentName(): string { return this._defaultViewComponentName; }
-        public set defaultViewComponentName(value: string) { this._defaultViewComponentName = value; }
-
-        protected _exceptionViewComponentName: string;
-        public get exceptionViewComponentName(): string { return this._exceptionViewComponentName; }
-        public set exceptionViewComponentName(value: string) { this._exceptionViewComponentName = value; }
-
         protected _currentRoute: IRouteInfo;
         public get currentRoute(): IRouteInfo { return this._currentRoute; }
 
-        public constructor(view: ajs.mvvm.view.View, defaultViewComponentName?: string, exceptionViewComponentName?: string) {
+        public constructor(view: ajs.mvvm.view.View, routes?: IRoutes[]) {
 
             this._view = view;
 
-            this._routes = [];
+            this._routes = routes || [];
 
             this._lastURL = "";
             this._lastViewComponentName = null;
@@ -56,17 +48,6 @@ namespace ajs.routing {
 
             this._currentRoute = { base: "", path: "", search: "", hash: "" };
 
-            if (defaultViewComponentName !== undefined) {
-                this._defaultViewComponentName = defaultViewComponentName;
-            } else {
-                this._defaultViewComponentName = null;
-            }
-
-            if (exceptionViewComponentName !== undefined) {
-                this._exceptionViewComponentName = exceptionViewComponentName;
-            } else {
-                this._exceptionViewComponentName = null;
-            }
         }
 
         public registerRoute(paths: IRoute[], viewComponentName: string): void {
@@ -146,7 +127,7 @@ namespace ajs.routing {
 
             }
 
-            return this._defaultViewComponentName;
+            return null;
         }
 
 

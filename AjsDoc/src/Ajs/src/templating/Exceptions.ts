@@ -22,6 +22,10 @@ namespace ajs.templating {
 
     "use strict";
 
+    export class FailedToLoadTemplatesException extends Error { }
+
+    export class FailedToLoadTemplateStyleSheetsException extends Error { }
+
     export class PlaceholdersCantHaveChildrenNodesException extends Error { }
 
     export class MissingVisualComponentNameException extends Error{ }
