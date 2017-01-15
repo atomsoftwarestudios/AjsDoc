@@ -11,6 +11,8 @@ The JSON data are required to be generated with the TypeDoc (https://github.com/
 
 # Compilation
 
+Please note the local cache and session cache auto update / clearing is not implemented yet so if something goes wrong try to clear these storages in the browser.
+
 The project is the Visual Studio solution and should not be a problem to clone:
 
 ```
