@@ -173,6 +173,16 @@ namespace ajsdoc {
                 items: [],
             };
 
+            if (article.parent !== null && article.parent) {
+                menu.items.push({
+                    key: "-1",
+                    label: article.label,
+                    path: article.navPath,
+                    selected: article.navPath === ("/" + navPath),
+                    expandable: false
+                });
+            }
+
             for (let i: number = 0; i < article.children.length; i++) {
                 let item: IMenuItemState = {
                     key: i.toString(),

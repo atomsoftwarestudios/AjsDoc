@@ -175,6 +175,16 @@ namespace ajsdoc {
                 items: []
             };
 
+            if (node.parent.kind != -1) {
+                menu.items.push({
+                    key: "-1",
+                    path: "/ref" + node.path,
+                    label: node.kindString + " " + node.name,
+                    selected: node.path === ("/" + navPath),
+                    expandable: false
+                })
+            }
+
             if (node.children) {
 
                 for (let i: number = 0; i < node.children.length; i++) {
