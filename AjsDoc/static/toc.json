@@ -14,7 +14,6 @@
       {
         "path": "/static/content/04 How it works.html",
         "children": [
-          { "path": "/static/content/04/01 Overview.html" },
           { "path": "/static/content/04/02 Offline Application Support.html" },
           { "path": "/static/content/04/03 Boot Process.html" },
           { "path": "/static/content/04/04 Navigation and Routing.html" },

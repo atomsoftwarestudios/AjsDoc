@@ -1,1 +1,40 @@
 <h1>Offline Application Support</h1>
+
+<p>
+    Offline application support was one of main requiremets the framework has to fullfil. The support is currently based on the Application Cache browser feature,
+    what is going to be deprecated and removed from web browsers. Once this will happen the framework will switch to Service Workers technology, what in the end
+    will have no impact to existing applications usig AJS as this change will be transparent to them (of course only if application will be properly designed and
+    will follow AJS best practices).
+</p>
+
+<p>
+    The Application Cache is based on the manifest file with details describing what files should be cached and used in offline mode and another details. For
+    details see <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache" target="_blank">Using the application cache</a> article at
+    the MDN site.
+</p>
+
+<p>
+    Resources which were cahced to the Application Cache are never updated until the appcache.manifest file is modified. The post-build tool is included in the tools
+    directory and updates the appcache.manifest file automatically when:
+</p>
+
+<ul>
+    <li>index.html file is modified or</li>
+    <li>ajs.js file is modified or</li>
+    <li>ajs.boot.config.js file is modified or</li>
+    <li>favicon.ico file is modified or</li>
+</ul>
+
+<p>
+    Only files mentioned above are stored in the application cache. Other files (such as application resources) are managed by AJS Resource Manager if the
+    application does not use any different approach.
+</p>
+
+<p>
+    The following chart less or more describes how the Application Cache works in the browser. In the end of initial HTTP request (when all resources are loaded = 
+    window.onload event) the ajs.boot._boot() function is executed to load the application itself, application resources, initialize the framework and application
+    and start the application by routing to appropriate view.
+</p>
+
+<h5>Application Cache web page loading process</h5>
+#chart /static/charts/appcache.svg

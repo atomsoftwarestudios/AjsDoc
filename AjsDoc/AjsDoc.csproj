@@ -29,7 +29,7 @@
     <Content Include="js\ajs.js" />
     <Content Include="js\ajsdocbrowser.js" />
     <Content Include="js\lib\highlight.pack.js" />
-    <Content Include="static\charts\index.svg" />
+    <Content Include="static\charts\appcache.svg" />
     <Content Include="static\content\03 Visual Studio Solution Setup.html" />
     <Content Include="static\content\03\02 Contributors.html" />
     <Content Include="static\content\03\01 End-Users.html" />
