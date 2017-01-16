@@ -9,5 +9,6 @@
   "/res/img/opera.png",
   "/res/img/safari.png",
   "/static/examples/app_init.ts",
-  "/static/examples/viewComponent_placeholder.ts"
+  "/static/examples/viewComponent_placeholder.ts",
+  "/static/charts/index.svg"
 ]

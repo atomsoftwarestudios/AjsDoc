@@ -1,0 +1,97 @@
+<h1>Change log</h1>
+
+Last recent version of the changelog can be always found here
+
+<pre>
+0.01 - Initial version
+
+Features:
+	- Boot process
+	- Resource management
+	- Routing
+	- Navigation
+	- Application management
+	- View, View Components and Visual Components (templating)
+TODO:
+    - Documentation
+		- Intentions and reasons why AJS was developed
+		- How it works
+		- Visual Studio project and compilation
+		   - Tools & toolchain
+		      - Javascript minification
+		      - Template compiler / minifier
+			  - Style compiler
+			  - Language & translation transpiller
+			  - Code optimalization
+		- Coding guidelines
+		- Browser application caching
+		- Features
+		   - Boot process
+		   - Resource Management
+		   - Navigation
+		   - Routing
+		   - Application
+		   - View, View Components and Visual Components (templating)
+		- Code documentation
+			- Add license agreement to all files
+		    - Finish the code documentation for the existing code
+			- Get rid of all errors reported by the Visual Studio Intellisense
+	- Browser Application Caching
+		- Only index.html, ajs.js and ajs.boot.js need to be cached
+		- Tool to update the manifest if the index.html, ajs.js or ajs.boot.js will change
+	- Error handling, exceptions & exception rethrowing
+		- Especially in templating and view component processings
+	- Loading message / page while the ajs is initializing
+	    - should be later usable through user project so should be implemented as a component
+	- Resource management
+	    - remove resources older than, partially done, need to be tested
+		- performance optiomizations
+		   - creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
+		   - multiple calls of getResource during single operation can be optimized
+		   - review cycles
+		- Implement state management
+			- Implement application state resource storage
+			- Implement session state resource storage
+	- View, View Components, Visual Components
+	    - Don't render the component tag to the output
+		   - will be hard to achieve as root node is needed at this time
+		- Move IFs from Template to the View Component
+		   - This is idea now, not designed, how it should work
+	    - Support for render target.
+		   - Currently, only the main window document is supported so it will be hard to integrate to playgrounds
+		- View modifications queuing to prevent async operation fighting
+		- CSS style management
+		   - LESS & reuired toolchain
+		- ViewComponent._getState -> implement function to collect the state information from the view component tree
+		- Dynamic View Component -> implement a component allowing to set the view component programatically, not just from template
+		- Static content view component
+		- Event subscriptions (component to component, DOM is implemented already)
+		- Refactor ViewComponent state management to look nicer
+		- Refactor ViewComponent rendering functions to look nicer
+	- Data
+		- JSON API
+		- Data caching
+		- Data validation
+		- Data binding
+	- WebSockets
+	- Language & Translation
+	----
+	Tools:
+		Implement typescript preprocessor
+		- Just // #ifdef and // #ifndef
+		- Integrate to msbuild process
+	FAR FUTURE:
+	- Caching of processed objects - especially visualComponents and view components??
+	----
+	Optimizations:
+	
+	A lot of optimizations can be done, at least:
+	a) Template class - when it is getting components, children components and placeholders
+	it is browsing the DOM structure multiple times. This can be done in a single step.
+	b) ViewComponent - while creating a new array of components it calls functions to
+	get viewcomponent constructor and visual constructor in the loop, this can be done just
+	once
+	c) if undefined && not null can be optimized at many places
+	----
+
+</pre>

@@ -21,7 +21,6 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <TypeScriptCompile Include="src\!ajs.ts" />
     <TypeScriptCompile Include="src\ajs.Framework.Exceptions.ts" />

@@ -70,7 +70,12 @@ namespace ajs.resources {
 
             // prepare necessary variables
             if (resource.data instanceof Uint8Array) {
-                data = JSON.stringify(btoa(String.fromCharCode.apply(null, resource.data)));
+                // # this hack is because of safari
+                let str: string = "";
+                for (let i: number = 0; i < resource.data.length; i++) {
+                    str += String.fromCharCode(resource.data[i]);
+                }
+                data = JSON.stringify(btoa(str));
             } else {
                 data = JSON.stringify(resource.data);
             }

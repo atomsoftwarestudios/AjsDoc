@@ -42,6 +42,8 @@ namespace ajs.boot {
             logErrors: true,
             showErrors: true,
 
+            ajsLoaderPath: "/js/ajsloader.js",
+
             resourceManager: {
                 memoryCacheSize: 20 * 1024 * 1024,
                 removeResourcesOlderThan: ajs.utils.maxDate()

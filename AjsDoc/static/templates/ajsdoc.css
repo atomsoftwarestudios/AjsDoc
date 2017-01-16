@@ -36,6 +36,8 @@
     width: 350px;
     box-sizing: border-box;
     overflow: hidden;
+    z-index: 8888;
+    -webkit-overflow-scrolling: touch;
 }
 
 .ajsDocLayoutContentContainer {
@@ -46,7 +48,39 @@
     bottom: 0;
     vertical-align: top;
     border-left: 1px solid #EAF4F8;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ajsDocLayoutMenuButton {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    opacity: 0.4;
+    width: 60px;
+    height: 60px;
+    background-image: resource('/res/img/ajs-logo.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 9999;
+    display: none;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .ajsDocLayoutMenuContainer {
+        display: none;
+        opacity: 0.97;
+    }
+
+    .ajsDocLayoutContentContainer {
+        left: 0
+    }
+
+    .ajsDocLayoutMenuButton {
+        display: block;
+    }
 }
 
 .ajsDocLayoutPageNavContainer {
@@ -173,7 +207,9 @@
 .ajsDocMenu {
     background: linear-gradient(-90deg, white, #FAFCFD);
     white-space: nowrap;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     position: absolute;
     top: 94px;
     left: 0;
@@ -274,6 +310,13 @@
 .ajsDocExample {
     border: solid 1px #EAF4F8;
     background-color: #FAFCFD;
+}
+
+.ajsDocChart {
+    border: solid 1px #EAF4F8;
+    text-align: center;
+    padding: 0.25em;
+    overflow: auto;
 }
 
 /* CODE TEMPLATES */

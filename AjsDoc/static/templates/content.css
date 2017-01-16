@@ -7,10 +7,19 @@
     font-style: oblique;
 }
 
+.ajsDocArticleContent h2 {
+    margin-top: 2em;
+}
+
+.ajsDocArticleContent p {
+    text-align: justify;
+}
+
 .ajsDocArticleContent .ajs-logo {
     display: inline-block;
     width: 110px;
     height: 108px;
+    margin: 0.5em;
     background-size: cover;
     background-image: resource('/res/img/ajs-logo.png');
 }
@@ -19,6 +28,7 @@
     display: inline-block;
     width: 130px;
     height: 85px;
+    margin: 0.5em;
     background-size: cover;
     background-image: resource('/res/img/atom-logo.png');
 }
@@ -83,8 +93,7 @@
     margin-bottom: 1%;
     padding: 0.5em;
     text-align: left;
-    width: 48%;
-    min-width: 480px;
+    min-width: 300px;
     min-height: 150px;
     float: left;
     box-sizing: border-box;

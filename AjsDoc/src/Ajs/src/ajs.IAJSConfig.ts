@@ -33,6 +33,7 @@ namespace ajs {
         /** TODO: Remove? : Specifies if errors occured should be shown in the ajs error page to end users */
         showErrors?: boolean;
 
+        ajsLoaderPath?: string;
 
         /** Configuration of resource pools */
         resourceManager?: ajs.resources.IResourceManagerConfig;

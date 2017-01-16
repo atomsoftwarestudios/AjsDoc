@@ -61,6 +61,7 @@ namespace ajs.boot {
 
     /**
      * Main entry point (executed when browser fires the window.onload event)
+     * - if ajsloader configured, loads and starts it
      * - initializes framework
      * - loads ajs resources configured in the ajs.boot.config file
      * @throws GetAjsConfigFunctionNotDefinedException Thrown when the ajs.boot namespace has no
@@ -73,6 +74,7 @@ namespace ajs.boot {
         }
 
         let config: IAJSConfig = getAjsConfig();
+
         ajs.Framework.initialize(config);
         _loadResources();
     }

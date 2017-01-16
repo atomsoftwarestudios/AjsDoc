@@ -29,6 +29,18 @@
     <Content Include="js\ajs.js" />
     <Content Include="js\ajsdocbrowser.js" />
     <Content Include="js\lib\highlight.pack.js" />
+    <Content Include="static\charts\index.svg" />
+    <Content Include="static\content\03 Visual Studio Solution Setup.html" />
+    <Content Include="static\content\03\02 Contributors.html" />
+    <Content Include="static\content\03\01 End-Users.html" />
+    <Content Include="static\content\04\02 Offline Application Support.html" />
+    <Content Include="static\content\04\05 Resource Management and Caching.html" />
+    <Content Include="static\content\04\04 Navigation and Routing.html" />
+    <Content Include="static\content\04\03 Boot Process.html" />
+    <Content Include="static\content\04\01 Overview.html" />
+    <Content Include="static\content\04\06\02 Models.html" />
+    <Content Include="static\content\04\06\01 View and its components.html" />
+    <Content Include="static\content\98 License.html" />
     <Content Include="static\templates\content.css" />
     <Content Include="res\img\ajs-logo.png" />
     <Content Include="res\img\atom-logo.png" />
@@ -41,12 +53,12 @@
     <Content Include="res\img\safari.png" />
     <Content Include="static\content\01 Introduction.html" />
     <Content Include="static\content\02 Design requirements.html" />
-    <Content Include="static\content\04\01\01 View.html" />
-    <Content Include="static\content\04\01\03 View Components.html" />
-    <Content Include="static\content\04\01\02 Visual Components.html" />
-    <Content Include="static\content\04\01 View and its components.html" />
-    <Content Include="static\content\98 Special thanks.html" />
-    <Content Include="static\content\99 License.html" />
+    <Content Include="static\content\04\06\01\01 View.html" />
+    <Content Include="static\content\04\06\01\03 View Components.html" />
+    <Content Include="static\content\04\06\01\02 Visual Components and Visual Styles.html" />
+    <Content Include="static\content\04\06 MVVM Architecture.html" />
+    <Content Include="static\content\97 Special thanks.html" />
+    <Content Include="static\content\99 Changelog.html" />
     <Content Include="static\templates\ajsdoc.html" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -64,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="js\ajs.d.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocLayoutMenuButton.ts" />
     <TypeScriptCompile Include="src\IAjsDocBrowserConfig.ts" />
     <TypeScriptCompile Include="src\!ajsdoc.ts" />
     <TypeScriptCompile Include="src\components\AjsDocArticle.ts" />

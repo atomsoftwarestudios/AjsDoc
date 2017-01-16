@@ -59,6 +59,7 @@ namespace ajsdoc {
             this._applyState({
                 ajsDocLayout: {
                     ajsDocHeader: {},
+                    ajsDocLayoutMenuButton: {},
                     ajsDocContextSwitcher: {},
                     ajsDocMenu: {},
                     ajsDocArticle: {},
@@ -343,6 +344,28 @@ namespace ajsdoc {
                             }
                             text = text.replace(new RegExp("#example " + example + ".*", "g"),
                                 "<pre class=\"ajsDocExample\"><code class=\"typescript\">" + resource.data + "</pre></code>");
+                        }
+                    }
+                }
+            }
+
+            let charts: RegExpMatchArray = text.match(/#chart.*/g);
+            if (charts && charts !== null) {
+                for (let i: number = 0; i < charts.length; i++) {
+                    let chart: string = charts[i].substring(7, charts[i].length);
+
+                    for (let j: number = 0; j < resources.length; j++) {
+                        if (resources[j].indexOf(chart) !== -1) {
+                            let resource: ajs.resources.IResource;
+                            resource = ajs.Framework.resourceManager.getResource(
+                                resources[j],
+                                config.storageType
+                            );
+                            if (resource === null) {
+                                throw new Error("Example resource '" + resources[j] + "' not loaded");
+                            }
+                            text = text.replace(new RegExp("#chart " + chart + ".*", "g"),
+                                "<div class=\"ajsDocChart\">" + resource.data + "</div>");
                         }
                     }
                 }
