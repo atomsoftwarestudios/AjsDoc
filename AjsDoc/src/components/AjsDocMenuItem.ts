@@ -20,36 +20,10 @@ IN THE SOFTWARE.
 
 namespace ajsdoc {
 
-    "use strict";
-
-    export class AjsDocLayoutMenuButton extends ajs.mvvm.viewmodel.ViewComponent {
-
-
-        public openMenu(): void {
-
-            let menu = this._ajsViewComponentManager.getComponentInstance(AjsDocMenu);
-
-            let e1: HTMLCollectionOf<Element> = document.getElementsByClassName("ajsDocLayoutMenuContainer");
-            let e2: HTMLCollectionOf<Element> = document.getElementsByClassName("ajsDocLayoutContentContainer");
-            if (window.getComputedStyle(e1[0]).display === "none") {
-                if (window.innerWidth < 350) {
-                    (e1[0] as HTMLElement).style.width = "100%";
-                } else {
-                    (e1[0] as HTMLElement).style.width = "350px";
-                }
-                (e1[0] as HTMLElement).style.display = "block";
-                //(e2[0] as HTMLElement).style.left = "350px";
-            } else {
-                (e1[0] as HTMLElement).style.display = "none";
-                //(e2[0] as HTMLElement).style.left = "0";
-            }
-
-        }
-
+    export class AjsDocMenuItem extends ajs.mvvm.viewmodel.ViewComponent {
     }
 
     /** Register the component to ViewComponentManager */
-    ajs.Framework.viewComponentManager.registerComponents(AjsDocLayoutMenuButton);
+    ajs.Framework.viewComponentManager.registerComponents(AjsDocMenuItem);
 
 }
-

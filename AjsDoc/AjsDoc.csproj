@@ -22,13 +22,19 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="android-chrome-192x192.png" />
+    <Content Include="apple-touch-icon.png" />
+    <Content Include="browserconfig.xml" />
+    <Content Include="favicon-16x16.png" />
+    <Content Include="favicon-32x32.png" />
     <Content Include="favicon.ico" />
-    <Content Include="favicon.png" />
     <Content Include="index.html" />
     <Content Include="js\ajs.boot.config.js" />
     <Content Include="js\ajs.js" />
     <Content Include="js\ajsdocbrowser.js" />
     <Content Include="js\lib\highlight.pack.js" />
+    <Content Include="mstile-150x150.png" />
+    <Content Include="safari-pinned-tab.svg" />
     <Content Include="static\charts\appcache.svg" />
     <Content Include="static\content\03 Visual Studio Solution Setup.html" />
     <Content Include="static\content\03\02 Contributors.html" />
@@ -67,6 +73,8 @@
     <Content Include="static\content\04 How it works.html" />
     <Content Include="static\toc.json" />
     <Content Include="static\appresources.json" />
+    <Content Include="manifest.json" />
+    <Content Include="cache.manifest" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -77,6 +85,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="js\ajs.d.ts" />
     <TypeScriptCompile Include="src\components\AjsDocLayoutMenuButton.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocMenu.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocMenuItem.ts" />
     <TypeScriptCompile Include="src\IAjsDocBrowserConfig.ts" />
     <TypeScriptCompile Include="src\!ajsdoc.ts" />
     <TypeScriptCompile Include="src\components\AjsDocArticle.ts" />
@@ -84,7 +94,7 @@
     <TypeScriptCompile Include="src\components\AjsDoc.ts" />
     <TypeScriptCompile Include="src\components\AjsDocContextSwitcher.ts" />
     <TypeScriptCompile Include="src\components\AjsDocMember.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocMenu.ts" />
+    <TypeScriptCompile Include="src\components\AjsDocMenuGroup.ts" />
     <TypeScriptCompile Include="src\models\ContentModel.ts" />
     <TypeScriptCompile Include="src\models\ProgramModel.ts" />
     <TypeScriptCompile Include="src\Exceptions.ts" />
@@ -169,8 +179,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>powershell.exe -ExecutionPolicy Bypass -File "..\..\Tools\cachemanifest.ps1" "$(ProjectDir)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

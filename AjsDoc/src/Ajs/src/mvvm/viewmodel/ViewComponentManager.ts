@@ -80,10 +80,37 @@ namespace ajs.mvvm.viewmodel {
             delete (this._componentInstances[component.ajsComponentId]);
         }
 
-        public getComponentInstance(componentId: number): ViewComponent {
+        public getComponentInstanceByComponentId(componentId: number): ViewComponent {
             if (this._componentInstances.hasOwnProperty(componentId.toString())) {
                 return this._componentInstances[componentId];
             }
+            return null;
+        }
+
+        public getComponentInstance(component: typeof ViewComponent, id?: string, key?: string): ViewComponent {
+
+            for (var key in this._componentInstances) {
+                if (this._componentInstances.hasOwnProperty(key)) {
+                    if (this._componentInstances[key] instanceof component) {
+                        if (id) {
+                            if (this._componentInstances[key].ajsid === id) {
+                                if (key) {
+                                    if (this._componentInstances[key].hasOwnProperty("key")) {
+                                        if (this._componentInstances[key].key === key) {
+                                            return this._componentInstances[key];
+                                        }
+                                    } 
+                                } else {
+                                    return this._componentInstances[key];
+                                }
+                            }
+                        } else {
+                            return this._componentInstances[key];
+                        }
+                    }
+                }
+            }
+
             return null;
         }
 

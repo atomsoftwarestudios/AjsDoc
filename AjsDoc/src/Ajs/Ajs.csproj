@@ -39,7 +39,7 @@
     <TypeScriptCompile Include="src\boot\IGetResourceList.ts" />
     <TypeScriptCompile Include="src\boot\IResourceLists.ts" />
     <TypeScriptCompile Include="src\boot\IResourceLoadingInfo.ts" />
-    <TypeScriptCompile Include="src\mvvm\!mvvm.ts" />
+    <TypeScriptCompile Include="src\mvvm\viewmodel\!mvvm.ts" />
     <TypeScriptCompile Include="src\mvvm\view\Exceptions.ts" />
     <TypeScriptCompile Include="src\mvvm\model\!model.ts" />
     <TypeScriptCompile Include="src\mvvm\model\Exceptions.ts" />

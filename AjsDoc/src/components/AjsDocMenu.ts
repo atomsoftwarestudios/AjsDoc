@@ -22,7 +22,7 @@ namespace ajsdoc {
 
     "use strict";
 
-    enum TransitionType {
+    export enum TransitionType {
         NONE,
         FADE,
         LTR,
@@ -41,7 +41,7 @@ namespace ajsdoc {
         "Accessor"
     ];
 
-    class AjsDocMenu extends ajs.mvvm.viewmodel.ViewComponent {
+    export class AjsDocMenu extends ajs.mvvm.viewmodel.ViewComponent {
 
         protected _programModel: ProgramModel;
         protected _contentModel: ContentModel;

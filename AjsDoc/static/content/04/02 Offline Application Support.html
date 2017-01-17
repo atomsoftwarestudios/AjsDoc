@@ -22,7 +22,7 @@
     <li>index.html file is modified or</li>
     <li>ajs.js file is modified or</li>
     <li>ajs.boot.config.js file is modified or</li>
-    <li>favicon.ico file is modified or</li>
+    <li>favicons or appplication manifests file are modified</li>
 </ul>
 
 <p>
@@ -31,9 +31,39 @@
 </p>
 
 <p>
-    The following chart less or more describes how the Application Cache works in the browser. In the end of initial HTTP request (when all resources are loaded = 
-    window.onload event) the ajs.boot._boot() function is executed to load the application itself, application resources, initialize the framework and application
-    and start the application by routing to appropriate view.
+    Once the application gets offline there is fallback section defined in the cache manifest file which redirects all requests to index.html page (better said
+    to the root of the web - /). All resources requested in the offline mode are then handled as the index.html file (even if request for image is made).
+    In order to be possible to recognize the applicaion is oflline and cached resource should be returned (instead of index.html) the resource loader inspects
+    the resource content returned by the browser and is checking for &lt;!--offline--&gt; tag in first 50 bytes of loaded resource. If the offline marker is found
+    the appropriate the resource loader returns 304 - Not modified instead of the resource loaded and resource manager uses the resource from the cache. So this means
+    the index.html file has to contain this offline marker the in order the application work properly. The index.html should look like the following example:
+    
+    <pre class="ajsDocExample"><code class="html">&lt;!DOCTYPE html&gt;
+&lt;!--offline--&gt;
+&lt;html lang="en" manifest="/cache.manifest"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+        &lt;meta name="apple-mobile-web-app-capable" content="yes" /&gt;
+        &lt;meta name="theme-color" content="#ffffff"&gt;
+        &lt;link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"&gt;
+        &lt;link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"&gt;
+        &lt;link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"&gt;
+        &lt;link rel="manifest" href="/manifest.json"&gt;
+        &lt;link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"&gt;
+        &lt;title&gt;The Application Title&lt;/title&gt;
+        &lt;script src="/js/ajs.boot.config.js"&gt;&lt;/script&gt;
+        &lt;script src="/js/ajs.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</p>
+
+<p>
+    The following chart less or more accurately describes how the Application Cache works in the browser. In the end of initial HTTP request (when all resources
+    are loaded = window.onload event) the ajs.boot._boot() function is executed to load the application itself, application resources, initialize the framework
+    and application and start the application by routing to appropriate view.
 </p>
 
 <h5>Application Cache web page loading process</h5>

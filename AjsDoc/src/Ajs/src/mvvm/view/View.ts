@@ -129,12 +129,12 @@ namespace ajs.mvvm.view {
             this._cleanUpDocument();
 
             this._rootViewComponentName = rootComponentName;
-            this._rootViewComponent = this._createViewComponent(rootComponentName);
+            this._rootViewComponent = this._createViewComponent(rootComponentName, "rootViewComponent");
 
             this.render(this._rootViewComponent);
         }
 
-        protected _createViewComponent(name: string): ajs.mvvm.viewmodel.ViewComponent {
+        protected _createViewComponent(name: string, id: string): ajs.mvvm.viewmodel.ViewComponent {
 
             let viewComponentConstructor: typeof ajs.mvvm.viewmodel.ViewComponent;
             viewComponentConstructor = this._viewComponentManager.getComponentConstructorByName(name);
@@ -152,7 +152,7 @@ namespace ajs.mvvm.view {
 
             this.applyStyleSheetsFromTemplate(visualComponent.template);
 
-            return new viewComponentConstructor(this, null, visualComponent);
+            return new viewComponentConstructor(this, this._viewComponentManager, id, null, visualComponent);
 
         }
 
@@ -309,7 +309,7 @@ namespace ajs.mvvm.view {
                         // if the node is component update the component element
                         if (this._isComponent(source)) {
                             let id: number = this._getComponentId(source);
-                            let component: ajs.mvvm.viewmodel.ViewComponent = this._viewComponentManager.getComponentInstance(id);
+                            let component: ajs.mvvm.viewmodel.ViewComponent = this._viewComponentManager.getComponentInstanceByComponentId(id);
                             component.ajsElement = adoptedNode as HTMLElement;
 
                         }
@@ -345,7 +345,7 @@ namespace ajs.mvvm.view {
                                 // if the node is component, update the component element and register defined event listeners
                                 if (this._isComponent(source.childNodes.item(i))) {
                                     let id: number = this._getComponentId(source.childNodes.item(i));
-                                    let component: ajs.mvvm.viewmodel.ViewComponent = ajs.Framework.viewComponentManager.getComponentInstance(id);
+                                    let component: ajs.mvvm.viewmodel.ViewComponent = ajs.Framework.viewComponentManager.getComponentInstanceByComponentId(id);
                                     component.ajsElement = adoptedNode as HTMLElement;
                                 }
                                 // if any register defined event listeners

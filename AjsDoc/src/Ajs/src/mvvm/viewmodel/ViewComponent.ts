@@ -44,11 +44,17 @@ namespace ajs.mvvm.viewmodel {
 
     export class ViewComponent {
 
+        protected _ajsid: string;
+        public get ajsid(): string { return this._ajsid; }
+
         protected _ajsComponentId: number;
         public get ajsComponentId(): number { return this._ajsComponentId; }
 
         protected _ajsView: view.View;
         public get ajsView(): view.View { return this._ajsView; }
+
+        protected _ajsViewComponentManager: ViewComponentManager;
+        public get ajsViewComponentManager(): ViewComponentManager { return this._ajsViewComponentManager; }
 
         protected _ajsParentComponent: ViewComponent;
         public get ajsParentComponent(): ViewComponent { return this._ajsParentComponent; }
@@ -79,8 +85,13 @@ namespace ajs.mvvm.viewmodel {
 
         protected _ajsAttributeProcessors: IAttributeProcessorsCollection;
 
+        /** Prepared for arrayed components but never initialized so hasOwnProperty must be used to check */
+        public key: string;
+
         public constructor(
             view: view.View,
+            viewComponentManager: ViewComponentManager,
+            id: string,
             parentComponent: ViewComponent,
             visualComponent: ajs.templating.IVisualComponent,
             state?: IViewStateSet) {
@@ -94,8 +105,10 @@ namespace ajs.mvvm.viewmodel {
             }
 
             // initialize properties
+            this._ajsid = id;
             this._ajsComponentId = view.getComponentId;
             this._ajsView = view;
+            this._ajsViewComponentManager = viewComponentManager;
             this._ajsParentComponent = parentComponent;
             this._ajsVisualComponent = visualComponent;
             this._ajsElement = null;
@@ -341,7 +354,7 @@ namespace ajs.mvvm.viewmodel {
                                         } else {
                                             // create new component
                                             let newViewComponent: ViewComponent =
-                                                this._createViewComponent(this._ajsVisualComponent.children[key], state[key][i]);
+                                                this._createViewComponent(key, this._ajsVisualComponent.children[key], state[key][i]);
                                             this[key].splice(i, 0, newViewComponent);
                                         }
                                     }
@@ -376,7 +389,7 @@ namespace ajs.mvvm.viewmodel {
                                         let filteredState: IFilteredState = this._filterStateArrayItem(key, i, state[key].length, state[key][i]);
 
                                         let newViewComponent: ViewComponent;
-                                        newViewComponent = this._createViewComponent(this._ajsVisualComponent.children[key], filteredState.filterApplied && filteredState.key === key ? filteredState.state : state[key][i]);
+                                        newViewComponent = this._createViewComponent(key, this._ajsVisualComponent.children[key], filteredState.filterApplied && filteredState.key === key ? filteredState.state : state[key][i]);
 
                                         this[key][i] = newViewComponent;
 
@@ -384,7 +397,7 @@ namespace ajs.mvvm.viewmodel {
 
                                 // create a component and apply a state to it
                                 } else {
-                                    this[key] = this._createViewComponent(this._ajsVisualComponent.children[key], state[key]);
+                                    this[key] = this._createViewComponent(key, this._ajsVisualComponent.children[key], state[key]);
                                     this.ajsStateKeys.push(key);
 
                                 }
@@ -444,7 +457,7 @@ namespace ajs.mvvm.viewmodel {
 
         }
 
-        protected _createViewComponent(viewComponentInfo: ajs.templating.IVisualComponentChildInfo, state: IViewStateSet): ViewComponent {
+        protected _createViewComponent(id: string, viewComponentInfo: ajs.templating.IVisualComponentChildInfo, state: IViewStateSet): ViewComponent {
 
             let name: string = viewComponentInfo.tagName;
             if (name === "COMPONENT" && viewComponentInfo.nameAttribute) {
@@ -465,7 +478,7 @@ namespace ajs.mvvm.viewmodel {
                 throw new ajs.mvvm.view.VisualComponentNotRegisteredException(name);
             }
 
-            return new viewComponentConstructor(this._ajsView, this, visualComponent, state);
+            return new viewComponentConstructor(this._ajsView, this._ajsViewComponentManager, id, this, visualComponent, state);
         }
 
         /**

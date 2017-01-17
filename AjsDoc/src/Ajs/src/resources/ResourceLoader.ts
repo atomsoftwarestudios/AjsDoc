@@ -74,6 +74,30 @@ namespace ajs.resources {
                     endTime: new Date()
                 };
 
+                // index.html should never pass the resource manager so if it passes
+                // it means it was provided by the app cache and we are offline now
+                if (responseData.httpStatus === 200 && typeof (responseData.data) === "string") {
+                    let tmp: string = responseData.data.substr(0, 50);
+                    if (tmp.indexOf("<!--offline-->") !== -1) {
+                        responseData.httpStatus = 304;
+                    }
+                }
+
+                // index.html should never pass the resource manager so if it passes
+                // it means it was provided by the app cache and we are offline now
+                if (responseData.httpStatus === 200 &&
+                    responseData.data instanceof ArrayBuffer) {
+                    let buffer: Int8Array = new Int8Array(responseData.data);
+                    let count: number = buffer.byteLength < 50 ? buffer.byteLength : 50;
+                    let str: string = "";
+                    for (let i: number = 0; i < count; i++) {
+                        str += String.fromCharCode(buffer[i]);
+                    }
+                    if (str.indexOf("<!--offline-->") !== -1) {
+                        responseData.httpStatus = 304;
+                    }
+                }
+
                 if (requestData.loadEndHandler instanceof Function) {
                     requestData.loadEndHandler(responseData);
                 }

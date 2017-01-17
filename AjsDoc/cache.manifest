@@ -1,0 +1,22 @@
+CACHE MANIFEST
+\index.html
+\js\ajs.js
+\js\ajs.boot.config.js
+\favicon.ico
+\favicon-16x16.png
+\favicon-32x32.png
+\android-chrome-192x192.png
+\apple-touch-icon.png
+\mstile-150x150.png
+\safari-pinned-tab.svg
+\manifest.json
+\browserconfig.xml
+
+NETWORK:
+*
+
+FALLBACK:
+/ /
+
+# HASH: D095DECB185887CB465B5B08B42E84B5
+# LASTCHANGE: 01/17/2017 10:58:31
