@@ -368,6 +368,12 @@
     padding-left: 1em;
 }
 
+.ajsDocMenuItemLinkGrouped {
+    display: block;
+    padding: 0.25em;
+    padding-left: 1em;
+}
+
 .ajsDocMenuItemLink:hover {
     background-color: #EAF4F8;
 }

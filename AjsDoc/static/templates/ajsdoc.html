@@ -31,11 +31,11 @@
 
     <component name="AjsDocLayout">
 
-        <div class="ajsDocLayoutDialog" dialogvisible="{dialogVisible}" onmousedown="dialogClick">This is dialog frame</div>
+        <div class="ajsDocLayoutDialog" dialogvisible="{dialogVisible}" onmousedown="dialogClick" ontouchmove="touchMove">This is dialog frame</div>
 
         <div component="AjsDocLayoutMenuButton" id="ajsDocLayoutMenuButton" class="ajsDocLayoutMenuButton" menuvisible="{menuVisible}" onmousedown="toggleMenu"></div>
 
-        <div class="ajsDocLayoutMenuContainer" menuvisible="{menuVisible}">
+        <div class="ajsDocLayoutMenuContainer" menuvisible="{menuVisible}" ontouchmove="touchMove">
 
             <div class="ajsDocLayoutHeaderContainer">
                 <ajsDocHeader id="ajsDocHeader"></ajsDocHeader>
@@ -87,7 +87,7 @@
 
     <!-- MENU COMPONENTS -->
 
-    <div component="AjsDocMenu" class="ajsDocMenu" visible="{visible}">
+    <div component="AjsDocMenu" class="ajsDocMenu" visible="{visible}" ontouchmove="touchMove">
 
         <div class="ajsDocMenuLabel">
             {label}

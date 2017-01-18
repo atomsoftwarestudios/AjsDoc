@@ -33,14 +33,21 @@ namespace ajsdoc {
         }
 
         public hideDialogFrame() {
+            // hiding dialog frame hides menu too
             document.body.style.overflow = "";
             this.setState({ dialogVisible: false, menuVisible: false });
             this._updateButton();
         }
 
         public showMenu() {
-            document.body.style.overflow = "hidden";
-            this.setState({ dialogVisible: true, menuVisible: true });
+            // both states can be set at once so don't call showDialogFrame
+            console.log(window.innerWidth);
+            if (window.innerWidth < 980) {
+                document.body.style.overflow = "hidden";
+                this.setState({ dialogVisible: true, menuVisible: true });
+            } else {
+                this.setState({ menuVisible: true });
+            }
             this._updateButton();
         }
 
@@ -61,8 +68,17 @@ namespace ajsdoc {
             this.hideDialogFrame();
         }
 
+        public touchMove(event: Event): void {
+            if (this.menuVisible) {
+                event.preventDefault();
+            }
+        }
+
         protected _initialize() {
             this.showMenu();
+        }
+
+        protected _finalize() {
         }
 
         protected _updateButton() {

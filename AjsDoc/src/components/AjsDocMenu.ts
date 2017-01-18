@@ -59,6 +59,14 @@ namespace ajsdoc {
             this._ajsVisualStateTransition = true;
         }
 
+        public touchMove(e: Event) {
+            e.cancelBubble = true;
+            e.stopPropagation();
+            if (this.ajsElement.scrollHeight <= this.ajsElement.clientHeight) {
+                e.preventDefault();
+            }
+        }
+
         public ajsVisualStateTransitionBegin(newElement: HTMLElement): void {
 
             super.ajsVisualStateTransitionBegin(newElement);
