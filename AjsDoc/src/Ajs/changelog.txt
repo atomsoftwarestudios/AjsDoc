@@ -24,6 +24,7 @@ AJS Framework changelog
 
 Features:
 	- Boot process
+	   - Support for wellcome / progress loading screen
 	- Resource management
 	- Routing
 	- Navigation
@@ -57,9 +58,6 @@ TODO:
 
 	- Error handling, exceptions & exception rethrowing
 		- Especially in templating and view component processings
-
-	- Loading message / page while the ajs is initializing
-	    - should be later usable through user project so should be implemented as a component
 
 	- Resource management
 	    - remove resources older than, partially done, need to be tested

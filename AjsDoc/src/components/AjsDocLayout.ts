@@ -23,6 +23,53 @@ namespace ajsdoc {
     "use strict";
 
     export class AjsDocLayout extends ajs.mvvm.viewmodel.ViewComponent {
+
+        public dialogVisible: boolean;
+        public menuVisible: boolean;
+
+        public showDialogFrame() {
+            document.body.style.overflow = "hidden";
+            this.setState({ dialogVisible: true });
+        }
+
+        public hideDialogFrame() {
+            document.body.style.overflow = "";
+            this.setState({ dialogVisible: false, menuVisible: false });
+            this._updateButton();
+        }
+
+        public showMenu() {
+            document.body.style.overflow = "hidden";
+            this.setState({ dialogVisible: true, menuVisible: true });
+            this._updateButton();
+        }
+
+        public hideMenu() {
+            this.hideDialogFrame();
+            this._updateButton();
+        }
+
+        public toggleMenu() {
+            if (this.menuVisible) {
+                this.hideMenu();
+            } else {
+                this.showMenu();
+            }
+        }
+
+        public dialogClick(event: Event): void {
+            this.hideDialogFrame();
+        }
+
+        protected _initialize() {
+            this.showMenu();
+        }
+
+        protected _updateButton() {
+            let button: AjsDocLayoutMenuButton = this._ajsViewComponentManager.getFirstComponentInstance<AjsDocLayoutMenuButton>(AjsDocLayoutMenuButton, "ajsDocLayoutMenuButton");
+            button.setState({ menuVisible: this.menuVisible });
+        }
+
     }
 
     /** Register the component to ViewComponentManager */

@@ -26,25 +26,17 @@ namespace ajsdoc {
 
         protected _layout: AjsDocLayout;
 
-        protected _menuVisible: boolean;
         protected _componentTreeChanged: ajs.events.IListener;
 
         protected _initialize(): void {
-            this._menuVisible = true;
         }
 
         protected _finalize(): void {
         }
 
         public toggleMenu(): void {
-            this._menuVisible = !this._menuVisible;
-            this._updateState();
-        }
-
-        protected _updateState(): void {
             let layout: AjsDocLayout = this._ajsViewComponentManager.getFirstComponentInstance<AjsDocLayout>(AjsDocLayout, "ajsDocLayout");
-            layout.setState({ menuVisible: this._menuVisible });
-            this.setState({ menuVisible: this._menuVisible });
+            layout.toggleMenu();
         }
 
     }

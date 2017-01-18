@@ -19,6 +19,22 @@
 
 /* PAGE LAYOUT */
 
+.ajsDocLayoutDialog {
+    position: fixed; 
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #EAF4F8;
+    opacity: 0.35;
+    z-index: 5000;
+    display: none;
+}
+
+.ajsDocLayoutDialog[dialogvisible="true"] {
+    display: block;
+}
+
 .ajsDocLayoutHeaderContainer {
     background: linear-gradient(-3deg, #EAF4F8, white);
     text-align: center;
@@ -175,7 +191,8 @@
     display: table-cell;
     height: 48px;
     vertical-align: middle;
-    padding-left: 0.5em
+    padding-left: 0.5em;
+    white-space: nowrap;
 }
 
 .ajsDocHeaderLabel {
