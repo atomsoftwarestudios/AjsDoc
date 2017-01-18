@@ -58,6 +58,7 @@ namespace ajsdoc {
             // set default state
             this._applyState({
                 ajsDocLayout: {
+                    menuVisible: true,
                     ajsDocHeader: {},
                     ajsDocLayoutMenuButton: {},
                     ajsDocContextSwitcher: {},

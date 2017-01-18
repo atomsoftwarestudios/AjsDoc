@@ -28,36 +28,32 @@ Features:
 	- Routing
 	- Navigation
 	- Application management
-	- View, View Components and Visual Components (templating)
+	- Event "delegate"
+	- mvvm
+		- view
+		- view component (view model)
+		- basic model
+	- Simple session state manager
+	- Templating
+	- Utilities
+
+	- Tools:
+		cache.manifest post-build generator (PowerShell)
 
 TODO:
     - Documentation
-		- Intentions and reasons why AJS was developed
-		- How it works
-		- Visual Studio project and compilation
-		   - Tools & toolchain
-		      - Javascript minification
-		      - Template compiler / minifier
-			  - Style compiler
-			  - Language & translation transpiller
-			  - Code optimalization
-		- Coding guidelines
-		- Browser application caching
-		- Features
-		   - Boot process
-		   - Resource Management
-		   - Navigation
-		   - Routing
-		   - Application
-		   - View, View Components and Visual Components (templating)
 		- Code documentation
-			- Add license agreement to all files
 		    - Finish the code documentation for the existing code
 			- Get rid of all errors reported by the Visual Studio Intellisense
 
-	- Browser Application Caching
-		- Only index.html, ajs.js and ajs.boot.js need to be cached
-		- Tool to update the manifest if the index.html, ajs.js or ajs.boot.js will change
+		- How it works
+
+		- Visual Studio project and compilation
+		   - Tools & toolchain
+
+		- Coding guidelines
+
+		- Browser application caching
 
 	- Error handling, exceptions & exception rethrowing
 		- Especially in templating and view component processings
@@ -73,7 +69,6 @@ TODO:
 		   - review cycles
 		- Implement state management
 			- Implement application state resource storage
-			- Implement session state resource storage
 
 	- View, View Components, Visual Components
 	    - Don't render the component tag to the output
@@ -105,13 +100,18 @@ TODO:
 
 	----
 
-	Tools:
-		Implement typescript preprocessor
-		- Just // #ifdef and // #ifndef
-		- Integrate to msbuild process
+	Tools (both - in-house/3rd party):
+		-Implement typescript preprocessor
+			- Just // #ifdef and // #ifndef
+			- Integrate to msbuild process
+		- Javascript minification
+		- Template compiler / minifier
+		- Style compiler
+		- Language & translation transpiller
+		- Code optimalizations
 
 	FAR FUTURE:
-	- Caching of processed objects - especially visualComponents and view components??
+	- Caching of processed objects - especially visualComponents and view components, dom??
 
 	----
 

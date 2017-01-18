@@ -23,21 +23,69 @@ namespace ajs.resources {
     "use strict";
 
     /** Function is not implemented (probably must be implemented in derived class */
-    export class NotImplementedException extends Error { }
+    export class NotImplementedException extends Error {
+        constructor(msg?: string) {
+            let message: string = "NotImplementedException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
     /** The required storage type is not supported by the browser */
-    export class StorageTypeNotSupportedException extends Error { }
+    export class StorageTypeNotSupportedException extends Error {
+        constructor(msg?: string) {
+            let message: string = "StorageTypeNotSupportedException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
     /** Storage type requested is not valid */
-    export class InvalidStorageTypeException extends Error { }
+    export class InvalidStorageTypeException extends Error {
+        constructor(msg?: string) {
+            let message: string = "InvalidStorageTypeException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
     /** If the storage is chosen the caching policy must be set */
-    export class CachePolicyMustBeSetException extends Error { }
+    export class CachePolicyMustBeSetException extends Error {
+        constructor(msg?: string) {
+            let message: string = "CachePolicyMustBeSetException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
     /** Resource was not found in the storage */
-    export class ResourceNotFoundException extends Error { }
+    export class ResourceNotFoundException extends Error {
+        constructor(msg?: string) {
+            let message: string = "ResourceNotFoundException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
     /** Storage is out of space or the resource can't fit the storage */
-    export class NotEnoughSpaceInStorageException extends Error { }
+    export class NotEnoughSpaceInStorageException extends Error {
+        constructor(msg?: string) {
+            let message: string = "NotEnoughSpaceInStorageException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
 }

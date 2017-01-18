@@ -20,10 +20,12 @@ IN THE SOFTWARE.
 
 namespace ajsdoc {
 
-    export class AjsDocMenuItem extends ajs.mvvm.viewmodel.ViewComponent {
+    "use strict";
+
+    export class AjsDocLayout extends ajs.mvvm.viewmodel.ViewComponent {
     }
 
     /** Register the component to ViewComponentManager */
-    ajs.Framework.viewComponentManager.registerComponents(AjsDocMenuItem);
+    ajs.Framework.viewComponentManager.registerComponents(AjsDocLayout);
 
 }

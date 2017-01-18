@@ -35,7 +35,12 @@ namespace ajs.navigation {
         protected _router: Router;
         public get router(): Router { return this.router; }
 
+        protected _canNavigate: boolean;
+        public get canNavigate(): boolean { return this._canNavigate; }
+        public set canNavigate(value: boolean) { this._canNavigate = value; }
+
         public constructor(router: Router, redirections?: IRedirection[]) {
+            this._canNavigate = false;
             this._router = router;
             this._lastUrl = null;
             this._redirections = redirections || [];
@@ -51,7 +56,7 @@ namespace ajs.navigation {
         }
 
         public navigated(): void {
-            if (window.location.href !== this._lastUrl) {
+            if (window.location.href !== this._lastUrl && this._canNavigate) {
                 this._lastUrl = window.location.href;
                 if (!this._redirect(window.location.pathname)) {
                     this._router.route();

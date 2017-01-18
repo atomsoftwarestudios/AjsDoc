@@ -23,20 +23,43 @@ namespace ajs.mvvm.view {
     "use strict";
 
     export class ViewComponentIsNotRegisteredException extends Error {
-        constructor(componentName: string) {
-            super(componentName);
-            this.message = componentName;
+        constructor(msg?: string) {
+            super();
+            this.message = "ViewComponentIsNotRegisteredException";
+            if (msg) {
+                this.message = this.message + ": " + msg;
+            }
         }
     }
 
     export class VisualComponentNotRegisteredException extends Error {
-        constructor(componentName: string) {
-            super(componentName);
-            this.message = componentName;
+        constructor(msg?: string) {
+            super();
+            this.message = "VisualComponentNotRegisteredException";
+            if (msg) {
+                this.message = this.message + ": " + msg;
+            }
         }
     }
 
-    export class CSSInvalidResourceSpecificationException extends Error { }
+    export class CSSInvalidResourceSpecificationException extends Error {
+        constructor(msg?: string) {
+            super();
+            this.message = "CSSInvalidResourceSpecificationException";
+            if (msg) {
+                this.message = this.message + ": " + msg;
+            }
+        }
+    }
 
-    export class CSSRequiredResourceNotLoadedException extends Error { }
+    export class CSSRequiredResourceNotLoadedException extends Error {
+        constructor(msg?: string) {
+            super();
+            this.message = "CSSRequiredResourceNotLoadedException";
+            if (msg) {
+                this.message = this.message + ": " + msg;
+            }
+        }
+    }
+
 }

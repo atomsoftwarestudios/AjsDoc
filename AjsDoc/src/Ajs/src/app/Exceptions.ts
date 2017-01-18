@@ -26,12 +26,28 @@ namespace ajs.app {
      * Thrown when the application recognizes it was not initialized before calling the _run method
      * @
      */
-    export class NotInitializedException extends Error { }
+    export class NotInitializedException extends Error {
+        constructor(msg?: string) {
+            let message: string = "NotInitialzedException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
     /**
      * Thrown when the inherited application does not implement required functionality
      * @
      */
-    export class NotImplementedException extends Error { }
+    export class NotImplementedException extends Error {
+        constructor(msg?: string) {
+            let message: string = "NotImplementedException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
 }

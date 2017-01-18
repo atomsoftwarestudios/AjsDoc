@@ -2,14 +2,11 @@
 
     <!-- VIEW COMPONENTS -->
 
-    <component name="ajsdoc" class="ajsDoc">
+    <component name="AjsDoc" class="ajsDoc">
         <ajsDocLayout id="ajsDocLayout"></ajsDocLayout>
     </component>
 
-    <component name="ajsDocHeader">
-        <div class="ajsDocAjsLogo">
-            <img class="ajsDocAjsLogo" src="/res/img/ajs-logo.png" alt="ajs" />
-        </div>
+    <component name="AjsDocHeader">
         <div class="ajsDocHeaderLabelContainer">
             <h3 class="ajsDocHeaderLabel">AJS Framework</h3>
             <br />
@@ -17,7 +14,7 @@
         </div>
     </component>
 
-    <component name="ajsDocFooter">
+    <component name="AjsDocFooter">
         <div>
             AjsDoc browser v. 1.0.0 (<a class="ajsDocLink" href="https://github.com/atomsoftwarestudios/ajsDoc">GitHub</a>)
             Using the AJS Frontend Application Framework (<a class="ajsDocLink" href="https://github.com/atomsoftwarestudios/ajs">GitHub</a>)<br />
@@ -32,11 +29,11 @@
 
     <!-- LAYOUT COMPONENT -->
 
-    <component name="ajsDocLayout">
+    <component name="AjsDocLayout">
 
-        <div component="AjsDocLayoutMenuButton" id="ajsDocLayoutMenuButton" class="ajsDocLayoutMenuButton" onmousedown="openMenu"></div>
+        <div component="AjsDocLayoutMenuButton" id="ajsDocLayoutMenuButton" class="ajsDocLayoutMenuButton" menuvisible="{menuVisible}" onmousedown="toggleMenu"></div>
 
-        <div class="ajsDocLayoutMenuContainer">
+        <div class="ajsDocLayoutMenuContainer" menuvisible="{menuVisible}">
 
             <div class="ajsDocLayoutHeaderContainer">
                 <ajsDocHeader id="ajsDocHeader"></ajsDocHeader>
@@ -50,7 +47,7 @@
             <ajsDocMenu id="ajsDocMenu"></ajsDocMenu>
         </div>
 
-        <div class="ajsDocLayoutContentContainer">
+        <div class="ajsDocLayoutContentContainer" menuvisible="{menuVisible}">
             <!--<div class="ajsDocLayoutPageNavContainer">
                 PageNav
             </div>-->
@@ -73,9 +70,9 @@
 
     <!-- NAV BAR COMPONENTS -->
 
-    <component name="ajsDocNavBar">
+    <component name="AjsDocNavBar">
         <div class="ajsDocNavBar" if="this.items">
-            <span component="ajsDocNavBarItem" id="items">
+            <span component="AjsDocNavBarItem" id="items">
                 <span if="!this.firstItem"> / </span>
                 <a class="ajsDocLink" href="{itemPath}" style="white-space: nowrap">{itemType} {itemLabel}</a>
             </span>
@@ -88,7 +85,7 @@
 
     <!-- MENU COMPONENTS -->
 
-    <div component="ajsDocMenu" class="ajsDocMenu">
+    <div component="AjsDocMenu" class="ajsDocMenu" visible="{visible}">
 
         <div class="ajsDocMenuLabel">
             {label}
@@ -102,12 +99,12 @@
 
         <ajsDocMenuItem id="items"></ajsDocMenuItem>
 
-        <component name="ajsDocMenuGroup" id="groups">
+        <component name="AjsDocMenuGroup" id="groups">
 
             <div class="ajsDocMenuItemGroupLabel" style="border-bottom: solid 1px #EAF4F8">{label}</div>
 
             <ul class="ajsDocMenuItemGroup">
-                <li component="ajsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}" style="border-bottom: solid 1px #EAF4F8">
+                <li component="AjsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}" style="border-bottom: solid 1px #EAF4F8">
                     <a class="ajsDocLink ajsDocMenuItemLink" href="{path}">
                         <span if="this.expandable" style="float: right">&gt;</span>
                         {label}
@@ -125,9 +122,9 @@
 
     <!-- CODE TEMPLATES -->
 
-    <span component="ajsDocMemberDataType">: <span class="hljs-built_in" if="this.name !==''">{name}</span><span class="hljs-built_in" if="this.name ===''">any</span></span>
+    <span component="AjsDocMemberDataType">: <span class="hljs-built_in" if="this.name !==''">{name}</span><span class="hljs-built_in" if="this.name ===''">any</span></span>
 
-    <component name="ajsDocMemberFunctionParams"><!--
+    <component name="AjsDocMemberFunctionParams"><!--
         -->{name}<!--
         --><span if="this.flags.isOptional">?</span><!--
         --><span><!--
@@ -136,11 +133,11 @@
         --><span if="!this.isLast">, </span><!--
     --></component>
 
-    <component class="hljs-built_in" name="ajsDocMemberExtends">{name}<span if="!this.isLast">, </span></component>
+    <component class="hljs-built_in" name="AjsDocMemberExtends">{name}<span if="!this.isLast">, </span></component>
 
-    <component class="hljs-built_in" name="ajsDocMemberImplements">{name}<span if="!this.isLast">, </span></component>
+    <component class="hljs-built_in" name="AjsDocMemberImplements">{name}<span if="!this.isLast">, </span></component>
 
-    <div component="ajsDocMember" class="ajsDocMember">
+    <div component="AjsDocMember" class="ajsDocMember">
 
         <a class="ajsDocLink" href="/ref/{path}">
             <div class="ajsDocMemberStatement ">
@@ -167,7 +164,7 @@
                 <span if="!this.comment || !this.comment.shortText || this.comment.shortText.trim() === ''">
                     <strong>!!! DOCUMENTATION IS MISSING !!!</strong>
                 </span>
-                <span component="ajsDocMemberDescription" id="comment">
+                <span component="AjsDocMemberDescription" id="comment">
                     <span if="this.shortText !== ''">{shortText}</span>
                 </span>
             </div>
@@ -175,7 +172,7 @@
 
     </div>
 
-    <component name="ajsDocArticle">
+    <component name="AjsDocArticle">
 
         <div style="padding-left: 0.5em; padding-right: 0.5em">
 
@@ -184,7 +181,7 @@
             <div if="this.hasHierarchy">
                 <h3>Hierarchy</h3>
                 <div style="border: solid 1px #EAF4F8; background-color: #FAFCFD; padding: 0.5em; padding-left: 0">
-                    <ul component="ajsDocHierarchy" id="hierarchy" style="text-decoration: none; list-style: none; margin: 0; padding-left: 1em">
+                    <ul component="AjsDocHierarchy" id="hierarchy" style="text-decoration: none; list-style: none; margin: 0; padding-left: 1em">
                         <li><a class="ajsDocLink" href="/ref{path}">{name}</a></li>
                         <ajsDocHierarchy id="extends"></ajsDocHierarchy>
                     </ul>
@@ -194,7 +191,7 @@
             <div if="this.implements">
                 <h3>Implements</h3>
                 <div style="border: solid 1px #EAF4F8; background-color: #FAFCFD; padding: 0.5em">
-                    <div component="ajsDocImplements" id="implements"><a class="ajsDocLink" href="/ref{path}">{name}</a></div>
+                    <div component="AjsDocImplements" id="implements"><a class="ajsDocLink" href="/ref{path}">{name}</a></div>
                 </div>
             </div>
 

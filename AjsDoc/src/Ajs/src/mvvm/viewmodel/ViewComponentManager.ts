@@ -87,25 +87,60 @@ namespace ajs.mvvm.viewmodel {
             return null;
         }
 
-        public getComponentInstance(component: typeof ViewComponent, id?: string, key?: string): ViewComponent {
+        public getComponentInstances(component: typeof ViewComponent, id?: string, userKey?: string): ViewComponent[] {
+
+            let viewComponentInstances: ViewComponent[] = [];
+
+            let componentConstructorName: string = ajs.utils.getFunctionName(component);
 
             for (var key in this._componentInstances) {
                 if (this._componentInstances.hasOwnProperty(key)) {
-                    if (this._componentInstances[key] instanceof component) {
+                    let constructorName: string = ajs.utils.getClassName(this._componentInstances[key]);
+                    if (constructorName === componentConstructorName) {
                         if (id) {
                             if (this._componentInstances[key].ajsid === id) {
-                                if (key) {
+                                if (userKey) {
                                     if (this._componentInstances[key].hasOwnProperty("key")) {
-                                        if (this._componentInstances[key].key === key) {
-                                            return this._componentInstances[key];
+                                        if (this._componentInstances[key].key === userKey) {
+                                            viewComponentInstances.push(this._componentInstances[key]);
                                         }
-                                    } 
+                                    }
                                 } else {
-                                    return this._componentInstances[key];
+                                    viewComponentInstances.push(this._componentInstances[key]);
                                 }
                             }
                         } else {
-                            return this._componentInstances[key];
+                            viewComponentInstances.push(this._componentInstances[key]);
+                        }
+                    }
+                }
+            }
+
+            return viewComponentInstances;
+        }
+
+        public getFirstComponentInstance<T extends ViewComponent>(component: typeof ViewComponent, id?: string, userKey?: string): T {
+
+            let componentConstructorName: string = ajs.utils.getFunctionName(component);
+
+            for (var key in this._componentInstances) {
+                if (this._componentInstances.hasOwnProperty(key)) {
+                    let constructorName: string = ajs.utils.getClassName(this._componentInstances[key]);
+                    if (constructorName === componentConstructorName) {
+                        if (id) {
+                            if (this._componentInstances[key].ajsid === id) {
+                                if (userKey) {
+                                    if (this._componentInstances[key].hasOwnProperty("key")) {
+                                        if (this._componentInstances[key].key === userKey) {
+                                            return <T>this._componentInstances[key];
+                                        }
+                                    }
+                                } else {
+                                    return <T>this._componentInstances[key];
+                                }
+                            }
+                        } else {
+                            return <T>this._componentInstances[key];
                         }
                     }
                 }
@@ -113,6 +148,7 @@ namespace ajs.mvvm.viewmodel {
 
             return null;
         }
+
 
     }
 

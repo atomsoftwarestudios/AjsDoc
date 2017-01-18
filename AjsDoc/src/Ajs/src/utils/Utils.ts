@@ -45,6 +45,14 @@ namespace ajs.utils {
         return undefined;
     }
 
+    export function getFunctionName(fn: Function) {
+        let name: RegExpExecArray = /^function\s+([\w\$]+)\s*\(/.exec(fn.toString())
+        if (name && name.length === 2) {
+            return name[1];
+        }
+        return undefined;
+    }
+
     export function minDate(): Date {
         return new Date(0);
     }

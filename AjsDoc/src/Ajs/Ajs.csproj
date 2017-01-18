@@ -101,6 +101,8 @@
     <TypeScriptCompile Include="src\templating\IVisualComponentPlaceholderCollection.ts" />
     <TypeScriptCompile Include="src\templating\Template.ts" />
     <TypeScriptCompile Include="src\templating\TemplateManager.ts" />
+    <TypeScriptCompile Include="src\ui\!ui.ts" />
+    <TypeScriptCompile Include="src\ui\InitialProgressBar.ts" />
     <TypeScriptCompile Include="src\utils\Base64.ts" />
     <TypeScriptCompile Include="src\utils\DeepMerge.ts" />
     <TypeScriptCompile Include="src\utils\HTMLTags.ts" />

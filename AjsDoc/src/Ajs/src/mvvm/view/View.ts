@@ -87,7 +87,6 @@ namespace ajs.mvvm.view {
         /** Returns style sheets (template names) applied to the current view */
         public get appliedStyleSheets(): string[] { return this._appliedStyleSheets; }
 
-
         protected _navigationNotifier: ajs.events.Notifier;
         public get navigationNotifier(): ajs.events.Notifier { return this._navigationNotifier; }
 
@@ -198,7 +197,7 @@ namespace ajs.mvvm.view {
         }
 
         public onNavigate(): void {
-            this._navigationNotifier.notify(null);
+            this._navigationNotifier.notify(this);
         }
 
         public _stateChangeBegin(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
@@ -212,8 +211,10 @@ namespace ajs.mvvm.view {
                 // render only if the root view component was rendered already
                 // initial rendering of the root component is ensured from the _rootUpdated method
                 if (this._rootViewComponent !== null) {
+                    // render the root change view component
                     this.render(viewComponent);
-                    this._renderDoneNotifier.notify(null);
+                    // notify registered subscribers the rendering is over
+                    this._renderDoneNotifier.notify(this);
                 }
                 this._changeRootComponent = null;
             }

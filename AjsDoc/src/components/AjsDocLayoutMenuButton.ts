@@ -24,26 +24,27 @@ namespace ajsdoc {
 
     export class AjsDocLayoutMenuButton extends ajs.mvvm.viewmodel.ViewComponent {
 
+        protected _layout: AjsDocLayout;
 
-        public openMenu(): void {
+        protected _menuVisible: boolean;
+        protected _componentTreeChanged: ajs.events.IListener;
 
-            let menu = this._ajsViewComponentManager.getComponentInstance(AjsDocMenu);
+        protected _initialize(): void {
+            this._menuVisible = true;
+        }
 
-            let e1: HTMLCollectionOf<Element> = document.getElementsByClassName("ajsDocLayoutMenuContainer");
-            let e2: HTMLCollectionOf<Element> = document.getElementsByClassName("ajsDocLayoutContentContainer");
-            if (window.getComputedStyle(e1[0]).display === "none") {
-                if (window.innerWidth < 350) {
-                    (e1[0] as HTMLElement).style.width = "100%";
-                } else {
-                    (e1[0] as HTMLElement).style.width = "350px";
-                }
-                (e1[0] as HTMLElement).style.display = "block";
-                //(e2[0] as HTMLElement).style.left = "350px";
-            } else {
-                (e1[0] as HTMLElement).style.display = "none";
-                //(e2[0] as HTMLElement).style.left = "0";
-            }
+        protected _finalize(): void {
+        }
 
+        public toggleMenu(): void {
+            this._menuVisible = !this._menuVisible;
+            this._updateState();
+        }
+
+        protected _updateState(): void {
+            let layout: AjsDocLayout = this._ajsViewComponentManager.getFirstComponentInstance<AjsDocLayout>(AjsDocLayout, "ajsDocLayout");
+            layout.setState({ menuVisible: this._menuVisible });
+            this.setState({ menuVisible: this._menuVisible });
         }
 
     }

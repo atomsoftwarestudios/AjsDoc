@@ -28,60 +28,131 @@
 }
 
 .ajsDocLayoutMenuContainer {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
-    bottom: 0;
+    height: 100%;
+    width: 0;
+    border-right: 1px solid #EAF4F8;
     vertical-align: top;
-    width: 350px;
     box-sizing: border-box;
     overflow: hidden;
-    z-index: 8888;
+    z-index: 9500;
     -webkit-overflow-scrolling: touch;
 }
 
 .ajsDocLayoutContentContainer {
-    position: absolute;
-    left: 350px;
-    top: 0;
-    right: 0;
-    bottom: 0;
     vertical-align: top;
-    border-left: 1px solid #EAF4F8;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
+@keyframes ajsDocMenuButtonVisible {
+    from { opacity: 0.25; }
+    to { opacity: 1; }
+}
+
+@keyframes ajsDocMenuButtonInvisible {
+    from { opacity: 1; }
+    to { opacity: 0.25; }
+}
+
 .ajsDocLayoutMenuButton {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    opacity: 0.4;
-    width: 60px;
-    height: 60px;
+    position: fixed;
+    left: 3px;
+    top: 3px;
+    width: 48px;
+    height: 48px;
     background-image: resource('/res/img/ajs-logo.png');
     background-repeat: no-repeat;
     background-size: cover;
     z-index: 9999;
-    /*display: none;*/
+    animation: ajsDocMenuButtonVisible 250ms forwards;
 }
 
-@media only screen and (max-width: 800px) {
+.ajsDocLayoutMenuButton[menuvisible="false"] {
+    animation: ajsDocMenuButtonInvisible 250ms forwards;
+}
 
-    .ajsDocLayoutMenuContainer {
-        display: none;
-        opacity: 0.97;
+@keyframes ajsDocMenuMakeVisible350px {
+    from { width: 0; opacity: 0 }
+    to { width: 350px; opacity: 1 }
+}
+
+@keyframes ajsDocMenuMakeInvisible350px {
+    from { width: 350px; opacity: 1 }
+    to { width: 0; opacity: 0 }
+}
+
+@keyframes ajsDocMenuMakeVisible100 {
+    from { width: 0; opacity: 0 }
+    to { width: 100%; opacity: 0.95  }
+}
+
+@keyframes ajsDocMenuMakeInvisible100 {
+    from { width: 100%; opacity: 0.95 }
+    to { width: 0; opacity: 0 }
+}
+
+@keyframes ajsDocMenuVisibleContent {
+    from { margin-left: 0}
+    to { margin-left: 350px}
+}
+
+@keyframes ajsDocMenuInvisibleContent {
+    from { margin-left: 350px}
+    to { margin-left: 0}
+}
+
+@media only screen and (min-width: 980px) {
+
+    .ajsDocLayoutContentContainer[menuvisible="true"] {
+        animation: ajsDocMenuVisibleContent 250ms forwards;
     }
+
+    .ajsDocLayoutContentContainer[menuvisible="false"] {
+        animation: ajsDocMenuInvisibleContent 250ms forwards;
+    }
+
+
+    .ajsDocLayoutMenuContainer[menuvisible="true"] {
+        animation: ajsDocMenuMakeVisible350px 250ms forwards;
+    }
+
+    .ajsDocLayoutMenuContainer[menuvisible="false"] {
+        animation: ajsDocMenuMakeInvisible350px 250ms forwards;
+    }
+
+}
+
+@media only screen and (max-width: 980px) {
 
     .ajsDocLayoutContentContainer {
         left: 0
     }
 
-    .ajsDocLayoutMenuButton {
-        display: block;
+    .ajsDocLayoutMenuContainer[menuvisible="true"] {
+        animation: ajsDocMenuMakeVisible350px 250ms forwards;
+    }
+
+    .ajsDocLayoutMenuContainer[menuvisible="false"] {
+        animation: ajsDocMenuMakeInvisible350px 250ms forwards;
     }
 }
+
+@media only screen and (max-width: 350px) {
+
+    .ajsDocLayoutMenuContainer[menuvisible="true"] {
+        animation: ajsDocMenuMakeVisible100 250ms forwards;
+    }
+
+    .ajsDocLayoutMenuContainer[menuvisible="false"] {
+        animation: ajsDocMenuMakeInvisible100 250ms forwards;
+    }
+
+}
+
 
 .ajsDocLayoutPageNavContainer {
     display: table-cell;
@@ -218,7 +289,6 @@
 }
 
 .ajsDocMenuRtlOld {
-    /*filter: brightness(95%);*/
     animation: ajsDocMenuOldAnimationRtl 300ms forwards;
 }
 
@@ -227,7 +297,6 @@
 }
 
 .ajsDocMenuLtrOld {
-    /*filter: brightness(95%);*/
     animation: ajsDocMenuOldAnimationLtr 300ms forwards;
 }
 

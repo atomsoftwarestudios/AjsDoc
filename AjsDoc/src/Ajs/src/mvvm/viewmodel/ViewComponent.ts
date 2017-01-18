@@ -132,7 +132,8 @@ namespace ajs.mvvm.viewmodel {
                 "onkeydown": <IAttributeProcessor>this._attrEventHandler,
                 "onkeyup": <IAttributeProcessor>this._attrEventHandler,
                 "onchange": <IAttributeProcessor>this._attrEventHandler,
-                "oninput": <IAttributeProcessor>this._attrEventHandler
+                "oninput": <IAttributeProcessor>this._attrEventHandler,
+                "ontouchmove": <IAttributeProcessor>this._attrEventHandler
             };
 
             // apply passed or default state

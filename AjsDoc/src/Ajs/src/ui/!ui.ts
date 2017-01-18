@@ -1,6 +1,6 @@
 ﻿/* *************************************************************************
 The MIT License (MIT)
-Copyright (c)2017 Atom Software Studios. All rights reserved.
+Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -18,12 +18,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajsdoc {
+namespace ajs.ui {
 
-    export class AjsDocMenuGroup extends ajs.mvvm.viewmodel.ViewComponent {
-    }
-
-    /** Register the component to ViewComponentManager */
-    ajs.Framework.viewComponentManager.registerComponents(AjsDocMenuGroup);
+    "use strict";
 
 }

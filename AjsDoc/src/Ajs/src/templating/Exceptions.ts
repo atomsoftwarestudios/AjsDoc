@@ -22,12 +22,44 @@ namespace ajs.templating {
 
     "use strict";
 
-    export class FailedToLoadTemplatesException extends Error { }
+    export class FailedToLoadTemplatesException extends Error {
+        constructor(msg?: string) {
+            let message: string = "FailedToLoadTemplatesException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
-    export class FailedToLoadTemplateStyleSheetsException extends Error { }
+    export class FailedToLoadTemplateStyleSheetsException extends Error {
+        constructor(msg?: string) {
+            let message: string = "FailedToLoadTemplateStyleSheetsException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
-    export class PlaceholdersCantHaveChildrenNodesException extends Error { }
+    export class PlaceholdersCantHaveChildrenNodesException extends Error {
+        constructor(msg?: string) {
+            let message: string = "PlaceholdersCantHaveChildrenNodesException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
-    export class MissingVisualComponentNameException extends Error{ }
+    export class MissingVisualComponentNameException extends Error {
+        constructor(msg?: string) {
+            let message: string = "MissingVisualComponentNameException";
+            if (msg) {
+                message = message + ": " + msg;
+            }
+            super(message);
+        }
+    }
 
 }

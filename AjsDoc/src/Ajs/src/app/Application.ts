@@ -81,6 +81,7 @@ namespace ajs.app {
          */
         protected _run(): void {
             if (!this._initialized) { throw new NotInitializedException(); }
+            ajs.Framework.navigator.canNavigate = true;
             ajs.Framework.navigator.navigated();
         }
 

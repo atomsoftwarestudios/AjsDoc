@@ -221,6 +221,11 @@ namespace ajs.resources {
                 callback: loadEndCallback
             };
 
+            // update initial progress bar
+            if (ajs.ui.InitialProgressBar) {
+                ajs.ui.InitialProgressBar.resourceLoading(url);
+            }
+
             // load the resource with the loadEndCallback
             this._resourceLoader.loadResource(
                 (response: IResourceResponseData) => { this._loadEnd(response); },
@@ -266,6 +271,7 @@ namespace ajs.resources {
             }
 
             for (let i: number = 0; i < urls.length; i++) {
+                // start loading of the resource
                 this.load(
                     (loaded: boolean, url: string, resource: IResource, userData: IResourcesLoadingInfo) => {
                         this._nextLoaded(loaded, url, resource, userData);
@@ -414,6 +420,11 @@ namespace ajs.resources {
                 }
             }
 
+            // update initial progress bar
+            if (ajs.ui.InitialProgressBar) {
+                ajs.ui.InitialProgressBar.resourceLoaded(url);
+            }
+
             // call the defined callback
             loadingInfo.callback(loaded, url, loadingInfo.resource, loadingInfo.userData);
         }
@@ -452,7 +463,7 @@ namespace ajs.resources {
 
                 // if all succesfully loaded, execute all script resources in the order they were requested to be loaded
                 if (allLoaded) {
-                    for (let i: number = 0; i < loadingInfo.loadingData.length; i++) {
+                    /*for (let i: number = 0; i < loadingInfo.loadingData.length; i++) {
                         if (loadingInfo.loadingData[i].resource.type === RESOURCE_TYPE.SCRIPT) {
                             if (USE_EVAL) {
                                 this._evalScript(loadingInfo.loadingData[i].resource);
@@ -460,7 +471,7 @@ namespace ajs.resources {
                                 this._addScriptTag(loadingInfo.loadingData[i].resource);
                             }
                         }
-                    }
+                    }*/
                 }
 
                 // prepare array of loaded resources to be passed to the callback

@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -18,19 +18,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.mvvm.viewmodel {
+namespace ajs.ui {
 
     "use strict";
 
-    export class NotImplementedException extends Error {
-        constructor(msg?: string) {
-            let message: string = "NotImplementedException";
-            if (msg) {
-                message = message + ": " + msg;
-            }
-            super(message);
-        }
-    }
+    export declare class InitialProgressBar {
 
+        static total: number;
+        static current: number;
+        static resourceLoading(label: string): void;
+        static resourceLoaded(e: string): void;
+        static update(): void;
+
+    }
 
 }
