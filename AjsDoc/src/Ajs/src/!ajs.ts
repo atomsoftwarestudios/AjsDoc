@@ -20,6 +20,8 @@ IN THE SOFTWARE.
 
 /**
  * The main AJS namespace
+ * Contains the static Framework class, Framework exceptions and Ajs
+ * configuration template
  */
 namespace ajs {
     "use strict";

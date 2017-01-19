@@ -18,16 +18,17 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.navigation {
+namespace ajs.boot {
 
     "use strict";
 
-    /** Template for the redirection record */
-    export interface IRedirection {
-        /** Source path (not full url) to be redirected */
-        path: string;
-        /** Target path */
-        target: string;
+    /**
+     * Defines the function returning the resources required to be loaded during the boot time
+     * This function must be implemented in the cofiguration file (namepace ajs.boot) and loaded
+     * by html page. It is expcected the function will be declred in the ajs.boot namespace.
+     */
+    export interface IGetResourceLists {
+        (): IResourceLists;
     }
 
 }

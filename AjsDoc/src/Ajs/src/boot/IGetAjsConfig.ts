@@ -21,12 +21,13 @@ namespace ajs.boot {
 
     "use strict";
 
-    /** Defines the function returning the ajs framework configuration
-     *  This function must be implemented in the cofiguration file (namepace ajs.boot)
-     *  and loaded by html page. It is expcected to be defined in the ajs.boot namespace.
+    /**
+     * Defines the function returning the ajs framework configuration
+     * This function must be implemented in the cofiguration file (namepace ajs.boot)
+     * and loaded by html page. It is expcected to be defined in the ajs.boot namespace.
      */
     export interface IGetAjsConfig {
-        (): IAJSConfig;
+        (): IAjsConfig;
     }
 
 }

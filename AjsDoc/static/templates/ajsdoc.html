@@ -8,7 +8,7 @@
 
     <component name="AjsDocHeader">
         <div class="ajsDocHeaderLabelContainer">
-            <h3 class="ajsDocHeaderLabel">AJS Framework</h3>
+            <h3 class="ajsDocHeaderLabel">Ajs Framework</h3>
             <br />
             Developer's Guide
         </div>
@@ -17,7 +17,7 @@
     <component name="AjsDocFooter">
         <div>
             AjsDoc browser v. 1.0.0 (<a class="ajsDocLink" href="https://github.com/atomsoftwarestudios/ajsDoc">GitHub</a>)
-            Using the AJS Frontend Application Framework (<a class="ajsDocLink" href="https://github.com/atomsoftwarestudios/ajs">GitHub</a>)<br />
+            Using the Ajs Frontend Application Framework (<a class="ajsDocLink" href="https://github.com/atomsoftwarestudios/ajs">GitHub</a>)<br />
             Copyright &copy;2016-2017 Atom Software Studios, Released under the MIT License.
         </div>
     </component>
@@ -87,7 +87,7 @@
 
     <!-- MENU COMPONENTS -->
 
-    <div component="AjsDocMenu" class="ajsDocMenu" visible="{visible}" ontouchmove="touchMove">
+    <div component="AjsDocMenu" class="ajsDocMenu" visible="{visible}" ontouchmove="touchMove" onstatetransitionbegin="stateTransitionBegin" onanimationend="stateTransitionEnd">
 
         <div class="ajsDocMenuLabel">
             {label}
@@ -146,9 +146,9 @@
                 <code>
                     <span class="hljs-keyword" if="this.exported">export</span>
                     <span class="hljs-keyword" if="this.isPublic">public</span>
-                    <span class="hljs-keyword" if="this.flags.isPrivate">protected</span>
-                    <span class="hljs-keyword" if="this.flags.isProtected">protected</span>
-                    <span class="hljs-keyword" if="this.flags.isStatic">static</span>
+                    <span class="hljs-keyword" if="this.flags && this.flags.isPrivate">protected</span>
+                    <span class="hljs-keyword" if="this.flags && this.flags.isProtected">protected</span>
+                    <span class="hljs-keyword" if="this.flags && this.flags.isStatic">static</span>
                     <span class="hljs-keyword" if="this.kindString !== 'property' && this.kindString !== 'method' && this.kindString !== 'variable'">{kindString}</span>
                     {name}<!--
                     --><span class="hljs-keyword" if="this.extendedTypes"> extends <ajsDocMemberExtends id="extendedTypes"></ajsDocMemberExtends></span><!--
@@ -163,11 +163,11 @@
                 </code>
             </div>
             <div style="padding: 0 0 0em 2em;">
-                <span if="!this.comment || !this.comment.shortText || this.comment.shortText.trim() === ''">
+                <span if="(!this.comment || !this.comment.shortText || this.comment.shortText.trim() === '') && this._ajsid !== 'syntaxes'">
                     <strong>!!! DOCUMENTATION IS MISSING !!!</strong>
                 </span>
                 <span component="AjsDocMemberDescription" id="comment">
-                    <span if="this.shortText !== ''">{shortText}</span>
+                    <span if="this._ajsParentComponent._ajsid !== 'syntaxes' && this.shortText !== ''">{shortText}</span>
                 </span>
             </div>
         </a>
@@ -179,6 +179,11 @@
         <div style="padding-left: 0.5em; padding-right: 0.5em">
 
             <h2 class="ajsDocArticleCaption">{caption}</h2>
+
+            <div if="this.syntaxes">
+                <h3>Syntax</h3>
+                <ajsDocMember id="syntaxes"></ajsDocMember>
+            </div>
 
             <div if="this.hasHierarchy">
                 <h3>Hierarchy</h3>
@@ -197,7 +202,7 @@
                 </div>
             </div>
 
-
+            <h3>Description</h3>
             <p>{description}</p>
 
             <div if="this.hasConstructors">

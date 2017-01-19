@@ -24,8 +24,8 @@ namespace ajs.mvvm.viewmodel {
 
     export interface IFilteredState {
         filterApplied: boolean;
-        key: string;
         state: IViewStateSet;
+        key?: string;
     }
 
 }

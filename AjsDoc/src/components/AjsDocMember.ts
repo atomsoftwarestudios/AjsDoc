@@ -28,7 +28,7 @@ namespace ajsdoc {
             // too lazy to implement the state interface so retype to any
             let _this: any = this;
 
-            return _this.flags.isExported &&
+            return _this.flags && _this.flags.isExported &&
                 _this.kindString !== "property" &&
                 _this.kindString !== "method" &&
                 _this.kindString !== "get" &&
@@ -39,12 +39,16 @@ namespace ajsdoc {
         public get isPublic(): boolean {
             let _this: any = this;
 
-            return !_this.flags.isPrivate &&
+            return _this.flags && !_this.flags.isPrivate &&
                 !_this.flags.isProtected &&
                 (_this.kindString === "property" ||
                     _this.kindString === "method" ||
                     _this.kindString === "accessor" ||
                     _this.kindString === "constructor");
+        }
+
+        protected _filterState(state: INodeState): INodeState {
+            return state;
         }
 
         protected _filterStateArrayItem(key: string, index: number, length: number, state: INodeState): ajs.mvvm.viewmodel.IFilteredState {

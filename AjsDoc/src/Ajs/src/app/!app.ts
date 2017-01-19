@@ -19,7 +19,7 @@ IN THE SOFTWARE.
 **************************************************************************** */
 
 /**
- * Contains base classes for the AJS Application, application configuration and exceptions.
+ * Contains base classes for the Ajs Application, application configuration and exceptions.
  * <p>The Application class has to be derived by the user code to initialize the
  * application, load necessary resources and setup routes.</p>
  * <p>The derived application class is construced and initialized during the
@@ -50,7 +50,6 @@ namespace ajs.app {
     export function test(test: number): number;
 
     /**
-     * this is signature 3
      * @param test
      */
     export function test(test: number): Date;
@@ -85,25 +84,64 @@ namespace ajs.app {
         return "";
     }
 
+    /**
+     * This is interface 1
+     */
     interface Interface1 {
+        (index: number): string[];
     }
 
+    /**
+     * This is interface 2
+     */
     interface Interface2 {
+        /** This is name */
+        name: string;
+        /** This is zip */
+        zip: number;
     }
 
-    interface Interface3 extends Interface1, Interface2 {
+    /**
+     * This is interface 3
+     */
+    interface Interface3{
+        [index: number]: string;
     }
 
+    /**
+     * This is interface 3
+     */
+    interface Interface4 extends Interface2, Interface3 {
+    }
+
+    /**
+     * This is class 1
+     */
     class Class1 {
     }
 
+    /**
+     * This is class 2
+     */
     class Class2 extends Class1 {
     }
 
-    class Class3 extends Class2 implements Interface1, Interface2 {
+    /**
+     * This is class 3
+     */
+    class Class3 extends Class2 implements Interface2 {
+
+        /** This is name at class */
+        public name: string;
+        /** This is zip at class */
+        public zip: number;
+
     }
 
-    class Class4 implements Interface3 {
+    /**
+     * This is class 4
+     */
+    class Class4 extends Class3 {
     }
 
 }

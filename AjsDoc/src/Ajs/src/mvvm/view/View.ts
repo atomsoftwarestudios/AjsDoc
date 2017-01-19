@@ -93,6 +93,9 @@ namespace ajs.mvvm.view {
         protected _renderDoneNotifier: ajs.events.Notifier;
         public get renderDoneNotifier(): ajs.events.Notifier { return this._renderDoneNotifier; }
 
+
+        public preventStateChange: viewmodel.ViewComponent[];
+
         /**
          * Constructs a view. This constructor is called from the ajs.Framework during initialization
          * View is supposed to be just one in the application. All the "view" functionality should be
@@ -118,6 +121,10 @@ namespace ajs.mvvm.view {
             this._appliedStyleSheets = [];
 
             this._lastComponentId = 0;
+
+
+            this.preventStateChange = [];
+
         }
 
         protected _rootUpdated(rootComponentName: string): void {
@@ -215,6 +222,10 @@ namespace ajs.mvvm.view {
                     this.render(viewComponent);
                     // notify registered subscribers the rendering is over
                     this._renderDoneNotifier.notify(this);
+                    // do the visual transition
+                    if (viewComponent.ajsHasVisualStateTransition) {
+                        viewComponent.ajsVisualStateTransitionBegin(viewComponent.ajsElement);
+                    }
                 }
                 this._changeRootComponent = null;
             }
@@ -240,10 +251,6 @@ namespace ajs.mvvm.view {
                 if (componentElement !== null) {
 
                     this._updateDom(componentElement, viewComponent.ajsElement);
-
-                    if (viewComponent.ajsVisualStateTransition) {
-                        viewComponent.ajsVisualStateTransitionBegin(viewComponent.ajsElement);
-                    }
 
                 // otherwise remove the component root element from the DOM
                 } else {
@@ -277,12 +284,16 @@ namespace ajs.mvvm.view {
         }
 
         protected _updateDom(source: Node, target: Node): void {
+            // if we have no source or target, return
+            /*if (source === undefined || source === null || target === undefined || target === null) {
+                return;
+            }*/
 
             // if the source node is view component and the target is different than the source
             if (this._isComponent(source) &&
                 (!this._isComponent(target) || this._getComponentId(source) !== this._getComponentId(target))) {
                 // search for the component in the target parent and update it if found
-                if (target.parentNode !== undefined && target.parentNode !== null) {
+                if (target !== undefined && target !== null && target.parentNode !== undefined && target.parentNode !== null) {
 
                     let componentFound: boolean = false;
                     for (let i: number = 0; i < target.parentNode.childNodes.length; i++) {

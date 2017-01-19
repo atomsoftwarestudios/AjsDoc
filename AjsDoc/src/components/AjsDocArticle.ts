@@ -44,6 +44,7 @@ namespace ajsdoc {
         caption?: string;
         description?: string;
         members?: INode[];
+        syntaxes?: INode[] | AjsDocMember[];
         hierarchy?: IHierarchyNodeState;
         implements?: IImplementedTypeState[];
     }
@@ -52,6 +53,8 @@ namespace ajsdoc {
         caption: string;
         description: string;
         modules: AjsDocMember[];
+        readonly hasSyntaxes: boolean;
+        syntaxes: AjsDocMember[] | INode[];
         readonly hasModules: boolean;
         functions: AjsDocMember[];
         readonly hasFunctions: boolean;
@@ -74,6 +77,9 @@ namespace ajsdoc {
         public caption: string;
         public description: string;
         public syntax: ajs.mvvm.viewmodel.ViewComponent;
+
+        public syntaxes: AjsDocMember[] | INode[];
+        public get hasSyntaxes(): boolean { return this.syntaxes instanceof Array && this.syntaxes.length > 0; }
 
         public hierarchy: IHierarchyNodeState;
         public get hasHierarchy(): boolean { return this.hierarchy !== undefined && this.hierarchy !== null; }
@@ -138,9 +144,21 @@ namespace ajsdoc {
             }
         }
 
+        protected _filterState(state: INodeState): INodeState {
+            return state;
+        }
+
+        protected _filterStateKey(key: string, state: INodeState): ajs.mvvm.viewmodel.IFilteredState {
+            return {
+                filterApplied: false,
+                key: null,
+                state: null
+            };
+        }
+
         protected _filterStateArrayItem(key: string, index: number, length: number, state: INodeState): ajs.mvvm.viewmodel.IFilteredState {
 
-            if (key === "members") {
+            if (key === "members" || key === "syntaxes") {
 
                 // Prepare new state values (Keep the original data untouched)
                 let newState: any = {
@@ -154,27 +172,31 @@ namespace ajsdoc {
                 };
 
                 // Copy rest of the data from the original data (state) to the new state
-                for (var key in state) {
-                    if (state.hasOwnProperty(key) && !newState.hasOwnProperty(key)) {
-                        newState[key] = state[key];
+                for (var k in state) {
+                    if (state.hasOwnProperty(k) && !newState.hasOwnProperty(k)) {
+                        newState[k] = state[k];
                     }
                 }
 
                 // Get path from INode tree
                 let path: string = "";
-                let pathBrowser: INode = state;
-                while (pathBrowser !== null && pathBrowser.parent !== null) {
-                    if (pathBrowser.name) {
-                        if (pathBrowser.parent !== null) {
-                            path = "/" + path;
+                if (key === "members") {
+                    let pathBrowser: INode = state;
+                    while (pathBrowser !== null && pathBrowser.parent !== null) {
+                        if (pathBrowser.name) {
+                            if (pathBrowser.parent !== null) {
+                                path = "/" + path;
+                            }
+                            path = pathBrowser.name + path;
                         }
-                        path = pathBrowser.name + path;
+                        pathBrowser = pathBrowser.parent;
                     }
-                    pathBrowser = pathBrowser.parent;
-                }
 
-                if (path !== "" && path[path.length - 1] === "/") {
-                    path = path.substr(0, path.length - 1);
+                    if (path !== "" && path[path.length - 1] === "/") {
+                        path = path.substr(0, path.length - 1);
+                    }
+                } else {
+                    path = null;
                 }
 
                 newState.path = path;
@@ -194,29 +216,31 @@ namespace ajsdoc {
                 // Based on the type set the state of appropriate member
                 switch ((newState as INode).kindString) {
                     case "constructor":
-                        return { filterApplied: true, key: "constructors", state: this._function(newState) }
+                        return { filterApplied: true, key: key !== "members" ? key : "constructors", state: this._function(newState, key === "members") }
                     case "module":
-                        return { filterApplied: true, key: "modules", state: newState }
+                        return { filterApplied: true, key: key !== "members" ? key : "modules", state: newState }
+                    case "call signature":
+                        return { filterApplied: true, key: key !== "members" ? key : "functions", state: this._function(newState, key === "members") }
                     case "function":
-                        return { filterApplied: true, key: "functions", state: this._function(newState) }
+                        return { filterApplied: true, key: key !== "members" ? key : "functions", state: this._function(newState, key === "members") }
                     case "class":
-                        return { filterApplied: true, key: "classes", state: newState }
+                        return { filterApplied: true, key: key !== "members" ? key : "classes", state: newState }
                     case "interface":
-                        return { filterApplied: true, key: "interfaces", state: newState }
+                        return { filterApplied: true, key: key !== "members" ? key : "interfaces", state: newState }
                     case "variable":
-                        return { filterApplied: true, key: "variables", state: this._variable(newState) }
+                        return { filterApplied: true, key: key !== "members" ? key : "variables", state: this._variable(newState) }
                     case "enumeration":
-                        return { filterApplied: true, key: "enumerations", state: newState }
+                        return { filterApplied: true, key: key !== "members" ? key : "enumerations", state: newState }
                     case "object literal":
-                        return { filterApplied: true, key: "objectLiterals", state: newState }
+                        return { filterApplied: true, key: key !== "members" ? key : "objectLiterals", state: newState }
                     case "property":
-                        return { filterApplied: true, key: "properties", state: newState }
+                        return { filterApplied: true, key: key !== "members" ? key : "properties", state: newState }
                     case "method":
-                        return { filterApplied: true, key: "methods", state: this._function(newState) }
+                        return { filterApplied: true, key: key !== "members" ? key : "methods", state: this._function(newState, key === "members") }
                     case "accessor":
-                        return { filterApplied: true, key: "accessors", state: this._accessor(newState) }
+                        return { filterApplied: true, key: key !== "members" ? key : "accessors", state: this._accessor(newState) }
                     case "enumeration member":
-                        return { filterApplied: true, key: "enumMembers", state: newState }
+                        return { filterApplied: true, key: key !== "members" ? key : "enumMembers", state: newState }
                 }
             }
 
@@ -243,8 +267,8 @@ namespace ajsdoc {
             return newState;
         }
 
-        protected _function(state: ajs.mvvm.viewmodel.IViewStateSet): ajs.mvvm.viewmodel.IViewStateSet {
-            let expandedState: any = this._expandSignatures(state);
+        protected _function(state: ajs.mvvm.viewmodel.IViewStateSet, expand: boolean): ajs.mvvm.viewmodel.IViewStateSet {
+            let expandedState: any = this._expandSignatures(state, expand);
 
             if (expandedState instanceof Array) {
                 let nodes: INode[] = expandedState;
@@ -262,6 +286,10 @@ namespace ajsdoc {
                 return nodes;
             } else {
                 let node: INode = this._type(expandedState, true);
+                node.parameters = node.parameters || [];
+                if (node.parameters.length > 0) {
+                    node.parameters[node.parameters.length - 1].isLast = true;
+                }
                 return node;
             }
         }
@@ -277,6 +305,10 @@ namespace ajsdoc {
                     name: (state as INode).name,
                     type: signature.type,
                     parameters: signature.parameters || []
+                }
+
+                if (newState.parameters instanceof Array && newState.parameters.length > 0) {
+                    newState.parameters[newState.parameters.length - 1].isLast = true;
                 }
 
                 for (var key in state) {
@@ -338,8 +370,8 @@ namespace ajsdoc {
             return node;
         }
 
-        protected _expandSignatures(state: ajs.mvvm.viewmodel.IViewStateSet): ajs.mvvm.viewmodel.IViewStateSet | ajs.mvvm.viewmodel.IViewStateSet[] {
-            if ((state as INode).signatures && (state as INode).signatures.length > 0) {
+        protected _expandSignatures(state: ajs.mvvm.viewmodel.IViewStateSet, expand: boolean): ajs.mvvm.viewmodel.IViewStateSet | ajs.mvvm.viewmodel.IViewStateSet[] {
+            if ((state as INode).signatures && (state as INode).signatures.length > 0 && expand) {
                 let states: ajs.mvvm.viewmodel.IViewStateSet[] = [];
 
                 if ((state as INode).parameters === undefined) {

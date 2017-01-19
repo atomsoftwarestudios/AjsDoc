@@ -22,36 +22,79 @@ namespace ajs.events {
 
     "use strict";
 
+    /** Notifier can be instanced to let subscribers register within it and notify them about particular events */
     export class Notifier {
 
+        /** List of subscribers */
         protected _listeners: IListener[];
 
+        /**
+         * Instantiates the Notifier and subscribes listeners passed as parameter
+         * @param listeners
+         */
         public constructor(...listeners: IListener[]) {
+
+            ajs.debug.log(debug.LogType.Constructor, "ajs.events", this);
+
             this._listeners = [];
             for (let i: number = 0; i < listeners.length; i++) {
                 this._listeners.push(listeners[i]);
             }
+
+            ajs.debug.log(debug.LogType.Exit, "ajs.events", this);
+
         }
 
+        /**
+         * Subscribes listener to obtain notifications passed through the current instance of Notifier
+         * @param listener Listener to be subscribed
+         */
         public subscribe(listener: IListener): void {
+
+            ajs.debug.log(debug.LogType.Enter, "ajs.events", this);
+
             if (this._listeners.indexOf(listener) === -1) {
                 this._listeners.push(listener);
             }
+
+            ajs.debug.log(debug.LogType.Exit, "ajs.events", this, "Registered subscribers: " + this._listeners.length);
+            ajs.debug.log(debug.LogType.Exit, "ajs.events", this);
         }
 
+        /**
+         * Unsubscribes the listener from the current instance of the notifier
+         * @param listener Listener to be subscribed
+         */
         public unsubscribe(listener: IListener): void {
+
+            ajs.debug.log(debug.LogType.Enter, "ajs.events", this);
+
             if (this._listeners.indexOf(listener) !== -1) {
                 this._listeners.splice(this._listeners.indexOf(listener));
             }
+
+            ajs.debug.log(debug.LogType.Exit, "ajs.events", this, "Registered subscribers: " + this._listeners.length);
+            ajs.debug.log(debug.LogType.Exit, "ajs.events", this);
         }
 
+        /**
+         * Notifies registered subscribers the event occured
+         * Subscribers can cancel propagation to other subscribers by returning false from listener function
+         * @param sender Sender object identifier
+         * @param data Data to be passed to subscribers
+         */
         public notify(sender: any, data?: any): void {
+
+            ajs.debug.log(debug.LogType.Enter, "ajs.events", this, "Sender: " + ajs.utils.getClassName(sender));
+
             for (let i: number = 0; i < this._listeners.length; i++) {
                 let result: boolean = this._listeners[i](sender, data);
                 if (!result) {
                     return;
                 }
             }
+
+            ajs.debug.log(debug.LogType.Exit, "ajs.events", this);
         }
 
     }

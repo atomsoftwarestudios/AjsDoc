@@ -22,6 +22,12 @@ namespace ajs.events {
 
     "use strict";
 
+    /**
+     * Template for the listener function
+     * @param sender Sender identification
+     * @param data Data passed from sender
+     * @returns true if other subscribers should be notified or false to cancel notification propagation
+     */
     export interface IListener {
         (sender: any, data?: any): boolean;
     }

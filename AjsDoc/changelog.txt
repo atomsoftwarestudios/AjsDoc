@@ -1,0 +1,108 @@
+﻿AjsDoc Documentation Browser
+
+----------------------------------------------------------------------------
+The MIT License (MIT)
+Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+----------------------------------------------------------------------------
+
+Since January, 19 2017, all changes are documented here as patch numbers and comments
+at GitHub just reffers to the patch numbers defined bellow.
+
+--------------------------------------------------------------------------------------------------------------------------------
+Implemented features
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Guide & Examples
+	- HTML based reference guide
+
+- Reference guide
+	- HTML Code documentation supported
+
+- HTML Code (both, static & code documentation)
+	- Supported tags:
+		#example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
+						  are properly replaced)
+						- Must be on the separate line
+		#chart url      - Includes svg chart to the HTML code
+						- Must be on the separate line
+
+- Ajs Feature Examples (directly in the code)
+    - Complete offline application support
+    - Boot process and configuration
+    - Resource loading including the InitialProgressBar
+    - Application resource loading and management
+	- Templating
+	- Visual State management
+	- Visual State transition
+	- View Component state management
+	- View Component state filtering
+    - Session state management
+	- Models for the static JSON data
+    - Debugging tools
+
+--------------------------------------------------------------------------------------------------------------------------------
+Change log
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Patch #00/2017 - All pushes before Jan, 19 2017
+	- initial development release, a lot of dev cycles, a lot of feature implementations, changes, and bug fixes
+
+- Patch #01/2017-01-19 FN
+    - changelog updated
+    - added syntax to be shown
+    - added documentation
+
+    - Articles
+        Offline application support updated
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted change requests
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted feature requirements
+--------------------------------------------------------------------------------------------------------------------------------
+
+#01/201701
+- Implement search feature
+
+#02/201701
+- Implement #see {link description} tag
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted issues
+--------------------------------------------------------------------------------------------------------------------------------
+
+#01/201701
+- Interface Index signitures are not rendered under syntax
+
+#02/201701
+- Description is doubled when multiple signatures exists within the node
+
+#03/201701
+- Function / method parameters at overloads are not handled properly (missing the main function params if defined in code)
+
+#04/201701
+- Review highlighting and "nohighlight" class as the changelog is also highlighted
+
+--------------------------------------------------------------------------------------------------------------------------------
+Untagged ToDo's & Ideas
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Implement decorators?
+- Check what TypeScript features are still missing

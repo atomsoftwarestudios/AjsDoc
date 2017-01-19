@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -18,16 +18,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.navigation {
+/**
+ * Events namespace contains Notifier class
+ * Notifier clas can be instanced and used as the event notificator similiar to
+ * #C delegates or addEventListener in the DOM. Listener should be a lambda function
+ * to follow the TypeScript requirements regarding using of the this instance
+ * identifier. The function must be defined according to the IListener interface.
+ */
+namespace ajs.events {
 
     "use strict";
-
-    /** Template for the redirection record */
-    export interface IRedirection {
-        /** Source path (not full url) to be redirected */
-        path: string;
-        /** Target path */
-        target: string;
-    }
 
 }

@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -18,16 +18,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.boot {
+namespace ajs.mvvm.viewmodel {
 
     "use strict";
 
-    /** Defines the function returning the resources required to be loaded during the boot time
-     *  This function must be implemented in the cofiguration file (namepace ajs.boot) and loaded
-     *  by html page. It is expcected the function will be declred in the ajs.boot namespace.
+    /**
+     * Contain "statetransitiontype/old/new" attribute values to be set to the old state element and new state element
      */
-    export interface IGetResourceLists {
-        (): IResourceLists;
+    export interface ITransitionBeginHandler {
+        (): ITransitionType;
     }
 
 }

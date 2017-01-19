@@ -28,35 +28,40 @@ namespace ajsdoc {
         public menuVisible: boolean;
 
         public showDialogFrame() {
+            console.log("Show dialog frame");
             document.body.style.overflow = "hidden";
             this.setState({ dialogVisible: true });
         }
 
         public hideDialogFrame() {
+            console.log("Hide dialog frame");
             // hiding dialog frame hides menu too
             document.body.style.overflow = "";
             this.setState({ dialogVisible: false, menuVisible: false });
-            this._updateButton();
+            this._updateButton(false);
         }
 
         public showMenu() {
+            console.log("Show menu");
             // both states can be set at once so don't call showDialogFrame
-            console.log(window.innerWidth);
             if (window.innerWidth < 980) {
                 document.body.style.overflow = "hidden";
                 this.setState({ dialogVisible: true, menuVisible: true });
+                this._updateButton(true);
             } else {
                 this.setState({ menuVisible: true });
+                this._updateButton(false);
             }
-            this._updateButton();
         }
 
         public hideMenu() {
+            console.log("Hide menu");
             this.hideDialogFrame();
-            this._updateButton();
+            this._updateButton(false);
         }
 
         public toggleMenu() {
+            console.log("Toggle menu: " + this.menuVisible);
             if (this.menuVisible) {
                 this.hideMenu();
             } else {
@@ -81,9 +86,9 @@ namespace ajsdoc {
         protected _finalize() {
         }
 
-        protected _updateButton() {
+        protected _updateButton(visible: boolean) {
             let button: AjsDocLayoutMenuButton = this._ajsViewComponentManager.getFirstComponentInstance<AjsDocLayoutMenuButton>(AjsDocLayoutMenuButton, "ajsDocLayoutMenuButton");
-            button.setState({ menuVisible: this.menuVisible });
+            button.setState({ menuVisible: visible });
         }
 
     }

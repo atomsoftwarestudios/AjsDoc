@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -17,17 +17,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
-
-namespace ajs.navigation {
+/**
+ * View namespace is dedicated to view and its exceptions only
+ */
+namespace ajs.mvvm.view {
 
     "use strict";
-
-    /** Template for the redirection record */
-    export interface IRedirection {
-        /** Source path (not full url) to be redirected */
-        path: string;
-        /** Target path */
-        target: string;
-    }
 
 }

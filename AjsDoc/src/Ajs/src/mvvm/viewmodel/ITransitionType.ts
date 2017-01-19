@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -18,16 +18,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.navigation {
+namespace ajs.mvvm.viewmodel {
 
     "use strict";
 
-    /** Template for the redirection record */
-    export interface IRedirection {
-        /** Source path (not full url) to be redirected */
-        path: string;
-        /** Target path */
-        target: string;
+    /**
+     * Contain "statetransitiontype/old/new" attribute values to be set to the old state element and new state element
+     */
+    export interface ITransitionType {
+        /** statetransitiontypeold attribute value */
+        oldComponent: string;
+        /** statetransitiontypenew attribute value */
+        newComponent: string;
     }
 
 }

@@ -305,29 +305,30 @@
     bottom: 0;
 }
 
-.ajsDocMenuRtlOld {
+.ajsDocMenu[statetransitiontypeold="RTL"] {
     animation: ajsDocMenuOldAnimationRtl 300ms forwards;
 }
 
-.ajsDocMenuRtlNew {
+.ajsDocMenu[statetransitiontypenew="RTL"] {
     animation: ajsDocMenuNewAnimationRtl 300ms forwards;
 }
 
-.ajsDocMenuLtrOld {
+.ajsDocMenu[statetransitiontypeold="LTR"] {
     animation: ajsDocMenuOldAnimationLtr 300ms forwards;
 }
 
-.ajsDocMenuLtrNew {
+.ajsDocMenu[statetransitiontypenew="LTR"] {
     animation: ajsDocMenuNewAnimationLtr 300ms forwards;
 }
 
-.ajsDocMenuFadeNew {
+.ajsDocMenu[statetransitiontypeold="FADE"] {
+    animation: ajsDocMenuOldFadeOut 300ms forwards;
+}
+
+.ajsDocMenu[statetransitiontypenew="FADE"] {
     animation: ajsDocMenuNewFadeIn 300ms forwards;
 }
 
-.ajsDocMenuFadeOld {
-    animation: ajsDocMenuOldFadeOut 300ms forwards;
-}
 
 .ajsDocMenuLabel {
     display: table-cell;

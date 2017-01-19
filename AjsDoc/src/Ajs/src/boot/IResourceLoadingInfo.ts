@@ -22,9 +22,7 @@ namespace ajs.boot {
 
     "use strict";
 
-    /**
-     * Represents single set of resources loading
-     */
+    /** Represents single set of resources being loaded */
     interface IResourceLoadingInfo {
         resources: string[];
         storageType: ajs.resources.STORAGE_TYPE;

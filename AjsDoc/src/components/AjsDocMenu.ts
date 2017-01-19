@@ -56,10 +56,9 @@ namespace ajsdoc {
             this._previousContext = null;
             this._previousRefNode = null;
             this._previousArticle = null;
-            this._ajsVisualStateTransition = true;
         }
 
-        public touchMove(e: Event) {
+        public touchMove(e: Event): void {
             e.cancelBubble = true;
             e.stopPropagation();
             if (this.ajsElement.scrollHeight <= this.ajsElement.clientHeight) {
@@ -67,62 +66,23 @@ namespace ajsdoc {
             }
         }
 
-        public ajsVisualStateTransitionBegin(newElement: HTMLElement): void {
-
-            super.ajsVisualStateTransitionBegin(newElement);
-
-            let animationEndListener: EventListener = (e: Event) => {
-                this._ajsTransitionOldElement.style.animationDuration = "";
-                this._ajsTransitionNewElement.style.animationDuration = "";
-                this._ajsTransitionOldElement.classList.remove("ajsDocMenuLtrOld");
-                this._ajsTransitionOldElement.classList.remove("ajsDocMenuRtlOld");
-                this._ajsTransitionOldElement.classList.remove("ajsDocMenuFadeOld");
-                this._ajsTransitionNewElement.classList.remove("ajsDocMenuLtrNew");
-                this._ajsTransitionNewElement.classList.remove("ajsDocMenuRtlNew");
-                this._ajsTransitionNewElement.classList.remove("ajsDocMenuFadeNew");
-                this._visualStateTransitionEnd();
-            };
+        public stateTransitionBegin(): ajs.mvvm.viewmodel.ITransitionType {
 
             let transitionType: TransitionType = this._getTransitionType();
 
-            switch (transitionType) {
-                case TransitionType.LTR:
-                    this._ajsTransitionNewElement.addEventListener("animationend", animationEndListener);
-                    this._ajsTransitionNewElement.classList.add("ajsDocMenuLtrNew");
-                    this._ajsTransitionOldElement.classList.add("ajsDocMenuLtrOld");
-                    this._ajsTransitionNewElement.parentElement.insertBefore(
-                        this._ajsTransitionOldElement,
-                        this._ajsTransitionNewElement
-                    );
-                    break;
-                case TransitionType.RTL:
-                    this._ajsTransitionNewElement.addEventListener("animationend", animationEndListener);
-                    this._ajsTransitionNewElement.classList.add("ajsDocMenuRtlNew");
-                    this._ajsTransitionOldElement.classList.add("ajsDocMenuRtlOld");
-                    this._ajsTransitionNewElement.parentElement.insertBefore(
-                        this._ajsTransitionOldElement,
-                        this._ajsTransitionNewElement
-                    );
-                    break;
-                case TransitionType.FADE:
-                    this._ajsTransitionNewElement.parentElement.insertBefore(
-                        this._ajsTransitionOldElement,
-                        this._ajsTransitionNewElement.nextSibling
-                    );
-                    this._ajsTransitionNewElement.addEventListener("animationend", animationEndListener);
-                    this._ajsTransitionNewElement.classList.add("ajsDocMenuFadeNew");
-                    this._ajsTransitionOldElement.classList.add("ajsDocMenuFadeOld");
-                    break;
-                default:
-                    this._visualStateTransitionEnd();
-                    return;
+            if (transitionType === TransitionType.NONE) {
+                return null;
+            } else {
+                return {
+                    oldComponent: TransitionType[transitionType],
+                    newComponent: TransitionType[transitionType]
+                };
             }
 
         }
 
-        protected _ajsVisualStateTransitionCancel(): void {
-            this._ajsTransitionOldElement.style.animationDuration = "1ms";
-            this._ajsTransitionNewElement.style.animationDuration = "1ms";
+        public stateTransitionEnd(e: Event): void {
+            this._visualStateTransitionEnd();
         }
 
         protected _getTransitionType(): TransitionType {
@@ -218,7 +178,7 @@ namespace ajsdoc {
 
             if (this._previousRefNode !== null) {
 
-                if (currentNode.parent !== this._previousRefNode) {
+                if (currentNode.parent !== this._previousRefNode && currentNode.parent !== this._previousRefNode.parent) {
                     transitionType = TransitionType.FADE;
                 }
 

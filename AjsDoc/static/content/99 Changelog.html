@@ -1,97 +1,406 @@
 <h1>Change log</h1>
 
-Last recent version of the changelog can be always found here
+Last recent version of both projects the changelog can be always found here
+
+<h2>The Ajs Framework</h2>
+
+<p>
+    Since January, 19 2017, all changes are documented here as patch numbers and comments
+    at GitHub just reffers to the patch numbers defined bellow.
+
+    As both projects (Ajs and AjsDoc are currently managed together, both change logs are here)
+</p>
+
+<pre class="nohighlight">
+--------------------------------------------------------------------------------------------------------------------------------
+Implemented features:
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Boot process control
+	- Support for wellcome / progress loading progress bar
+	- Loading of basic resources (mainly application JS)
+	- Framework initialization and setup
+
+- Resource management
+	- Key/Value storage (based on local/session storages)
+	- Three stores supported - Local / Session / Memory
+	- Caching policies supported - None, Permanent or Last Recently Used
+	- Automatic resource cache management
+	- Configurable size of the memory cache
+	- Support for wellcome / progress loading progress bar
+	- Automatic script evaluation uppon load
+	- Support for both textual and binary data
+
+- Routing
+	- Configurable routing based on RegExps to route request to appropriate model view
+		
+- Navigation
+	- Browser navigation event management (popstate / hashchange)
+	- Navigation to the same origin or remote origin resources
+	- Redirection Support (currently simple without RegExps, will be updated soon)
+
+- Application management
+	- Automatic application loading, configuration and instantiation
+	- User configuration is loaded during the boot process
+	- BeforeUnload event passed to the application to perform appropriate actions
+
+- Event "delegate"
+	- Notifier based on Subscribe / Unsubcribe functionality
+
+- MVVM
+	- View
+		- Full support of templating features
+		- Automatic DOM updating based on View Component state changes
+			- Only changed elements / attributes / text nodes are updated for the maximum performance
+			
+	- View Component (view model)
+		- Full support of templting features
+		- Automated & queued state management
+			- State filtering prior the state is applied to the View Component
+		- Automated tree rendering based on the state changes
+		- Support for dynmic View Component creation from the Application code
+		- Visual state transition support
+
+	- Model
+
+- Simple application / session state manager
+	- Using the Resource Manager features
+	- Key / Value storage for the application data to persist between F5 refreshes, manual addressbar
+		updates or browser restarting
+
+- Templating
+	- new terminology is used to support the innovative approach to templating:
+	    Visual Style (CSS), Visual Component (HTML), View Component (Model View / Code behind), View (TS Class manangin the view)
+	- Visual Style suppord for resources managed by the resource manager
+	- Dynamic Visual Style state representation of the Visual Component is determined by the CSS rules and TAG attributes only
+		- its not necessary to manipulate tag classes from the code anymore, just to set the visual state properties correctly
+			and map them to the tag visual style state attributes
+	- Support for separate Visual Styles for various templates as
+		- style tag directly in the template
+		- stylesheets attribute within the template tag
+	- Logic-less templates (almost) - only the one logic performing statement is IF
+	- Minimum of additional tags or attributes to be learned
+	- DOM Event mapping to View Component DOM listeners
+	- Reusable view components
+	- Automated mapping of the data based on the data structure and View Component structure
+
+- Utilities
+
+- Debugging tools
+	- Debugging tools User Interface
+	- Can be used together with the browser dev tools for better debugging experience
+	- Tools available:
+		- Logger with log browser
+
+- Development Tools
+	- utf8.bom to utf file converter
+	- cache.manifest post-build generator (PowerShell)
+	- TypeScript post-processor (not developed yet)
+		- support for // #IFDEF , // # NIFDEF and // #ENDIF
+		- Configurable debugging tools / code removal from the whole code with keeping refs to map file valid
+		- Code size optimizer (before minification)
+			- Namespace optimizer (joins namespaces together)
+			- Accessor optimizer (replaces all occurences of the defineProperty with single )
+
+--------------------------------------------------------------------------------------------------------------------------------
+Change log
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Patch #00/2017-01-18 FN (All pushes before Jan, 19 2017)
+
+	- initial development release, a lot of dev cycles, a lot of feature implementations, changes, and bug fixes
+	- Somehow, but wrongly, documented at GitHub
+
+- Patch #01/2017-01-19 FN
+
+	Untagged changes:
+	-----------------
+		- Changelog: structure changed to the current version
+		- Testing signitures for the AjsDoc in !ajs.ts updated
+		- Documentation updated
+			- ajs, Framework, boot, events, navigation
+		- Support for Logger added
+			- ajs, Framework boot, events, navigation
+		- State change queuing
+		- State filtering updated to support returned array states
+		- Visual transition state reworked
+			- Its possible to 
+			- added DOM events related to CSS animations
+				- onanimationend
+				- onstatetransitionbegin (Ajs related, HTML5 Non-standard)
+		- Added some console logging to ViewComponent for debugging purposes (will be replaced with the logger)
+		- AJS renamed to Ajs everywhere
+
+	Feature implementations:
+	------------------------
+
+	Issue fixes:
+	------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted change requests
+--------------------------------------------------------------------------------------------------------------------------------
+
+#01/201701 HIGH
+- Remove the resource option within the CSS template and rather check if url('...') is a cached resource and use it
+	- This will require redesign of the resource manager to keep urls of released resources
+
+#02/201701 HIGH
+- Refactoring
+	- Refactor View DOM Update functions to look nicer
+	- Refactor ViewComponent state change management to look nicer
+	- Refactor ViewComponent rendering functions to look nicer
+
+#02/201701 MEDIUM
+- Rework debugging tools to support components
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted feature requests
+--------------------------------------------------------------------------------------------------------------------------------
+
+#01/201701 HIGH
+- Boot process control
+	- AppCached files updates detection and autoreload to force the browser use them
+
+#02/201701 HIGH
+- Application management
+	- Global Error (exception) handling
+
+#03/201701 HIGH
+- MVVM
+	- View
+		- Automatic DOM updating based on View Component state changes
+			- Support for render target
+				- Rendering can be performed to the window document, shadow document or any existing configurable tag
+
+#04/201701 HIGH
+- MVVM
+			
+	- View Component (view model)
+		- Automated tree rendering based on the state changes
+			- Support for the render target
+
+#05/201701 HIGH
+- Debugging tools
+    - Configuration
+        - Show on reload
+    - Resource manager info
+        - Managed resources
+        - Loaded resources
+        - Resource loading times
+        - Cached info
+    - State manager info
+        - Managed states
+    - Template manager
+        - All possible information about templates
+    - ViewComponent manager
+        - Registered components 
+        - Instanced components
+        - Component states
+	- Tools available:
+		- Logger with log browser
+			- Suppoort all Ajs components
+			- Configurable logging level (what events will be logged)
+			- Will be supported by the post processor to be removed from the release version of the project
+
+#06/201701 HIGH
+- Development Tools
+	- TypeScript post-processor (not developed yet)
+		- support for // #IFDEF , // # NIFDEF and // #ENDIF
+		- Configurable debugging tools / code removal from the whole code with keeping refs to map file valid
+		- Code size optimizer (release version before minification)
+			- Namespace optimizer (joins namespaces together)
+			- Accessor optimizer (replaces all occurences of the defineProperty with single defineProperties)
+
+#07/201701 HIGH
+- Resource management
+	- remove resources older than
+
+#08/201701 HIGH
+- Add support for "Working" state icon when the application / framework is bussy
+
+#09/201701 HIGH
+- Implement Language & Translation functionality and integrate it with templating / view components
+
+#10/201701 HIGH
+- Implement Ajs components for the data management
+	- JSON API
+	- Data caching
+
+#11/2017 HIGH
+- ViewComponent - Implement all DOM event attributes and necessary processors
+
+#12/2017 HIGH
+- View - Implement & test updating of the DOM of "form" elements based on the onchange event and state updates
+
+#12/2017 HIGH
+- Template / ViewComponent - to the result component merge attributes from both, component definition and component instance
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted issues
+--------------------------------------------------------------------------------------------------------------------------------
+
+#01/201701 HIGH
+- Strange behaviour during visual state transition
+	- Components are removed and can't be rendered uppon unexpected user actions
+	- (AjsDoc menu hide during the menu state transition)
+
+--------------------------------------------------------------------------------------------------------------------------------
+Untagged ToDo's & Ideas
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Get rid of all warnings reported by the Visual Studio Intellisense
+
+- Documentation
+	- Code documentation
+		- Finish the code documentation for the existing code
+
+	- How it works
+
+	- Visual Studio project and compilation
+		- Tools & toolchain
+
+	- Coding guidelines
+
+	- Browser application caching
+
+- Resource management
+	- performance optiomizations
+		- creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
+		- multiple calls of getResource during single operation can be optimized
+		- review cycles
+	- Implement state management
+		- Implement application state resource storage
+
+- View, View Components, Visual Components
+	- Don't render the component tag to the output
+		- will be hard to achieve as root node is needed at this time
+	- Move IFs from Template to the View Component
+		- This is idea now, not designed, how it should work
+	- View state modifications queuing to prevent async operation fighting
+	- ViewComponent._getState -> implement function to collect the state information from the view component tree
+	- Dynamic View Component -> implement a component allowing to set the view component programatically, not just from template
+
+- Helper libraries -> Implement or reuse?
+	- UI
+	- Data
+		- Data binding???
+		- Data validation helpers
+	- WebSockets
+	- Geo location
+	- Push notifications
+
+----
+
+- Javascript minification
+- Template compiler / minifier
+- Style compiler
+- Language & translation transpiller
+- Code optimalizations
+
+FAR FUTURE:
+- Caching of processed objects - especially visualComponents and view components, dom??
+
+----
+
+Optimizations:
+	
+A lot of optimizations can be done, at least:
+
+a) Template class - when it is getting components, children components and placeholders
+it is browsing the DOM structure multiple times. This can be done in a single step.
+
+b) ViewComponent - while creating a new array of components it calls functions to
+get viewcomponent constructor and visual constructor in the loop, this can be done just
+once
+
+c) if undefined && not null can be optimized at many places
+</pre>
+
+<h2>The AjsDoc Browser</h2>
 
 <pre>
-0.01 - Initial version
+--------------------------------------------------------------------------------------------------------------------------------
+Implemented features
+--------------------------------------------------------------------------------------------------------------------------------
 
-Features:
-	- Boot process
-	- Resource management
-	- Routing
-	- Navigation
-	- Application management
-	- View, View Components and Visual Components (templating)
-TODO:
-    - Documentation
-		- Intentions and reasons why AJS was developed
-		- How it works
-		- Visual Studio project and compilation
-		   - Tools & toolchain
-		      - Javascript minification
-		      - Template compiler / minifier
-			  - Style compiler
-			  - Language & translation transpiller
-			  - Code optimalization
-		- Coding guidelines
-		- Browser application caching
-		- Features
-		   - Boot process
-		   - Resource Management
-		   - Navigation
-		   - Routing
-		   - Application
-		   - View, View Components and Visual Components (templating)
-		- Code documentation
-			- Add license agreement to all files
-		    - Finish the code documentation for the existing code
-			- Get rid of all errors reported by the Visual Studio Intellisense
-	- Browser Application Caching
-		- Only index.html, ajs.js and ajs.boot.js need to be cached
-		- Tool to update the manifest if the index.html, ajs.js or ajs.boot.js will change
-	- Error handling, exceptions & exception rethrowing
-		- Especially in templating and view component processings
-	- Loading message / page while the ajs is initializing
-	    - should be later usable through user project so should be implemented as a component
-	- Resource management
-	    - remove resources older than, partially done, need to be tested
-		- performance optiomizations
-		   - creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
-		   - multiple calls of getResource during single operation can be optimized
-		   - review cycles
-		- Implement state management
-			- Implement application state resource storage
-			- Implement session state resource storage
-	- View, View Components, Visual Components
-	    - Don't render the component tag to the output
-		   - will be hard to achieve as root node is needed at this time
-		- Move IFs from Template to the View Component
-		   - This is idea now, not designed, how it should work
-	    - Support for render target.
-		   - Currently, only the main window document is supported so it will be hard to integrate to playgrounds
-		- View modifications queuing to prevent async operation fighting
-		- CSS style management
-		   - LESS & reuired toolchain
-		- ViewComponent._getState -> implement function to collect the state information from the view component tree
-		- Dynamic View Component -> implement a component allowing to set the view component programatically, not just from template
-		- Static content view component
-		- Event subscriptions (component to component, DOM is implemented already)
-		- Refactor ViewComponent state management to look nicer
-		- Refactor ViewComponent rendering functions to look nicer
-	- Data
-		- JSON API
-		- Data caching
-		- Data validation
-		- Data binding
-	- WebSockets
-	- Language & Translation
-	----
-	Tools:
-		Implement typescript preprocessor
-		- Just // #ifdef and // #ifndef
-		- Integrate to msbuild process
-	FAR FUTURE:
-	- Caching of processed objects - especially visualComponents and view components??
-	----
-	Optimizations:
-	
-	A lot of optimizations can be done, at least:
-	a) Template class - when it is getting components, children components and placeholders
-	it is browsing the DOM structure multiple times. This can be done in a single step.
-	b) ViewComponent - while creating a new array of components it calls functions to
-	get viewcomponent constructor and visual constructor in the loop, this can be done just
-	once
-	c) if undefined && not null can be optimized at many places
-	----
+- Guide & Examples
+	- HTML based reference guide
 
+- Reference guide
+	- HTML Code documentation supported
+
+- HTML Code (both, static & code documentation)
+	- Supported tags:
+		#example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
+						  are properly replaced)
+						- Must be on the separate line
+		#chart url      - Includes svg chart to the HTML code
+						- Must be on the separate line
+
+- Ajs Feature Examples (directly in the code)
+    - Complete offline application support
+    - Boot process and configuration
+    - Resource loading including the InitialProgressBar
+    - Application resource loading and management
+	- Templating
+	- Visual State management
+	- Visual State transition
+	- View Component state management
+	- View Component state filtering
+    - Session state management
+	- Models for the static JSON data
+    - Debugging tools
+
+--------------------------------------------------------------------------------------------------------------------------------
+Change log
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Patch #00/2017 - All pushes before Jan, 19 2017
+	- initial development release, a lot of dev cycles, a lot of feature implementations, changes, and bug fixes
+
+- Patch #01/2017-01-19 FN
+    - changelog updated
+    - added syntax to be shown
+    - added documentation
+
+    - Articles
+        Offline application support updated
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted change requests
+--------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted feature requirements
+--------------------------------------------------------------------------------------------------------------------------------
+
+#01/201701
+- Implement search feature
+
+#02/201701
+- Implement #see {link description} tag
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted issues
+--------------------------------------------------------------------------------------------------------------------------------
+
+#01/201701
+- Interface Index signitures are not rendered under syntax
+
+#02/201701
+- Description is doubled when multiple signatures exists within the node
+
+#03/201701
+- Function / method parameters at overloads are not handled properly (missing the main function params if defined in code)
+
+#04/201701
+- Review highlighting and "nohighlight" class as the changelog is also highlighted
+
+--------------------------------------------------------------------------------------------------------------------------------
+Untagged ToDo's & Ideas
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Implement decorators?
+- Check what TypeScript features are still missing
 </pre>

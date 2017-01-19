@@ -32,7 +32,7 @@ namespace ajs.boot {
 
     };
 
-    getAjsConfig = function(): IAJSConfig {
+    getAjsConfig = function(): IAjsConfig {
 
         // const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
         // const anyPath: string = "(\\/.*|.*)";
@@ -41,8 +41,6 @@ namespace ajs.boot {
             debug: true,
             logErrors: true,
             showErrors: true,
-
-            ajsLoaderPath: "/js/ajsloader.js",
 
             resourceManager: {
                 memoryCacheSize: 20 * 1024 * 1024,

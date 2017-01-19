@@ -225,24 +225,47 @@ namespace ajsdoc {
 
             let retVal: IAjsDocArticleStateSet = {};
 
-            // if (node.id !== 0) {
-                retVal.caption = node.kindString + " " + node.name;
-                retVal.description = this._setupHTMLContent(this._getComment(node));
-                if (hierarchyNode) {
-                    retVal.hierarchy = hierarchyNode;
-                }
-                if (node.implementedTypes) {
-                    retVal.implements = [];
-                    for (let i: number = 0; i < node.implementedTypes.length; i++) {
-                        retVal.implements.push({
-                            key: node.implementedTypes[i].id.toString(),
-                            name: node.implementedTypes[i].name,
-                            path: this._progModel.getItemById(node.implementedTypes[i].id).path
-                        });
+            retVal.caption = node.kindString + " " + node.name;
+
+            let syntaxes: INode[] = [];
+
+            //if (node.kindString === "Function" || node.kindString === "Interface" || node.kindString === "Method") {
+                let desc: string = this._getComment(node);
+                syntaxes.push(node);
+                if (node.signatures && node.signatures.length > 0) {
+                    for (let i = 0; i < node.signatures.length; i++) {
+                        syntaxes.push(node.signatures[i]);
+                        if (desc === "DOCUMENTATION IS MISSING!") {
+                            desc = "";
+                        }
+                        let com: string = this._getComment(node.signatures[i]);
+                        desc += "<p>" + this._getComment(node.signatures[i]) + "</p>";
                     }
                 }
-                retVal.members = node.children;
-            // }
+                retVal.description = this._setupHTMLContent(desc);
+            /*} else {
+                retVal.description = this._setupHTMLContent(this._getComment(node));
+            }*/
+
+            if (hierarchyNode) {
+                retVal.hierarchy = hierarchyNode;
+            }
+
+            if (syntaxes.length > 0) {
+                retVal.syntaxes = syntaxes;
+            }
+
+            if (node.implementedTypes) {
+                retVal.implements = [];
+                for (let i: number = 0; i < node.implementedTypes.length; i++) {
+                    retVal.implements.push({
+                        key: node.implementedTypes[i].id.toString(),
+                        name: node.implementedTypes[i].name,
+                        path: this._progModel.getItemById(node.implementedTypes[i].id).path
+                    });
+                }
+            }
+            retVal.members = node.children;
 
             return retVal;
         }

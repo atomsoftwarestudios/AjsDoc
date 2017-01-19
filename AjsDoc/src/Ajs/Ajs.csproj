@@ -25,7 +25,7 @@
     <TypeScriptCompile Include="src\!ajs.ts" />
     <TypeScriptCompile Include="src\ajs.Framework.Exceptions.ts" />
     <TypeScriptCompile Include="src\ajs.Framework.ts" />
-    <TypeScriptCompile Include="src\ajs.IAJSConfig.ts" />
+    <TypeScriptCompile Include="src\ajs.IAjsConfig.ts" />
     <TypeScriptCompile Include="src\app\!app.ts" />
     <TypeScriptCompile Include="src\app\Application.ts" />
     <TypeScriptCompile Include="src\app\Exceptions.ts" />
@@ -36,10 +36,16 @@
     <TypeScriptCompile Include="src\boot\Exceptions.ts" />
     <TypeScriptCompile Include="src\boot\IGetAjsApplicationConfig.ts" />
     <TypeScriptCompile Include="src\boot\IGetAjsConfig.ts" />
-    <TypeScriptCompile Include="src\boot\IGetResourceList.ts" />
+    <TypeScriptCompile Include="src\boot\IGetResourceLists.ts" />
     <TypeScriptCompile Include="src\boot\IResourceLists.ts" />
     <TypeScriptCompile Include="src\boot\IResourceLoadingInfo.ts" />
+    <TypeScriptCompile Include="src\debug\!debug.ts" />
+    <TypeScriptCompile Include="src\debug\Logger.ts" />
+    <TypeScriptCompile Include="src\events\!events.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\!mvvm.ts" />
+    <TypeScriptCompile Include="src\mvvm\viewmodel\ITransitionBeginHandler.ts" />
+    <TypeScriptCompile Include="src\mvvm\viewmodel\ITransitionType.ts" />
+    <TypeScriptCompile Include="src\mvvm\view\!view.ts" />
     <TypeScriptCompile Include="src\mvvm\view\Exceptions.ts" />
     <TypeScriptCompile Include="src\mvvm\model\!model.ts" />
     <TypeScriptCompile Include="src\mvvm\model\Exceptions.ts" />
@@ -60,6 +66,7 @@
     <TypeScriptCompile Include="src\mvvm\viewmodel\IViewStateSet.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\ViewComponent.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\ViewComponentManager.ts" />
+    <TypeScriptCompile Include="src\navigation\!navigation.ts" />
     <TypeScriptCompile Include="src\navigation\Navigator.ts" />
     <TypeScriptCompile Include="src\resources\AjsStorage.ts" />
     <TypeScriptCompile Include="src\resources\Exceptions.ts" />
@@ -82,6 +89,7 @@
     <TypeScriptCompile Include="src\resources\StorageMemory.ts" />
     <TypeScriptCompile Include="src\resources\StorageSession.ts" />
     <TypeScriptCompile Include="src\navigation\IRedirection.ts" />
+    <TypeScriptCompile Include="src\routing\!routing.ts" />
     <TypeScriptCompile Include="src\routing\IRoute.ts" />
     <TypeScriptCompile Include="src\routing\IRouteInfo.ts" />
     <TypeScriptCompile Include="src\routing\IRoutes.ts" />

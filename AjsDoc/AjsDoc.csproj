@@ -22,16 +22,18 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="changelog.txt" />
     <Content Include="index.html" />
     <Content Include="js\ajs.boot.config.js" />
     <Content Include="js\ajs.js" />
     <Content Include="js\ajsdocbrowser.js" />
     <Content Include="js\lib\highlight.pack.js" />
+    <Content Include="license.txt" />
     <Content Include="res\img\atom-logo.gif" />
     <Content Include="static\charts\appcache.svg" />
     <Content Include="static\content\03 Visual Studio Solution Setup.html" />
     <Content Include="static\content\03\02 Contributors.html" />
-    <Content Include="static\content\03\01 End-Users.html" />
+    <Content Include="static\content\03\01 Application developers.html" />
     <Content Include="static\content\04\02 Offline Application Support.html" />
     <Content Include="static\content\04\05 Resource Management and Caching.html" />
     <Content Include="static\content\04\04 Navigation and Routing.html" />
@@ -100,6 +102,7 @@
     <TypeScriptCompile Include="src\program\IFlags.ts" />
     <TypeScriptCompile Include="src\program\INode.ts" />
     <TypeScriptCompile Include="src\program\IType.ts" />
+    <Content Include="static\examples\ajs.boot.config.ts" />
     <TypeScriptCompile Include="static\examples\viewComponent_placeholder.ts" />
     <Content Include="static\templates\ajsdoc.css" />
     <None Include="static\templates.json" />

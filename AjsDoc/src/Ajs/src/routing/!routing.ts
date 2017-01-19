@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -18,16 +18,22 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.navigation {
+/**
+ * Navigator takes care of capturing the browser navigation events when
+ * Forward / Back buttons are pressed and should used by the application
+ * to navigate over the page (all a href links should be changed to
+ * javascript:ajs.Framework.navigator.navigate("url"). All button presses or
+ * another dynamic events leading to the navigaton should use the same method
+ * in order to keep the browser state consistent with the framework. Navigator
+ * also takes care of internal redirections so if the path of the url being
+ * navigated is found in registered redirectons table the redirection to the
+ * target will occur. Navigator passes the actual path to the #see Router Router
+ * which will take care about instancing the correct view model. During the boot,
+ * prior the application is started the Navigator is disabled to prevent any
+ * problems with navigating to uninitialized application.
+ */
+namespace ajs.routing {
 
     "use strict";
-
-    /** Template for the redirection record */
-    export interface IRedirection {
-        /** Source path (not full url) to be redirected */
-        path: string;
-        /** Target path */
-        target: string;
-    }
 
 }

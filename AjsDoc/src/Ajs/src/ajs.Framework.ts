@@ -26,7 +26,7 @@ namespace ajs {
      * Ajs framework static class provides the complete framework functionality.
      * Initialization is called automatically from the ajs boot when the
      * window.onload event is fired. The framework, based on the boot configuration
-     * file initializes the user application class inherited from the ajs.app.Application
+     * file, initializes the user application class inherited from the ajs.app.Application
      * and starts it.
      */
     export class Framework {
@@ -47,9 +47,9 @@ namespace ajs {
         public static set lastError(value: Error) { Framework._lastError = value; }
 
         /** Stores the framework configuration loaded during the index.html load */
-        protected static _config: ajs.IAJSConfig;
+        protected static _config: ajs.IAjsConfig;
         /** Returns the framework configuration object */
-        public static get config(): ajs.IAJSConfig { return Framework._config; }
+        public static get config(): ajs.IAjsConfig { return Framework._config; }
 
         /** Stores the application configuration */
         protected static _appConfig: ajs.app.IApplicationConfig;
@@ -103,15 +103,21 @@ namespace ajs {
 
 
         /** Basic framework initialization is called automatically from the boot when window.onload event occurs */
-        public static initialize(config: IAJSConfig): void {
-            console.warn("IMPLEMENT: Framework.initialize - global error handler");
+        public static initialize(config: IAjsConfig): void {
+
+            ajs.debug.log(debug.LogType.Enter, "ajs", this);
+
+            ajs.debug.log(debug.LogType.Warning, "ajs", this, "IMPLEMENT: Framework.initialize - global error handler");
             window.onerror = Framework._errorHandler;
 
+            // store config locally
             Framework._config = config;
 
+            // basic initialization
             Framework._appConfig = null;
             Framework._application = null;
 
+            // create framework components
             Framework._resourceManager = new ajs.resources.ResourceManager(config.resourceManager);
             Framework._stateManager = new ajs.state.StateManager(Framework._resourceManager);
             Framework._templateManager = new ajs.templating.TemplateManager(Framework._resourceManager);
@@ -120,6 +126,8 @@ namespace ajs {
             Framework._view = new ajs.mvvm.view.View(Framework._templateManager, Framework._viewComponentManager);
             Framework._router = new ajs.routing.Router(Framework._view, Framework._config.router);
             Framework._navigator = new ajs.navigation.Navigator(Framework._router, Framework._config.navigator);
+
+            ajs.debug.log(debug.LogType.Exit, "ajs", this);
         }
 
         /**
@@ -128,7 +136,11 @@ namespace ajs {
          * @param config Application configuration file
          */
         public static configureApplication(config: ajs.app.IApplicationConfig): void {
+            ajs.debug.log(debug.LogType.Enter, "ajs", this);
+
             Framework._appConfig = config;
+
+            ajs.debug.log(debug.LogType.Exit, "ajs", this);
         }
 
         /**
@@ -138,7 +150,11 @@ namespace ajs {
          * @throws AppConstructorMustBeAFunctionException Thrown when the passed application constructor is not a function
          */
         public static start(): void {
+
+            ajs.debug.log(debug.LogType.Enter, "ajs", this);
+
             if (Framework._appConfig === null) {
+                ajs.debug.log(debug.LogType.Error, "ajs", this, "ApplicationNotConfiguredException");
                 throw new ApplicationNotConfiguredException();
             }
 
@@ -146,8 +162,11 @@ namespace ajs {
                 Framework._application = new Framework._appConfig.appConstructor(Framework._appConfig.userConfig);
                 Framework._application.initialize();
             } else {
+                ajs.debug.log(debug.LogType.Error, "ajs", this, "AppConstructorMustBeAFunctionException");
                 throw new AppConstructorMustBeAFunctionException();
             }
+
+            ajs.debug.log(debug.LogType.Exit, "ajs", this);
         }
 
         /**
