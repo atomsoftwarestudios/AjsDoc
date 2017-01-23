@@ -90,6 +90,18 @@ namespace ajs.mvvm.viewmodel {
             return null;
         }
 
+        public getChildrenComponentInstances(component: ViewComponent): ViewComponent[] {
+            let childrenInstances: ViewComponent[] = [];
+            for (var key in this._componentInstances) {
+                if (this._componentInstances.hasOwnProperty(key)) {
+                    if (this._componentInstances[key].ajsParentComponent === component) {
+                        childrenInstances.push(component);
+                    }
+                }
+            }
+            return childrenInstances;
+        }
+
         public getComponentInstances(component: typeof ViewComponent, id?: string, userKey?: string): ViewComponent[] {
 
             let viewComponentInstances: ViewComponent[] = [];

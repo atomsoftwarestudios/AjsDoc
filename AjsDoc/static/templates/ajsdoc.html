@@ -31,7 +31,7 @@
 
     <component name="AjsDocLayout">
 
-        <div class="ajsDocLayoutDialog" dialogvisible="{dialogVisible}" onmousedown="dialogClick" ontouchmove="touchMove">This is dialog frame</div>
+        <div class="ajsDocLayoutDialog" dialogvisible="{dialogVisible}" onmousedown="dialogClick" ontouchmove="touchMove"></div>
 
         <div component="AjsDocLayoutMenuButton" id="ajsDocLayoutMenuButton" class="ajsDocLayoutMenuButton" menuvisible="{menuVisible}" onmousedown="toggleMenu"></div>
 
@@ -89,17 +89,15 @@
 
     <div component="AjsDocMenu" class="ajsDocMenu" visible="{visible}" ontouchmove="touchMove" onstatetransitionbegin="stateTransitionBegin" onanimationend="stateTransitionEnd">
 
-        <div class="ajsDocMenuLabel">
-            {label}
-            <span if="!this.label">{defaultLabel}</span>            
+        <div class="ajsDocMenuLabel" if="this.label && this.label !=='' && this.parentPath && this.parentPath != ''">
+            <a class="ajsDocLink ajsDocMenuItemLinkParent" href="{parentPath}">
+                <span style="float: left" if="this.parentPath !== undefined && this.parentPath !== ''" ><strong>&lt;&nbsp;</strong></span>
+                {label}
+                <span if="!this.label">{defaultLabel}</span>
+            </a>
         </div>
 
-        <div>
-            <a class="ajsDocLink ajsDocMenuItemLinkParent" if="this.parentPath !== undefined && this.parentPath !== ''" href="{parentPath}">...</a>
-            <span if="this.parentPath === undefined || this.parentPath === ''">{parentLabel}</span>
-        </div>
-
-        <ajsDocMenuItem id="items"></ajsDocMenuItem>
+        <AjsDocMenuItem id="items" class="ajsDocMenuItemLinkNonGrouped"></AjsDocMenuItem>
 
         <component name="AjsDocMenuGroup" id="groups">
 
@@ -108,7 +106,7 @@
             <ul class="ajsDocMenuItemGroup">
                 <li component="AjsDocMenuItem" id="items" class="ajsDocMenuItem" ajsselected="{selected}" style="border-bottom: solid 1px #EAF4F8">
                     <a class="ajsDocLink ajsDocMenuItemLink" href="{path}">
-                        <span if="this.expandable" style="float: right">&gt;</span>
+                        <span if="this.expandable" style="float: right"><strong>&gt;</strong></span>
                         {label}
                     </a>
                 </li>
@@ -148,6 +146,7 @@
                     <span class="hljs-keyword" if="this.isPublic">public</span>
                     <span class="hljs-keyword" if="this.flags && this.flags.isPrivate">protected</span>
                     <span class="hljs-keyword" if="this.flags && this.flags.isProtected">protected</span>
+                    <span class="hljs-keyword" if="this.flags && this.flags.isAbstract">abstract</span>
                     <span class="hljs-keyword" if="this.flags && this.flags.isStatic">static</span>
                     <span class="hljs-keyword" if="this.kindString !== 'property' && this.kindString !== 'method' && this.kindString !== 'variable'">{kindString}</span>
                     {name}<!--
@@ -162,7 +161,7 @@
                     <!--{body}-->
                 </code>
             </div>
-            <div style="padding: 0 0 0em 2em;">
+            <div style="padding: 0.25em; ">
                 <span if="(!this.comment || !this.comment.shortText || this.comment.shortText.trim() === '') && this._ajsid !== 'syntaxes'">
                     <strong>!!! DOCUMENTATION IS MISSING !!!</strong>
                 </span>
@@ -202,8 +201,8 @@
                 </div>
             </div>
 
-            <h3>Description</h3>
-            <p>{description}</p>
+            <!--<h3 if="this.description && this.descriptioon !== ''">Description</h3>-->
+            <p if="this.description && this.descriptioon !== ''">{description}</p>
 
             <div if="this.hasConstructors">
                 <h3>Constructors</h3>

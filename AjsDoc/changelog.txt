@@ -1,4 +1,4 @@
-﻿AjsDoc Documentation Browser
+AjsDoc Documentation Browser
 
 ----------------------------------------------------------------------------
 The MIT License (MIT)
@@ -75,6 +75,11 @@ Change log
 - Patch #02/2017-01-19 FN
 	- License updated at all files
 
+- Patch #03/2017-01-24 FN
+    - Members of extended lib.d.ts classes are not included anymore
+    - Fixed problem with menu item unique keys
+    - Fixed menu button disappearing when dialog frame was not shown
+
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests
 --------------------------------------------------------------------------------------------------------------------------------
@@ -88,6 +93,9 @@ Accepted feature requirements
 
 #02/201701
 - Implement #see {link description} tag
+
+#03/201701
+- Display function / method parameters when function is expanded
 
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted issues
@@ -104,6 +112,9 @@ Accepted issues
 
 #04/201701
 - Review highlighting and "nohighlight" class as the changelog is also highlighted
+
+#05/201701
+- It seems highlighter is not started sometimes
 
 --------------------------------------------------------------------------------------------------------------------------------
 Untagged ToDo's & Ideas

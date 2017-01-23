@@ -27,33 +27,45 @@ namespace ajs.resources {
 
     /**
      * Represents the browser local storage (persistent until explicitly cleared)
-     * The total amount of the data storable to the local storage is about 5MB
-     *
-     * updateResource method should be called after each resource data change
-     *
+     * <p>
      * Implementation is in the StorageBrowser, the storage provider is set here
-     *
+     * </p>
+     * <p>
+     * The total amount of the data storable to the session storage is about 5MB
+     * </p>
+     * <p>
+     * updateResource method should be called after each resource data change
+     * </p>
+     * <p>
      * Items are stored under two keys in the storage:
-     * AJSRESOURCESINFO   - JSONed ICachedResource[] where data at all items is set to null
-     * AJSRESOURCES.%URL% - JSONed resource data where %URL% is URL of the data
-     * AJSADDTEST         - string of spaces for testing if it is possible to add / update resource
+     * AJSRESOURCESINFO<br />
+     * - JSONed ICachedResource[] where data at all items is set to null<br />
+     * AJSRESOURCES.%URL%<br />
+     * - JSONed resource data where %URL% is URL of the data<br />
+     * AJSADDTEST<br />
+     * - string of spaces for testing if it is possible to add / update resource<br />
+     * </p>
      */
     export class StorageLocal extends StorageBrowser {
 
         /** Returns type of the storage */
         public get type(): STORAGE_TYPE { return STORAGE_TYPE.LOCAL; }
 
-        /**
-         * Construct the StorageLocal object
-         */
+        /** Constructs the StorageLocal object */
         public constructor() {
+
             super();
+
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this);
+
             this._supported = window.localStorage !== undefined;
             if (this._supported) {
                 this._storageProvider = window.localStorage;
                 this._usedSpace = 0;
                 this._resources = this._getResourcesInfo();
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
         }
     }
 }

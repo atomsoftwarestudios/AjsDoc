@@ -1,4 +1,4 @@
-﻿/* *************************************************************************
+/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2017 Atom Software Studios. All rights reserved.
 
@@ -175,7 +175,7 @@ namespace ajsdoc {
 
             if (article.parent !== null && article.parent) {
                 menu.items.push({
-                    key: "-1",
+                    key: article.navPath,
                     label: article.label,
                     path: article.navPath,
                     selected: article.navPath === ("/" + navPath),
@@ -185,14 +185,14 @@ namespace ajsdoc {
 
             for (let i: number = 0; i < article.children.length; i++) {
                 let item: IMenuItemState = {
-                    key: i.toString(),
+                    key: article.navPath,
                     label: article.children[i].label,
                     path: article.children[i].navPath,
                     selected: article.children[i].navPath === ("/" + navPath),
                     expandable: article.children[i].children instanceof Array && article.children[i].children.length > 0
                 };
 
-                menu.label = article.label || "Guide & Examples";
+                menu.label = article.parent && article.parent.label ? article.parent.label : "Guide & Examples";
                 menu.parentPath = article.parent && article.parent !== null ?
                     article.parent.navPath !== "" ? article.parent.navPath : "/"
                     :

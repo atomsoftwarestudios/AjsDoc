@@ -22,6 +22,12 @@ namespace ajsdoc {
 
     "use strict";
 
+    export interface ISource {
+        fileName: string;
+        line: number;
+        character: 25;
+    }
+
     export interface INode {
         parent: INode;
         id: number;
@@ -40,6 +46,7 @@ namespace ajsdoc {
         setSignature?: INode[];
         isLast?: boolean;
         path: string;
+        sources: ISource[];
     }
 
 }

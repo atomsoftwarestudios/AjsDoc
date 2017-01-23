@@ -25,9 +25,43 @@ namespace ajs.resources {
 
     "use strict";
 
+    /**
+     * ResourceLoader is used internally by the #see (ajs.resources.ResourceManager} to load a resource
+     * <p>
+     * It performs standard HTTP request to the server and obtains the resource from it. It
+     * is using the standard XMLHttpRequest feature of the browser and resources are loaded isng the GET
+     * method. It is supposed to be used for static resources only.
+     * </p>
+     */
     export class ResourceLoader {
 
-        public loadResource(loadEndHandler: IResourceLoadEndHandler, url: string, isBinary: boolean, userData?: any, lastModified?: Date): void {
+        public constructor() {
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+        }
+
+        /**
+         * Initiates loading of the resource
+         * @param loadEndHandler Handler to be called when the resource loading finishes
+         * @param url Resource locator
+         * @param isBinary Identifies if binary data should be loaded
+         * @param userData User data object to be passed to the handler
+         * @param lastModified Information about resource last modification date/time
+         */
+        public loadResource(
+            loadEndHandler: IResourceLoadEndHandler,
+            url: string,
+            isBinary: boolean,
+            userData?: any,
+            lastModified?: Date
+        ): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                "Loading resource '" + url + "'", isBinary, userData, lastModified );
+
+            // prepare data for the loader
             lastModified = lastModified || ajs.utils.minDate();
             let requestData: IResourceRequestData = {
                 url: url,
@@ -37,11 +71,23 @@ namespace ajs.resources {
                 startTime: new Date(),
                 loadEndHandler: loadEndHandler
             };
+
+            // initiate loading of the resource
             this._loadResource(requestData);
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+
         }
 
+        /**
+         * Contructs the XHR, registers readystatechange listener and sends GET request it to the server
+         * @param requestData Request data
+         */
         protected _loadResource(requestData: IResourceRequestData): void {
 
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
+            // setup the xhr
             let xhr: IResourceRequest = new XMLHttpRequest() as IResourceRequest;
 
             xhr.open("GET", encodeURI(requestData.url));
@@ -53,21 +99,37 @@ namespace ajs.resources {
 
             // ie9 does not support loadend event
             xhr.addEventListener("readystatechange", (event: Event) => {
-                this._loadEnd(event);
+                this._xhrStatusChanged(event);
             });
 
             if (requestData.lastModified !== null) {
                 xhr.setRequestHeader("If-Modified-Since", requestData.lastModified.toUTCString());
             }
 
+            // send request to the server
             xhr.send();
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+
         }
 
-        protected _loadEnd(e: Event): void {
+        /**
+         * Called when XHR changes the loading status
+         * @param e XHR State change event data
+         */
+        protected _xhrStatusChanged(e: Event): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
             let xhr: IResourceRequest = e.target as IResourceRequest;
             let requestData: IResourceRequestData = xhr.resourceRequestData;
 
-            if (xhr.readyState === 4) {
+            ajs.debug.log(debug.LogType.Info, 3, "ajs.resources", this,
+                "Url: " + xhr.resourceRequestData.url + ", XHR readyState: " + xhr.readyState);
+
+            // if completed
+            if (xhr.readyState === xhr.DONE) {
+                // setup the result loading object
                 let responseData: IResourceResponseData = {
                     type: xhr.responseType,
                     data: requestData.isBinary ? xhr.response : xhr.responseText,
@@ -77,15 +139,22 @@ namespace ajs.resources {
                     endTime: new Date()
                 };
 
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                    "XHR ready in " + (responseData.endTime.getTime() - responseData.startTime.getTime()) +
+                    "ms with " + xhr.status + " " + xhr.statusText);
+
+                // for text data
                 // index.html should never pass the resource manager so if it passes
                 // it means it was provided by the app cache and we are offline now
                 if (responseData.httpStatus === 200 && typeof (responseData.data) === "string") {
                     let tmp: string = responseData.data.substr(0, 50);
                     if (tmp.indexOf("<!--offline-->") !== -1) {
                         responseData.httpStatus = 304;
+                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Offline mode detected, index.html served");
                     }
                 }
 
+                // for binary data
                 // index.html should never pass the resource manager so if it passes
                 // it means it was provided by the app cache and we are offline now
                 if (responseData.httpStatus === 200 &&
@@ -98,13 +167,24 @@ namespace ajs.resources {
                     }
                     if (str.indexOf("<!--offline-->") !== -1) {
                         responseData.httpStatus = 304;
+                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Offline mode detected, index.html served");
                     }
                 }
 
+                // call the handler
                 if (requestData.loadEndHandler instanceof Function) {
+
                     requestData.loadEndHandler(responseData);
+
+                } else {
+
+                    ajs.debug.log(debug.LogType.Error, 0, "Load end handler is not function", this);
+                    throw new LoadEndHandlerIsNotFunctionException();
+
                 }
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
 
         }
 

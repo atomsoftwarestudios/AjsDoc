@@ -1,4 +1,4 @@
-﻿/* *************************************************************************
+/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2017 Atom Software Studios. All rights reserved.
 
@@ -30,22 +30,19 @@ namespace ajsdoc {
         public dialogVisible: boolean;
         public menuVisible: boolean;
 
-        public showDialogFrame() {
-            console.log("Show dialog frame");
+        public showDialogFrame(): void {
             document.body.style.overflow = "hidden";
             this.setState({ dialogVisible: true });
         }
 
-        public hideDialogFrame() {
-            console.log("Hide dialog frame");
+        public hideDialogFrame(): void {
             // hiding dialog frame hides menu too
             document.body.style.overflow = "";
             this.setState({ dialogVisible: false, menuVisible: false });
             this._updateButton(false);
         }
 
-        public showMenu() {
-            console.log("Show menu");
+        public showMenu(): void {
             // both states can be set at once so don't call showDialogFrame
             if (window.innerWidth < 980) {
                 document.body.style.overflow = "hidden";
@@ -53,18 +50,16 @@ namespace ajsdoc {
                 this._updateButton(true);
             } else {
                 this.setState({ menuVisible: true });
-                this._updateButton(false);
+                this._updateButton(true);
             }
         }
 
-        public hideMenu() {
-            console.log("Hide menu");
+        public hideMenu(): void {
             this.hideDialogFrame();
             this._updateButton(false);
         }
 
-        public toggleMenu() {
-            console.log("Toggle menu: " + this.menuVisible);
+        public toggleMenu(): void {
             if (this.menuVisible) {
                 this.hideMenu();
             } else {
@@ -82,14 +77,15 @@ namespace ajsdoc {
             }
         }
 
-        protected _initialize() {
+        protected _initialize(): void {
             this.showMenu();
         }
 
-        protected _finalize() {
+        protected _finalize(): void {
+            ;
         }
 
-        protected _updateButton(visible: boolean) {
+        protected _updateButton(visible: boolean): void {
             let button: AjsDocLayoutMenuButton = this._ajsViewComponentManager.getFirstComponentInstance<AjsDocLayoutMenuButton>(AjsDocLayoutMenuButton, "ajsDocLayoutMenuButton");
             button.setState({ menuVisible: visible });
         }

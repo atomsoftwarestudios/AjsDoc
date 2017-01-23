@@ -1,4 +1,4 @@
-﻿/* *************************************************************************
+/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2017 Atom Software Studios. All rights reserved.
 
@@ -85,9 +85,8 @@ namespace ajsdoc {
         }
 
         public stateTransitionEnd(e: Event): void {
-            this._visualStateTransitionEnd();
+            this._ajsVisualStateTransitionEnd();
         }
-
         protected _getTransitionType(): TransitionType {
 
             let transitionType: TransitionType = TransitionType.NONE;
@@ -157,7 +156,7 @@ namespace ajsdoc {
                     }
                 }
 
-                if (currentArticle === this._previousArticle.parent.parent) {
+                if (this._previousArticle.parent && currentArticle === this._previousArticle.parent.parent) {
                     transitionType = TransitionType.LTR;
                 }
 

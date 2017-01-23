@@ -72,19 +72,26 @@ namespace ajs.boot {
      */
     function _boot(): void {
 
-        ajs.debug.log(debug.LogType.Enter, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
 
         if (!(getAjsConfig instanceof Function)) {
             alert("error");
             throw new GetAjsConfigFunctionNotDefinedException();
         }
 
+        // get config
         let config: IAjsConfig = getAjsConfig();
 
+        // if debugging is configured, start it up
+        if (config.debugging) {
+            ajs.debug.init(config.debugging);
+        }
+
+        // initialize config
         ajs.Framework.initialize(config);
         _loadResources();
 
-        ajs.debug.log(debug.LogType.Exit, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
 
     }
 
@@ -94,7 +101,7 @@ namespace ajs.boot {
      */
     function _loadResources(): void {
 
-        ajs.debug.log(debug.LogType.Enter, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
 
         if (!(getResourceLists instanceof Function)) {
             throw new GetResourceListFunctionNotDefinedException();
@@ -150,7 +157,7 @@ namespace ajs.boot {
             }
         }
 
-        ajs.debug.log(debug.LogType.Exit, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
 
     }
 
@@ -163,7 +170,7 @@ namespace ajs.boot {
      */
     function _resourcesLoadingFinished(allLoaded: boolean, resources: ajs.resources.IResource[], userData: IResourceLoadingInfo): void {
 
-        ajs.debug.log(debug.LogType.Enter, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
 
         userData.loaded = allLoaded;
         userData.loadingEnd = true;
@@ -178,19 +185,19 @@ namespace ajs.boot {
             }
         }
 
-        ajs.debug.log(debug.LogType.Info, "ajs.boot", this, "allDone=" + allDone + ", allSuccess=" + allSuccess);
+        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", this, "allDone=" + allDone + ", allSuccess=" + allSuccess);
 
         // throw an exception if loading is done but not all resources loaded succesfully
         if (allDone) {
             if (allLoaded) {
                 _configureApplication();
             } else {
-                ajs.debug.log(debug.LogType.Error, this, "ResourcesLoadingFailedException");
+                ajs.debug.log(debug.LogType.Error, 0, this, "ResourcesLoadingFailedException");
                 throw new ResourcesLoadingFailedException();
             }
         }
 
-        ajs.debug.log(debug.LogType.Exit, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
 
     }
 
@@ -201,10 +208,10 @@ namespace ajs.boot {
      */
     function _configureApplication(): void {
 
-        ajs.debug.log(debug.LogType.Enter, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
 
         if (!(getApplicationConfig instanceof Function)) {
-            ajs.debug.log(debug.LogType.Error, this, "GetApplicationConfigFunctionNotDefinedException");
+            ajs.debug.log(debug.LogType.Error, 0, this, "GetApplicationConfigFunctionNotDefinedException");
             throw new GetApplicationConfigFunctionNotDefinedException();
         }
 
@@ -213,7 +220,7 @@ namespace ajs.boot {
 
         _start();
 
-        ajs.debug.log(debug.LogType.Exit, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
     }
 
     /**
@@ -221,11 +228,11 @@ namespace ajs.boot {
      */
     function _start(): void {
 
-        ajs.debug.log(debug.LogType.Enter, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
 
         ajs.Framework.start();
 
-        ajs.debug.log(debug.LogType.Exit, "ajs.boot", this);
+        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
     }
 
     // call _boot function when the HTML document finishes loading

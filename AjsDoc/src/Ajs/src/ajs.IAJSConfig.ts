@@ -26,50 +26,56 @@ namespace ajs {
     "use strict";
 
     /** Interface for the Ajs Framework configuration object
-      * <p>
-      * The configuration is collected by the boot loader from the ajs.boot.config script
-      * where the #see {ajs.boot.IGetAjsConfig ajs.boot.getAjsConfig} function must be
-      * implemented and return the AJS framework configuration.
-      * </p>
-      * <p>
-      * Using the ajs configuration file it is possible to configure various components
-      * of the Ajs framework to work as required. Ajs configuration is usually stored in the
-      * ajs.boot.config together with the resources list to be loaded during the boot process
-      * and application config. For additional details see #see {ajs.boot} namespace or the
-      * development guide.
-      * </p>
-      * <p>
-      * The following example shows how to configure all components of the Ajs Framework:
-      * </p>
-      * #example /static/examples/ajs.boot.config-ajs.ts
-      * <p>
-      * TODO: Review necessary options
-      * </p>
-      */
+     * <p>
+     * The configuration is collected by the boot loader from the ajs.boot.config script
+     * where the #see {ajs.boot.IGetAjsConfig ajs.boot.getAjsConfig} function must be
+     * implemented and return the AJS framework configuration.
+     * </p>
+     * <p>
+     * Using the ajs configuration file it is possible to configure various components
+     * of the Ajs framework to work as required. Ajs configuration is usually stored in the
+     * ajs.boot.config together with the resources list to be loaded during the boot process
+     * and application config. For additional details see #see {ajs.boot} namespace or the
+     * development guide.
+     * </p>
+     * <p>
+     * The following example shows how to configure all components of the Ajs Framework:
+     * </p>
+     * #example /static/examples/ajs.boot.config-ajs.ts
+     * <p>
+     * TODO: Review necessary options
+     * </p>
+     */
     export interface IAjsConfig {
-        /** TODO: Remove? : Specifies if the debugging of the framework is switched on */
-        debug?: boolean;
+
         /** TODO: Remove? : Specifies if errors occured should be logged to the console */
         logErrors?: boolean;
         /** TODO: Remove? : Specifies if errors occured should be shown in the ajs error page to end users */
         showErrors?: boolean;
 
+
+        /**
+         * Configuration of the debugging console and its modules
+         * If ommited, no debugging will be performed
+         */
+        debugging?: ajs.debug.IConsoleConfig;
+
         /** 
-          * Configuration of the resource manager
-          * For additional details #see {ajs.resources.IResourceManagerConfig}
-          */
+         * Configuration of the resource manager
+         * For additional details #see {ajs.resources.IResourceManagerConfig}
+         */
         resourceManager?: ajs.resources.IResourceManagerConfig;
 
         /** 
-          * Redirections configuration
-          * For additional details #see {ajs.navigation.IRedirection}
-          */
+         * Redirections configuration
+         * For additional details #see {ajs.navigation.IRedirection}
+         */
         navigator?: ajs.navigation.IRedirection[];
 
         /**
-          * Routes configuration
-          * For additional details #see {ajs.routing.IRoutes}
-          */
+         * Routes configuration
+         * For additional details #see {ajs.routing.IRoutes}
+         */
         router?: ajs.routing.IRoutes[];
     }
 

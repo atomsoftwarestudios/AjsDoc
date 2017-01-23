@@ -26,19 +26,28 @@ namespace ajs.resources {
     "use strict";
 
     /**
-     * Represents the browser local storage (persistent until explicitly cleared)
-     * The total amount of the data storable to the local storage is about 5MB
-     *
+     * Represents the browser storage (memory/session/local, based on the configuration and store provider)
+     * <p>
+     * This class implements complete functionality for the AjsStorage, derived classes
+     * sets the appropriate storage provider only.
+     * </p>
+     * <p>
      * updateResource method should be called after each resource data change
-     *
+     * </p>
+     * <p>
      * Items are stored under two keys in the storage:
-     * AJSRESOURCESINFO   - JSONed ICachedResource[] where data at all items is set to null
-     * AJSRESOURCES.%URL% - JSONed resource data where %URL% is URL of the data
-     * AJSADDTEST         - string of spaces for testing if it is possible to add / update resource
+     * AJSRESOURCESINFO<br />
+     * - JSONed ICachedResource[] where data at all items is set to null<br />
+     * AJSRESOURCES.%URL%<br />
+     * - JSONed resource data where %URL% is URL of the data<br />
+     * Additional key is used temporarily:<br />
+     * AJSADDTEST<br />
+     * - string of spaces for testing if it is possible to add / update resource<br />
+     * </p>
      */
     export class StorageBrowser extends AjsStorage {
 
-        protected _storageProvider: Storage;
+        protected _storageProvider: IStorageProvider;
 
         /**
          * Completely cleans all resources from the storage
@@ -251,6 +260,9 @@ namespace ajs.resources {
          * Loads information about resources in the storage
          */
         protected _getResourcesInfo(): ICachedResource[] {
+
+            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.resources", this);
+
             let resources: ICachedResource[] = [];
             let cachedResourcesInfoStr: string = this._storageProvider.getItem(STORAGE_INFO_KEY);
 
@@ -272,6 +284,8 @@ namespace ajs.resources {
             } else {
                 this._storageProvider.setItem(STORAGE_INFO_KEY, JSON.stringify([]));
             }
+
+            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
             return resources;
         }
 

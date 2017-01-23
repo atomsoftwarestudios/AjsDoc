@@ -97,8 +97,6 @@ namespace ajs.mvvm.view {
         public get renderDoneNotifier(): ajs.events.Notifier { return this._renderDoneNotifier; }
 
 
-        public preventStateChange: viewmodel.ViewComponent[];
-
         /**
          * Constructs a view. This constructor is called from the ajs.Framework during initialization
          * View is supposed to be just one in the application. All the "view" functionality should be
@@ -124,10 +122,6 @@ namespace ajs.mvvm.view {
             this._appliedStyleSheets = [];
 
             this._lastComponentId = 0;
-
-
-            this.preventStateChange = [];
-
         }
 
         protected _rootUpdated(rootComponentName: string): void {
@@ -184,7 +178,7 @@ namespace ajs.mvvm.view {
                 this.appliedStyleSheets.push(template.styleSheets[i]);
                 let style: HTMLElement = document.createElement("style");
                 style.setAttribute("type", "text/css");
-                style.textContent = this._processStyleSheet(styleSheets[i]);
+                style.textContent = this._processStyleSheet(styleSheets[i], template.storageType);
                 document.head.appendChild(style);
             }
 
@@ -198,7 +192,7 @@ namespace ajs.mvvm.view {
                         let styleSheetData: string = styleSheet.innerText;
                         let style: HTMLElement = document.createElement("style");
                         style.setAttribute("type", "text/css");
-                        style.textContent = this._processStyleSheet(styleSheetData);
+                        style.textContent = this._processStyleSheet(styleSheetData, template.storageType);
                         document.head.appendChild(style);
                     }
                 }
@@ -451,12 +445,12 @@ namespace ajs.mvvm.view {
             return true;
         }
 
-        protected _processStyleSheet(styleSheet: string): string {
+        protected _processStyleSheet(styleSheet: string, storageType: resources.STORAGE_TYPE): string {
 
             styleSheet = styleSheet.replace(/resource\(.*\)/gm, (str: string): string => {
                 let tmp: RegExpExecArray = (/'(.*)'/g).exec(str);
                 if (tmp.length > 1) {
-                    let resource: ajs.resources.IResource = this._templateManager.resourceManager.getResource(tmp[1], resources.STORAGE_TYPE.LOCAL);
+                    let resource: ajs.resources.IResource = this._templateManager.resourceManager.getResource(tmp[1], storageType);
                     if (resource !== null) {
                         return "url(data:image;base64," + resource.data + ")";
                     } else {

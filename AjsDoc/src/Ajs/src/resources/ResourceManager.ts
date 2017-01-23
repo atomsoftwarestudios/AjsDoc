@@ -25,10 +25,12 @@ namespace ajs.resources {
 
     "use strict";
 
-    /** Default memory cache size is 20MB */
+    /** Default cache sizes 20 / 4 / 4 MB */
     const MEMORY_CACHE_SIZE: number = 20 * 1024 * 1024;
+    const SESSION_CACHE_SIZE: number = 4 * 1024 * 1024;
+    const LOCAL_CACHE_SIZE: number = 4 * 1024 * 1024;
 
-    /** Indicates if loaded scripts should executed using the eval function or by adding the <script> tag */
+    /** Indicates if loaded scripts should executed using the eval function or by adding the &lt;script&gt; tag */
     const USE_EVAL: boolean = true;
 
     /** Resource types and their file name extensions */
@@ -124,6 +126,8 @@ namespace ajs.resources {
          */
         public constructor(config?: IResourceManagerConfig) {
 
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this, "", config);
+
             if (config === undefined) {
                 config = this._defaultConfig();
             }
@@ -131,20 +135,33 @@ namespace ajs.resources {
             this._resourceLoader = new ResourceLoader();
             this._storageLocal = new StorageLocal();
             this._storageSession = new StorageSession();
-            this._storageMemory = new StorageMemory(config.memoryCacheSize);
+            this._storageMemory = new StorageMemory();
 
             if (config.removeResourcesOlderThan !== undefined) {
-                console.warn("IMPLEMENT: ResourceManager.constructor - removeResourcesOlderThan functionality");
+                ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this,
+                    "IMPLEMENT: ResourceManager.constructor - removeResourcesOlderThan functionality");
                 // throw new NotImplementedException();
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
          * Returnd the default ResourceManager configuration
          */
         protected _defaultConfig(): IResourceManagerConfig {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this,
+                "ResourceManager configuration not provided, fallback to default");
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+
             return {
-                memoryCacheSize: MEMORY_CACHE_SIZE
+                memoryCacheSize: MEMORY_CACHE_SIZE,
+                sessionCacheSize: SESSION_CACHE_SIZE,
+                localCacheSize: LOCAL_CACHE_SIZE
             };
         }
 
@@ -181,23 +198,34 @@ namespace ajs.resources {
             executeScript?: boolean
         ): void {
 
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                "Loading resource: '" + url + "', Storage: " + STORAGE_TYPE[storageType] + ", Cache Policy: " + CACHE_POLICY[cachePolicy] );
+
             let resource: IResource = null;
+            // get the storage
             let storage: AjsStorage = this._getStorageFromType(storageType);
 
             // basic checks and parameters update
             if (storage !== null) {
                 if (!storage.supported) {
+                    ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this, "Storage type not supported");
                     throw new StorageTypeNotSupportedException();
                 }
+
                 if (cachePolicy === undefined || cachePolicy === CACHE_POLICY.NONE) {
+                    ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this, "Cache policy not set");
                     throw new CachePolicyMustBeSetException();
                 }
             } else {
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Fallback to CACHE_POLICY.NONE");
                 cachePolicy = CACHE_POLICY.NONE;
             }
 
             if (executeScript === undefined) {
                 executeScript = true;
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Script resource will be executed by default");
             }
 
             // if resource is expected to be cached, try to load it from cache first
@@ -205,6 +233,9 @@ namespace ajs.resources {
 
             // setup resource info anyway, even if the resource was not in cache or is not a cached resource
             if (resource === null) {
+
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Resource not cached");
+
                 resource = {
                     url: url,
                     type: this._getResourceTypeFromURL(url),
@@ -226,6 +257,8 @@ namespace ajs.resources {
 
             // update initial progress bar
             if (ajs.ui.InitialProgressBar) {
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                    "Updating initial progress bar with resource to be loaded: '" + url + "'");
                 ajs.ui.InitialProgressBar.resourceLoading(url);
             }
 
@@ -237,6 +270,8 @@ namespace ajs.resources {
                 resourceLoadingInfo,
                 resource.lastModified
             );
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -258,12 +293,20 @@ namespace ajs.resources {
             executeScripts?: boolean
         ): void {
 
-            var resourcesLoadingInfo: IResourcesLoadingInfo = {
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                "Loading resources (" + urls.length + "), Storage: " + STORAGE_TYPE[storageType] +
+                 ", Cache Policy: " + CACHE_POLICY[cachePolicy], urls);
+
+            // prepare loading info structure
+            let resourcesLoadingInfo: IResourcesLoadingInfo = {
                 loadingData: [],
                 userData: userData,
                 loadEndCallback: loadEndCallback
             };
 
+            // add record for each resource to be loaded
             for (let i: number = 0; i < urls.length; i++) {
                 resourcesLoadingInfo.loadingData[i] = {
                     url: urls[i],
@@ -273,8 +316,8 @@ namespace ajs.resources {
                 };
             }
 
+            // start loading of all resources simultaneously
             for (let i: number = 0; i < urls.length; i++) {
-                // start loading of the resource
                 this.load(
                     (loaded: boolean, url: string, resource: IResource, userData: IResourcesLoadingInfo) => {
                         this._nextLoaded(loaded, url, resource, userData);
@@ -286,6 +329,9 @@ namespace ajs.resources {
                     executeScripts
                 );
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+
         }
 
         /**
@@ -294,6 +340,11 @@ namespace ajs.resources {
          * @param storageType type of the storage to be used for lookup
          */
         public getResource(url: string, storageType: STORAGE_TYPE): IResource {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                "Getting cached resource '" + url + "', Storage: " + STORAGE_TYPE[storageType]);
+
             let storage: AjsStorage = this._getStorageFromType(storageType);
             if (storage !== null) {
                 let cachedResource: ICachedResource = storage.getResource(url);
@@ -307,35 +358,50 @@ namespace ajs.resources {
                         cachePolicy: cachedResource.cachePolicy,
                         lastModified: cachedResource.lastModified
                     };
+                    ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
                     return resource;
                 }
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Resource not found in specified storage");
+                ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
                 return null;
             }
+
+            ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this, "Invalid storage type");
             throw new InvalidStorageTypeException();
         }
 
         /**
          * Returns a cached resource
-         * @param url
-         * @param storageType
+         * @param url Url of the cached resource
+         * @param storageType type of the storage to be used for lookup
          */
         public getCachedResource(url: string, storageType: STORAGE_TYPE): ICachedResource {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                "Getting cached resource '" + url + "', Storage: " + STORAGE_TYPE[storageType]);
+
             let storage: AjsStorage = this._getStorageFromType(storageType);
             if (storage !== null) {
+                ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
                 return storage.getResource(url);
             } else {
+                ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this, "Invalid storage type");
                 throw new InvalidStorageTypeException();
             }
         }
 
         /**
          * Creates or updates existing cached resource
-         * @param url
-         * @param data
-         * @param storageType
-         * @param cachePolicy
+         * @param url Url of the cached resource
+         * @param data Data to be stored or updated
+         * @param storageType type of the storage to be used
+         * @param cachePolicy cache policy to be used for new resources
          */
         public setCachedResource(url: string, data: any, storageType: STORAGE_TYPE, cachePolicy: CACHE_POLICY): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
             let storage: AjsStorage = this._getStorageFromType(storageType);
             if (storage !== null) {
                 let resource: ICachedResource = {
@@ -346,8 +412,12 @@ namespace ajs.resources {
                 };
                 storage.updateResource(resource);
             } else {
+                ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this, "Invalid storage type");
                 throw new InvalidStorageTypeException();
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+
         }
 
         /**
@@ -356,51 +426,72 @@ namespace ajs.resources {
          * @param storageType Type of the storage to be used
          */
         public removeCachedResource(url: string, storageType: STORAGE_TYPE): void {
-            let storage: AjsStorage = this._getStorageFromType(storageType);
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
+             let storage: AjsStorage = this._getStorageFromType(storageType);
             if (storage !== null) {
                 storage.removeResource(url);
             } else {
+                ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this, "Invalid storage type");
                 throw new InvalidStorageTypeException();
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
-         * Called internally when loading of single resource finishes
+         * Called internally when loading of single resource ends
          * @param response Information about the resource loaded passed from the resource loader
          */
         protected _loadEnd(response: IResourceResponseData): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
 
             let loaded: boolean;
             let loadingInfo: IResourceLoadingInfo = response.userData as IResourceLoadingInfo;
 
             let url: string = loadingInfo.resource.url;
 
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Processing loaded resource '" + url + "'");
+
             // loaded successfully, update resource and also cache if necessary
             if (response.httpStatus === 200) {
 
+                // based on the resource type, get the data
                 switch (loadingInfo.resource.type) {
                     case RESOURCE_TYPE.BINARY:
+                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Binary file loaded");
                         loadingInfo.resource.data = new Uint8Array(response.data);
                         break;
                     default:
+                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Text file loaded");
                         loadingInfo.resource.data = response.data;
                 }
 
+                // update cached resource
                 if (loadingInfo.resource.storage !== null) {
+
+                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Loaded resource is cached. Updating.");
+
                     let cachedResource: ICachedResource = {
                         url: loadingInfo.resource.url,
                         data: loadingInfo.resource.data,
                         cachePolicy: loadingInfo.resource.cachePolicy,
                         lastModified: new Date()
                     };
+
                     loadingInfo.resource.storage.updateResource(cachedResource);
                     loadingInfo.resource.cached = true;
                 }
+
                 loaded = true;
+
             } else {
                 // not modified, loaded successfully
                 // the resource loaded from cache is already set in the loading info
                 if (response.httpStatus === 304) {
+                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Not modified, using cached resource");
                     loaded = true;
                 } else {
                     // http failed but if resource was cached previously we are good
@@ -409,6 +500,7 @@ namespace ajs.resources {
                     // if the resource was not cached neither loaded, don't return
                     // the value previously set to the loading info
                     if (!loaded) {
+                        ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this, "Resource failed to load and is not cached");
                         loadingInfo.resource = null;
                     }
                 }
@@ -416,6 +508,10 @@ namespace ajs.resources {
 
             // if the resource is script and should be executed, do it
             if (loaded && loadingInfo.resource.type === RESOURCE_TYPE.SCRIPT && loadingInfo.execScript) {
+
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Executing the loaded script");
+
+                // use eval or insert the script tag to the code
                 if (USE_EVAL) {
                     this._evalScript(loadingInfo.resource);
                 } else {
@@ -424,12 +520,18 @@ namespace ajs.resources {
             }
 
             // update initial progress bar
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                "Updating initial progress bar with resource finished loading '" + url + "'");
+
             if (ajs.ui.InitialProgressBar) {
                 ajs.ui.InitialProgressBar.resourceLoaded(url);
             }
 
             // call the defined callback
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Calling the defined callback");
             loadingInfo.callback(loaded, url, loadingInfo.resource, loadingInfo.userData);
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -440,6 +542,8 @@ namespace ajs.resources {
          * @param userData Information about the callback and resources loading progress
          */
         protected _nextLoaded(loaded: boolean, url: string, resource: IResource, userData: IResourcesLoadingInfo): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
 
             let allFinished: boolean = true;
             let allLoaded: boolean = true;
@@ -456,10 +560,18 @@ namespace ajs.resources {
             }
 
             // for all resources check the finished and loaded status
+            let loadedCount: number = 0;
             for (let i: number = 0; i < loadingInfo.loadingData.length; i++) {
+                if (loadingInfo.loadingData[i].loadingFinished) {
+                    loadedCount++;
+                }
                 allFinished = allFinished && loadingInfo.loadingData[i].loadingFinished;
                 allLoaded = allLoaded && loadingInfo.loadingData[i].loaded;
             }
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                "Next resource loading finished (" + loadedCount + " out of " + loadingInfo.loadingData.length +
+                "), result: " + (loaded ? "success" : "fail"));
 
             // if all resources finished loading, prepare callback params and call it
             if (allFinished) {
@@ -486,6 +598,8 @@ namespace ajs.resources {
                 // call the defined callback
                 loadingInfo.loadEndCallback(allLoaded, resources, loadingInfo.userData);
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
 
         }
 

@@ -108,9 +108,9 @@ namespace ajs {
         /** Basic framework initialization is called automatically from the boot when window.onload event occurs */
         public static initialize(config: IAjsConfig): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs", this);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs", this);
 
-            ajs.debug.log(debug.LogType.Warning, "ajs", this, "IMPLEMENT: Framework.initialize - global error handler");
+            ajs.debug.log(debug.LogType.Warning, 0, "ajs", this, "IMPLEMENT: Framework.initialize - global error handler");
             window.onerror = Framework._errorHandler;
 
             // store config locally
@@ -130,7 +130,7 @@ namespace ajs {
             Framework._router = new ajs.routing.Router(Framework._view, Framework._config.router);
             Framework._navigator = new ajs.navigation.Navigator(Framework._router, Framework._config.navigator);
 
-            ajs.debug.log(debug.LogType.Exit, "ajs", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs", this);
         }
 
         /**
@@ -139,11 +139,11 @@ namespace ajs {
          * @param config Application configuration file
          */
         public static configureApplication(config: ajs.app.IApplicationConfig): void {
-            ajs.debug.log(debug.LogType.Enter, "ajs", this);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs", this);
 
             Framework._appConfig = config;
 
-            ajs.debug.log(debug.LogType.Exit, "ajs", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs", this);
         }
 
         /**
@@ -154,10 +154,10 @@ namespace ajs {
          */
         public static start(): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs", this);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs", this);
 
             if (Framework._appConfig === null) {
-                ajs.debug.log(debug.LogType.Error, "ajs", this, "ApplicationNotConfiguredException");
+                ajs.debug.log(debug.LogType.Error, 0, "ajs", this, "ApplicationNotConfiguredException");
                 throw new ApplicationNotConfiguredException();
             }
 
@@ -165,11 +165,11 @@ namespace ajs {
                 Framework._application = new Framework._appConfig.appConstructor(Framework._appConfig.userConfig);
                 Framework._application.initialize();
             } else {
-                ajs.debug.log(debug.LogType.Error, "ajs", this, "AppConstructorMustBeAFunctionException");
+                ajs.debug.log(debug.LogType.Error, 0, "ajs", this, "AppConstructorMustBeAFunctionException");
                 throw new AppConstructorMustBeAFunctionException();
             }
 
-            ajs.debug.log(debug.LogType.Exit, "ajs", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs", this);
         }
 
         /**

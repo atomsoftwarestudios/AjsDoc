@@ -27,30 +27,16 @@ namespace ajs.mvvm.viewmodel {
 
     import IVisualComponent = ajs.templating.IVisualComponent;
 
-    export interface IDomEventListenerInfo {
-        /** Indicates if the listener was added to the element */
-        registered: boolean;
-        /** Element in the main document or in the shadow DOM - if in shadow DOM its overwritten by View to document element */
-        element: Element;
-        /** Event type to be registered or registered already */
-        eventType: string;
-        /** Event listener */
-        listener: EventListener;
-    }
-
-    export interface IComponentElement extends Element {
-        ajsComponent?: ViewComponent;
-        ajsOwnerComponent?: ViewComponent;
-        ajsSkipUpdate?: boolean;
-        ajsEventListeners?: IDomEventListenerInfo[];
-    }
-
     export class ViewComponent {
 
+        /** Stores the attribute id value of the component instance specified in the tag in the template */
         protected _ajsid: string;
+        /** Returns the value of the id attribute specified at the view component instance in the template */
         public get ajsid(): string { return this._ajsid; }
 
+        /** Unique id of the view component in the view */
         protected _ajsComponentId: number;
+
         public get ajsComponentId(): number { return this._ajsComponentId; }
 
         protected _ajsView: view.View;
@@ -94,6 +80,10 @@ namespace ajs.mvvm.viewmodel {
 
         protected _ajsAttributeProcessors: IAttributeProcessorsCollection;
 
+        private _preventStateChange: boolean;
+        public get preventStateChange(): boolean { return this._preventStateChange; }
+        public set preventStateChange(value: boolean) { this._setPreventStateChange(value); }
+
         /** Prepared for arrayed components but never initialized so hasOwnProperty must be used to check */
         public key: string;
 
@@ -128,6 +118,8 @@ namespace ajs.mvvm.viewmodel {
 
             this._ajsHasVisualStateTransition = false;
             this._ajsVisualStateTransitionRunning = false;
+
+            this._preventStateChange = false;
 
             // register instance to the ViewComponentManager for simple lookups
             ajs.Framework.viewComponentManager.registerComponentInstance(this);
@@ -178,6 +170,7 @@ namespace ajs.mvvm.viewmodel {
         }
 
         protected _destroy(): void {
+
             // unregister all event listeners
             for (let i: number = 0; i < this._domEventListeners.length; i++) {
                 if (this._domEventListeners[i].registered) {
@@ -221,14 +214,15 @@ namespace ajs.mvvm.viewmodel {
             this._processStateQueue();
         }
 
-        public checkStateChangePrevented(): boolean {
-            let prevented = false
-            let viewComponent: ViewComponent = this;
-            while (viewComponent !== null) {
-                prevented = prevented || this._ajsView.preventStateChange.indexOf(viewComponent) !== -1;
-                viewComponent = viewComponent._ajsParentComponent;
+        protected _setPreventStateChange(value: boolean): void {
+            this._preventStateChange = value;
+            let children: ViewComponent[] = this._ajsViewComponentManager.getChildrenComponentInstances(this);
+            for (let i: number = 0; i < children.length; i++) {
+                children[i].preventStateChange = value;
             }
-            return prevented;
+            if (!value) {
+                this._processStateQueue();
+            }
         }
 
         protected _processStateQueue(): void {
@@ -238,34 +232,28 @@ namespace ajs.mvvm.viewmodel {
             }
 
             if(this._ajsProcessingStateQueue) {
-                console.warn("Processing state already running!");
+                // console.warn("Processing state already running!");
                 return;
             }
 
-            if (this.checkStateChangePrevented()) {
-                console.warn("State change is prevented!");
-                setTimeout(() => {
-                    this._processStateQueue();
-                }, 10);
+            if (this._preventStateChange) {
+                // console.warn("State change is prevented!");
                 return;
             }
 
             this._ajsProcessingStateQueue = true;
 
-            console.log("Processing state queue:" + ajs.utils.getClassName(this));
+            // console.log("Processing state queue:" + ajs.utils.getClassName(this));
 
             while (this._ajsStateQueue.length > 0) {
 
-                if (this.checkStateChangePrevented()) {
-                    console.warn("State change is prevented!");
-                    setTimeout(() => {
-                        this._processStateQueue();
-                    }, 10);
+                if (this._preventStateChange) {
+                    // console.warn("State change is prevented!");
                     return;
                 }
 
                 let state: IViewStateSet = this._ajsStateQueue.shift();
-                console.log(state);
+                // console.log(state);
 
                 if (this._ajsHasVisualStateTransition) {
                     if (this._ajsElement instanceof HTMLElement &&
@@ -289,7 +277,7 @@ namespace ajs.mvvm.viewmodel {
 
             this._ajsProcessingStateQueue = false;
 
-            console.log("Processing state queue done: " + ajs.utils.getClassName(this));
+            // console.log("Processing state queue done: " + ajs.utils.getClassName(this));
         }
 
         /**
@@ -765,8 +753,7 @@ namespace ajs.mvvm.viewmodel {
                 if (element.hasAttribute("href")) {
                     let href: string = element.getAttribute("href");
                     if (href.substr(0, 4) !== "http") {
-                        href = "javascript:ajs.Framework.navigator.navigate('" + href + "')";
-                        element.setAttribute("href", href);
+                        element.setAttribute("onclick", "return ajs.Framework.navigator.linkClicked(event);");
                     }
                 }
             }
@@ -854,9 +841,6 @@ namespace ajs.mvvm.viewmodel {
         }
 
         protected _attrTransitionBeginHanler(toRemove: string[], attr: Attr): boolean {
-
-            console.log("Processing attribute transitionbegin");
-
             if (this[attr.nodeValue] !== undefined && typeof this[attr.nodeValue] === "function") {
                 this._ajsHasVisualStateTransition = true;
                 this._ajsVisualStateTransitionBeginHandler = this[attr.nodeValue];
@@ -871,8 +855,6 @@ namespace ajs.mvvm.viewmodel {
             state: IViewStateSet,
             placeholder: string,
             index?: number): void {
-
-            console.log("visual component insert child component");
 
             if (state === null) {
                 state = {};
@@ -895,8 +877,6 @@ namespace ajs.mvvm.viewmodel {
 
         public removeChildComponent(placeholder: string, id: string): void {
 
-            console.log("visual component remove child component");
-
             if (this.hasOwnProperty(id) && this[id] instanceof ViewComponent) {
 
                 this._visualComponentRemoveChild(placeholder, id);
@@ -911,8 +891,6 @@ namespace ajs.mvvm.viewmodel {
         }
 
         protected _visualComponentInsertChild(placeholder: string, componentName: string, id: string, index?: number): void {
-
-            console.log("visual component insert child");
 
             if (this._ajsVisualComponent.placeholders.hasOwnProperty(placeholder)) {
 
@@ -936,8 +914,6 @@ namespace ajs.mvvm.viewmodel {
 
         protected _visualComponentRemoveChild(placeholder: string, id: string): void {
 
-            console.log("visual component remove child");
-
             if (this._ajsVisualComponent.placeholders.hasOwnProperty(placeholder)) {
 
                 let ph: HTMLElement = this._ajsVisualComponent.placeholders[placeholder].placeholder;
@@ -960,14 +936,12 @@ namespace ajs.mvvm.viewmodel {
 
         public ajsVisualStateTransitionBegin(newElement: HTMLElement): void {
 
-            console.log("visual transition begin");
-
             if (this._ajsVisualStateTransitionRunning) {
                 this._ajsVisualStateTransitionCancel();
             }
 
             this._ajsVisualStateTransitionRunning = true;
-            this._ajsView.preventStateChange.push(this);
+            // this._ajsView.preventStateChange.push(this);
 
             this._ajsTransitionNewElement = newElement;
 
@@ -976,17 +950,15 @@ namespace ajs.mvvm.viewmodel {
                 if (transitionType !== null) {
                     this._ajsVisualStateTransitionStart(transitionType);
                 } else {
-                    this._visualStateTransitionEnd();
+                    this._ajsVisualStateTransitionEnd();
                 }
             } else {
-                this._visualStateTransitionEnd();
+                this._ajsVisualStateTransitionEnd();
             }
 
         }
 
         protected _ajsVisualStateTransitionStart(transitionType: ITransitionType): void {
-
-            console.log("visual transition start");
 
             if (this._ajsTransitionOldElement instanceof HTMLElement && this._ajsTransitionNewElement instanceof HTMLElement) {
 
@@ -1002,17 +974,13 @@ namespace ajs.mvvm.viewmodel {
 
         protected _ajsVisualStateTransitionCancel(): void {
 
-            console.log("visual transition cancel");
-
             if (this._ajsVisualStateTransitionRunning) {
-                this._visualStateTransitionEnd();
+                this._ajsVisualStateTransitionEnd();
             }
 
         }
 
-        protected _visualStateTransitionEnd(): void {
-
-            console.log("visual transition end");
+        protected _ajsVisualStateTransitionEnd(): void {
 
             if (this._ajsVisualStateTransitionRunning &&
                 this._ajsTransitionOldElement instanceof HTMLElement &&
@@ -1024,12 +992,13 @@ namespace ajs.mvvm.viewmodel {
                 this._ajsTransitionOldElement.parentNode.removeChild(this._ajsTransitionOldElement);
             }
 
-            if (this._ajsView.preventStateChange.indexOf(this) !== -1) {
+            /*if (this._ajsView.preventStateChange.indexOf(this) !== -1) {
                 this._ajsView.preventStateChange.splice(
                     this._ajsView.preventStateChange.indexOf(this),
                     1
                 );
-            }
+            }*/
+
             this._ajsVisualStateTransitionRunning = false;
         }
 

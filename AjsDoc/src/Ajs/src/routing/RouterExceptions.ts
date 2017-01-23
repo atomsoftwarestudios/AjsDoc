@@ -25,6 +25,8 @@ namespace ajs.routing {
 
     "use strict";
 
-    export class NoRoutesConfigured extends Error { }
+    export class NoRoutesConfiguredException extends Error { }
+
+    export class RouteNotFoundException extends Error { }
 
 }

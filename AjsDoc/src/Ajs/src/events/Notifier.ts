@@ -37,14 +37,14 @@ namespace ajs.events {
          */
         public constructor(...listeners: IListener[]) {
 
-            ajs.debug.log(debug.LogType.Constructor, "ajs.events", this);
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.events", this);
 
             this._listeners = [];
             for (let i: number = 0; i < listeners.length; i++) {
                 this._listeners.push(listeners[i]);
             }
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.events", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.events", this);
 
         }
 
@@ -54,14 +54,15 @@ namespace ajs.events {
          */
         public subscribe(listener: IListener): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs.events", this);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.events", this);
 
             if (this._listeners.indexOf(listener) === -1) {
                 this._listeners.push(listener);
             }
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.events", this, "Registered subscribers: " + this._listeners.length);
-            ajs.debug.log(debug.LogType.Exit, "ajs.events", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.events", this,
+                "Registered subscribers: " + this._listeners.length, this._listeners);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.events", this);
         }
 
         /**
@@ -70,14 +71,15 @@ namespace ajs.events {
          */
         public unsubscribe(listener: IListener): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs.events", this);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.events", this);
 
             if (this._listeners.indexOf(listener) !== -1) {
                 this._listeners.splice(this._listeners.indexOf(listener));
             }
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.events", this, "Registered subscribers: " + this._listeners.length);
-            ajs.debug.log(debug.LogType.Exit, "ajs.events", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.events", this,
+                "Registered subscribers: " + this._listeners.length, this._listeners);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.events", this);
         }
 
         /**
@@ -88,7 +90,7 @@ namespace ajs.events {
          */
         public notify(sender: any, data?: any): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs.events", this, "Sender: " + ajs.utils.getClassName(sender));
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.events", this, "Sender: " + ajs.utils.getClassName(sender));
 
             for (let i: number = 0; i < this._listeners.length; i++) {
                 let result: boolean = this._listeners[i](sender, data);
@@ -97,7 +99,7 @@ namespace ajs.events {
                 }
             }
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.events", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.events", this);
         }
 
     }

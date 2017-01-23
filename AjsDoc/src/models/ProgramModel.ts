@@ -165,7 +165,7 @@ namespace ajsdoc {
                 parentPath = "";
             }
 
-            let label: string = node.kind !== 0 ? node.kindString + " " + node.name : null;
+            let label: string = node.parent && node.parent.kind !== 0 ? node.parent.kindString + " " + node.parent.name : null;
 
             let menu: IMenuState = {
                 parentLabel: parentLabel,
@@ -177,7 +177,7 @@ namespace ajsdoc {
 
             if (node.parent.kind != -1) {
                 menu.items.push({
-                    key: "-1",
+                    key: "/ref" + node.path,
                     path: "/ref" + node.path,
                     label: node.kindString + " " + node.name,
                     selected: node.path === ("/" + navPath),
@@ -194,18 +194,30 @@ namespace ajsdoc {
                         kindMapped = KIND_MAP[node.children[i].kindString.replace(" ", "_")];
                     }
 
+                    let isFromLibDTs: boolean = false;
+                    // Ignore everyithing from lib.d.ts
+                    if (node.children[i].sources instanceof Array) {
+                        for (let j: number = 0; j < node.children[i].sources.length; j++) {
+                            if (node.children[i].sources[j].fileName.indexOf("lib.d.ts") !== -1) {
+                                isFromLibDTs = true;
+                                break;
+                            }
+                        }
+                    }
+
+
                     let itemGroupIndex: number = this._getGroupIndex(menu, kindMapped);
-                    if (itemGroupIndex === -1) {
+                    if (itemGroupIndex === -1 && !isFromLibDTs) {
 
                         menu.groups.push({
-                            key: kindMapped,
+                            key: kindMapped + node.children[i].id,
                             label: kindMapped,
                             items: []
                         });
                         itemGroupIndex = menu.groups.length - 1;
                     }
 
-                    if (this._includeInMenu(node.children[i].kindString)) {
+                    if (this._includeInMenu(node.children[i].kindString) && !isFromLibDTs) {
                         menu.groups[itemGroupIndex].items.push({
                             key: node.children[i].id.toString(),
                             path: "/ref" + node.children[i].path,
@@ -255,9 +267,9 @@ namespace ajsdoc {
             this._dataReadyNotifier.notify(this, { articleState: this.navigate(path) });
         }
 
-        protected _getGroupIndex(menu: IMenuState, key: string): number {
+        protected _getGroupIndex(menu: IMenuState, label: string): number {
             for (let i: number = 0; i < menu.groups.length; i++) {
-                if (menu.groups[i].key === key) {
+                if (menu.groups[i].label === label) {
                     return i;
                 }
             }

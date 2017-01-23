@@ -40,10 +40,30 @@
     <TypeScriptCompile Include="src\boot\IResourceLists.ts" />
     <TypeScriptCompile Include="src\boot\IResourceLoadingInfo.ts" />
     <TypeScriptCompile Include="src\debug\!debug.ts" />
-    <TypeScriptCompile Include="src\debug\Logger.ts" />
+    <TypeScriptCompile Include="src\debug\IConsoleConfig.ts" />
+    <TypeScriptCompile Include="src\debug\IConsoleModuleCollection.ts" />
+    <TypeScriptCompile Include="src\debug\IConsoleModule.ts" />
+    <TypeScriptCompile Include="src\debug\modules\logger\ILogConfig.ts" />
+    <TypeScriptCompile Include="src\debug\modules\logger\IFunctionInfo.ts" />
+    <TypeScriptCompile Include="src\debug\modules\logger\ILogRecord.ts" />
+    <TypeScriptCompile Include="src\debug\modules\logger\LogBody.tsx" />
+    <TypeScriptCompile Include="src\debug\view\!view.ts" />
+    <TypeScriptCompile Include="src\debug\Console.ts" />
+    <TypeScriptCompile Include="src\debug\view\Body.tsx" />
+    <TypeScriptCompile Include="src\debug\view\StyleSheet.tsx" />
+    <TypeScriptCompile Include="src\debug\log.ts" />
+    <TypeScriptCompile Include="src\debug\modules\logger\!log.ts" />
+    <TypeScriptCompile Include="src\debug\modules\logger\LoggerStyleSheet.tsx" />
+    <TypeScriptCompile Include="src\debug\modules\logger\Logger.ts" />
+    <TypeScriptCompile Include="src\debug\modules\logger\LoggerToolbar.tsx" />
+    <TypeScriptCompile Include="src\debug\tsx\!tsx.ts" />
+    <TypeScriptCompile Include="src\debug\tsx\IViewComponent.ts" />
+    <TypeScriptCompile Include="src\debug\tsx\tsx.ts" />
     <TypeScriptCompile Include="src\events\!events.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\!mvvm.ts" />
+    <TypeScriptCompile Include="src\mvvm\viewmodel\IComponentElement.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\ITransitionBeginHandler.ts" />
+    <TypeScriptCompile Include="src\mvvm\viewmodel\IDomEventListenerInfo.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\ITransitionType.ts" />
     <TypeScriptCompile Include="src\mvvm\view\!view.ts" />
     <TypeScriptCompile Include="src\mvvm\view\Exceptions.ts" />
@@ -82,10 +102,12 @@
     <TypeScriptCompile Include="src\resources\IResourcesLoadEndCallback.ts" />
     <TypeScriptCompile Include="src\resources\IResourcesLoadingInfo.ts" />
     <TypeScriptCompile Include="src\resources\IResourceTypes.ts" />
+    <TypeScriptCompile Include="src\resources\IStorageProvider.ts" />
     <TypeScriptCompile Include="src\resources\ResourceLoader.ts" />
     <TypeScriptCompile Include="src\resources\ResourceManager.ts" />
     <TypeScriptCompile Include="src\resources\StorageBrowser.ts" />
     <TypeScriptCompile Include="src\resources\StorageLocal.ts" />
+    <TypeScriptCompile Include="src\resources\MemoryStorageProvider.ts" />
     <TypeScriptCompile Include="src\resources\StorageMemory.ts" />
     <TypeScriptCompile Include="src\resources\StorageSession.ts" />
     <TypeScriptCompile Include="src\navigation\IRedirection.ts" />
@@ -122,6 +144,7 @@
     <Content Include="changelog.txt" />
     <Content Include="license.txt" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
@@ -152,7 +175,7 @@
     <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptJSXEmit>Preserve</TypeScriptJSXEmit>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
     <TypeScriptModuleKind>None</TypeScriptModuleKind>

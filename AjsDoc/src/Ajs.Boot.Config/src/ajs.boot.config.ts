@@ -41,12 +41,46 @@ namespace ajs.boot {
         // const anyPath: string = "(\\/.*|.*)";
 
         return {
-            debug: true,
             logErrors: true,
             showErrors: true,
 
+            debugging: {
+                // styleSheet render target
+                styleRenderTarget: document.head,
+                // body render target
+                bodyRenderTarget: document.body,
+                // show the debug console on boot after x miliseconds (0 = don't show)
+                // to manually control the console use the browser console 
+                // ajs.debug.console.show()
+                // ajs.debug.console.hide()
+                showOnBootDelay: 5000,
+                loggerConfig: {
+                    // logging enabled
+                    enabled: true,
+                    // logger configuration
+                    logDataToConsole: false,
+                    // type of records to be logged
+                    logTypes: [
+                        ajs.debug.LogType.Enter,
+                        ajs.debug.LogType.Exit,
+                        ajs.debug.LogType.Constructor,
+                        ajs.debug.LogType.Info,
+                        ajs.debug.LogType.Warning,
+                        ajs.debug.LogType.Error,
+                        ajs.debug.LogType.DomAddListener,
+                        ajs.debug.LogType.DomRemoveListener,
+                        ajs.debug.LogType.DomAppendChild,
+                        ajs.debug.LogType.DomRemoveChild
+                    ],
+                    // max logging level
+                    maxLevel: 9
+                }
+            },
+
             resourceManager: {
                 memoryCacheSize: 20 * 1024 * 1024,
+                sessionCacheSize: 4 * 1024 * 1024,
+                localCacheSize: 4 * 1024 * 1024,
                 removeResourcesOlderThan: ajs.utils.maxDate()
             },
 
@@ -72,7 +106,7 @@ namespace ajs.boot {
     getApplicationConfig = function(): ajs.app.IApplicationConfig {
 
         let userConfig: ajsdoc.IAjsDocBrowserConfig = {
-            storageType: ajs.resources.STORAGE_TYPE.LOCAL,
+            storageType: ajs.resources.STORAGE_TYPE.SESSION,
             articlesStoragePolicy: ajs.resources.CACHE_POLICY.LASTRECENTLYUSED,
             libraries: ["/js/lib/highlight.pack.js"],
             templateList: "/static/templates.json",

@@ -41,6 +41,10 @@ namespace ajs.routing {
 
         public constructor(view: ajs.mvvm.view.View, routes?: IRoutes[]) {
 
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.routing", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.routing", this,
+                "Registering routes (" + (routes ? routes.length : 0) + ")", routes);
+
             this._view = view;
 
             this._routes = routes || [];
@@ -51,39 +55,61 @@ namespace ajs.routing {
 
             this._currentRoute = { base: "", path: "", search: "", hash: "" };
 
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.routing", this);
         }
 
         public registerRoute(paths: IRoute[], viewComponentName: string): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.routing", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.routing", this, "Registering route", paths);
+
             this._routes.push({
                 paths: paths,
                 viewComponentName: viewComponentName
             });
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.routing", this);
+
         }
 
         public route(): void {
 
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.routing", this);
+
             if (this._lastURL !== window.location.href) {
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.routing", this, "Maping route for '" + window.location.href + "'");
 
                 this._lastURL = window.location.href;
 
                 let viewComponentName: string = this._getRouteViewComponent();
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.routing", this, "Routing to " + viewComponentName);
 
                 if (viewComponentName !== null) {
 
                     if (this._lastViewComponentName !== viewComponentName) {
+                        ajs.debug.log(debug.LogType.Info, 0, "ajs.routing", this, "Routing to a different than previous component");
 
                         this._lastViewComponentName = viewComponentName;
                         this._view.rootViewComponentName = viewComponentName;
 
                     } else {
+                        ajs.debug.log(debug.LogType.Info, 0, "ajs.routing", this, "Notyfying component the navigation occured");
                         this._view.onNavigate();
                     }
 
+                } else {
+                    ajs.debug.log(debug.LogType.Error, 0, "ajs.routing", this, "ViewComponent not found for the path specified");
+                    throw new RouteNotFoundException();
                 }
+
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.routing", this);
         }
 
         protected _getRouteViewComponent(): string {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.routing", this);
 
             for (let i: number = 0; i < this._routes.length; i++) {
 
@@ -129,6 +155,9 @@ namespace ajs.routing {
                 }
 
             }
+
+            ajs.debug.log(debug.LogType.Warning, 0, "ajs.routing", this, "Route not found");
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.routing", this);
 
             return null;
         }

@@ -25,18 +25,34 @@ namespace ajs.utils {
 
     "use strict";
 
+    /**
+     * Helper to determine if variable is defined
+     * @param object Object to be checked
+     */
     export function defined(object: any): boolean {
         return object !== undefined;
     }
 
+    /**
+     * Helper to determine if the variable is null
+     * @param object Object to be checked
+     */
     export function isNull(object: any): boolean {
-        return object == null;
+        return object === null;
     }
 
+    /**
+     * Helper to determine if the variable defined and not null
+     * @param object Object to be checked
+     */
     export function definedAndNotNull(object: any): boolean {
-        return object !== undefined && object != null;
+        return object !== undefined && object !== null;
     }
 
+    /**
+     * Returns name of the constructor of the object
+     * @param obj Object to be checked
+     */
     export function getClassName(obj: Object): string {
         if (obj && obj.constructor && obj.constructor.toString) {
             var arr: RegExpMatchArray = obj.constructor.toString().match(/function\s*(\w+)/);
@@ -48,84 +64,113 @@ namespace ajs.utils {
         return undefined;
     }
 
-    export function getFunctionName(fn: Function) {
-        let name: RegExpExecArray = /^function\s+([\w\$]+)\s*\(/.exec(fn.toString())
-        if (name && name.length === 2) {
-            return name[1];
+    /**
+     * Returns name of the function
+     * @param fn Function which name has to be returned
+     */
+    export function getFunctionName(fn: Function): string {
+        if (fn instanceof Function) {
+            let name: RegExpExecArray = /^function\s+([\w\$]+)\s*\(/.exec(fn.toString());
+            if (name && name.length === 2) {
+                return name[1];
+            }
         }
         return undefined;
     }
 
+    /**
+     * Returns the minimum usefull date (Thu Jan 01 1970 01:00:00 GMT+0100)
+     */
     export function minDate(): Date {
         return new Date(0);
     }
 
+    /**
+     * Returns the maximum date (Sat Sep 13 275760 02:00:00 GMT+0200)
+     */
     export function maxDate(): Date {
         return new Date(8640000000000000);
     }
 
-    export function sizeOf(object: Object): number {
+    /**
+     * Measures the deep size of object. Levels to be measured could be limited
+     * @param object Object to be measured
+     * @param levels Number of children objects to measure
+     * @param level Current level used internally by the function
+     */
+    export function sizeOf(object: any, levels?: number, level?: number): number {
 
-        let objects: Object[] = [object];
         let size: number = 0;
+        levels = levels || -1;
+        level = level || 0;
 
-        // loop over the objects
-        for (let i: number = 0; i < objects.length; i++) {
+        if (levels !== -1 && level > levels) {
+            return 0;
+        }
 
-            // determine the type of the object
-            switch (typeof objects[i]) {
+        // determine the type of the object
+        switch (typeof (object)) {
 
-                // the object is a boolean
-                case "boolean":
-                    size += 4;
-                    break;
+            // the object is a boolean
+            case "boolean":
+                size += 4;
+                break;
 
-                // the object is a number
-                case "number":
+            // the object is a number
+            case "number":
+                size += 8;
+                break;
+
+            // the object is a string
+            case "string":
+                size += 2 * (object as string).length;
+                break;
+
+            case "object":
+
+                // type Int8Array
+                if (object instanceof Int8Array) {
+                    size += object.byteLength;
+                } else {
+
+                // type Int16Array
+                if (object instanceof Int16Array) {
+                    size += object.byteLength;
+                } else {
+
+                // type Int32Array
+                if (object instanceof Int32Array) {
+                    size += object.byteLength;
+                } else {
+
+                // type common Array
+                if (object instanceof Array) {
+                    for (let i: number = 0; i < object.length; i++) {
+                        size += sizeOf(object[i], levels, level + 1);
+                    }
+                } else {
+
+                // type Date
+                if (object instanceof Array) {
                     size += 8;
-                    break;
+                } else {
 
-                // the object is a string
-                case "string":
-                    size += 2 * (objects[i] as string).length;
-                    break;
-
-                // the object is a generic object
-                case "object":
-
-                    // if the object is not an array, add the sizes of the keys
-                    if (Object.prototype.toString.call(objects[i]) !== "[object Array]") {
-                        for (var key in objects[i]) {
-                            if (object[key] !== undefined) {
-                                size += 2 * key.length;
+                    // type common Object but not function
+                    if (!(object instanceof Function)) {
+                        for (var key in object) {
+                            if (object.hasOwnProperty(key)) {
+                                size += sizeOf(object[key], levels, level);
                             }
                         }
                     }
+                }
 
-                    // loop over the keys
-                    for (var key in objects[i]) {
-                        if (objects[i][key] !== undefined) {
-                            // determine whether the value has already been processed
-                            let processed: boolean = false;
-                            for (let j: number = 0; j < objects.length; j++) {
-                                if (objects[j] === objects[j][key]) {
-                                    processed = true;
-                                    break;
-                                }
-                            }
-                            // queue the value to be processed if appropriate
-                            if (!processed) {
-                                objects.push(objects[i][key]);
-                            }
-                        }
-                    }
-
-            }
+                }}}}
 
         }
 
-        // return the calculated size
         return size;
+
     }
 
 

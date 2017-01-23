@@ -26,17 +26,7 @@ namespace ajs.resources {
     "use strict";
 
     /**
-     * Represents the browser session storage (persistent until explicitly cleared)
-     * The total amount of the data storable to the session storage is about 5MB
-     *
-     * updateResource method should be called after each resource data change
-     *
-     * Implementation is in the StorageBrowser, the storage provider is set here
-     *
-     * Items are stored under two keys in the storage:
-     * AJSRESOURCESINFO   - JSONed ICachedResource[] where data at all items is set to null
-     * AJSRESOURCES.%URL% - JSONed resource data where %URL% is URL of the data
-     * AJSADDTEST         - string of spaces for testing if it is possible to add / update resource
+     * Represents the browser session storage (persistent until window is closed)
      */
     export class StorageSession extends StorageBrowser {
 
@@ -44,17 +34,21 @@ namespace ajs.resources {
         /** Returns type of the storage */
         public get type(): STORAGE_TYPE { return STORAGE_TYPE.SESSION; }
 
-        /**
-         * Construct the StorageSession object
-         */
+        /** Constructs the StorageSession object */
         public constructor() {
+
             super();
+
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this);
+
             this._supported = window.localStorage !== undefined;
             if (this._supported) {
                 this._storageProvider = window.sessionStorage;
                 this._usedSpace = 0;
                 this._resources = this._getResourcesInfo();
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
         }
 
     }

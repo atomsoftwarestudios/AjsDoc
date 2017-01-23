@@ -1,4 +1,4 @@
-﻿/* *************************************************************************
+/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -29,11 +29,11 @@ IN THE SOFTWARE.
  * </p>
  * <p>
  * Navigator should be also used by the application to navigate over the page
- * (all a href links should be changed to
- * javascript:ajs.Framework.navigator.navigate("url").
- * Also, all button presses or another dynamic events leading to the navigaton
- * should use the same method in order to keep the browser state consistent
- * with the framework.
+ * so all a hrefs should be modified to
+ * &lt;a href="link" onclick="return ajs.Framework.navigator.linkClicked(event);"&gt;...
+ * Button presses or another dynamic events leading to the navigaton
+ * should use the #see {ajs.navigation.navigator.Navigate} Navigator method in
+ * order to keep the framework state consistent with the browser.
  * <p>
  * Navigator also takes care of redirections so if the path of the url being
  * navigated is found in registered redirectons table the redirection to the

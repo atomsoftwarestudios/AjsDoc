@@ -1,4 +1,4 @@
-/*! ************************************************************************
+/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -21,11 +21,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-/**
- * The main AJS namespace
- * Contains the static Framework class, Framework exceptions and Ajs
- * configuration template
- */
-namespace ajs {
+namespace ajs.resources {
+
     "use strict";
+
+    /** this should be Storage interface from the lib.d.ts but not possible to implement with ES5 */
+    export interface IStorageProvider {
+        readonly length: number;
+        clear(): void;
+        getItem(key: string): string | null;
+        key(index: number): string | null;
+        removeItem(key: string): void;
+        setItem(key: string, data: string): void;
+    }
+
 }

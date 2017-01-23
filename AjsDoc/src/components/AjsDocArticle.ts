@@ -163,6 +163,20 @@ namespace ajsdoc {
 
             if (key === "members" || key === "syntaxes") {
 
+                // Ignore everyithing from lib.d.ts
+                if (state.sources instanceof Array) {
+                    for (let i: number = 0; i < state.sources.length; i++) {
+                        if (state.sources[i].fileName.indexOf("lib.d.ts") !== -1) {
+                            return {
+                                filterApplied: true,
+                                key: key,
+                                state: state
+                            }
+                        }
+                    }
+                }
+
+
                 // Prepare new state values (Keep the original data untouched)
                 let newState: any = {
                     key: state.id.toString(),

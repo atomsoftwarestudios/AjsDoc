@@ -25,7 +25,12 @@ namespace ajs.resources {
 
     "use strict";
 
-    export class AjsStorage {
+    /**
+     * Abstract class to be implemented by the Storage for the reqiured resource storage
+     * <p>
+     * Currently extended by StorageBrowser (then by StorageMemory, StorageSession, StorageLocal)
+     */
+    export abstract class AjsStorage {
 
         /** Resources stored in the storage */
         protected _resources: ICachedResource[];
@@ -47,46 +52,31 @@ namespace ajs.resources {
 
         /**
          * Completely clears the storage
-         * MUST BE OVERRIDEN IN INHERITED CLASS
          */
-        public clear(): void {
-            throw new NotImplementedException();
-        }
+        public abstract clear();
 
         /**
          * Adds a new resource to the storage
-         * MUST BE OVERRIDEN IN INHERITED CLASS
          * @param resource Resource to be stored
          */
-        public addResource(resource: ICachedResource): void {
-            throw new NotImplementedException;
-        }
+        public abstract addResource(resource: ICachedResource);
 
         /**
          * Returns the resource according the URL passed
-         * MUST BE OVERRIDEN IN INHERITED CLASS
          * @param url URL of the resource to be returned
          */
-        public getResource(url: string): ICachedResource {
-            throw new NotImplementedException();
-        }
+        public abstract getResource(url: string): ICachedResource;
 
         /**
          * Updates cached resource
-         * MUST BE OVERRIDEN IN INHERITED CLASS
          * @param resource Resource to be updated
          */
-        public updateResource(resource: ICachedResource): void {
-            throw new NotImplementedException();
-        }
+        public abstract updateResource(resource: ICachedResource): void;
 
         /**
          * Remove the resource from the storage
-         * MUST BE OVERRIDEN IN INHERITED CLASS
          * @param url Url of the resource to be removed
          */
-        public removeResource(url: string): void {
-            throw new NotImplementedException;
-        }
+        public abstract removeResource(url: string): void;
     }
 }

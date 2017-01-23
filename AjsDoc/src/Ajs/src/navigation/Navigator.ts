@@ -28,14 +28,15 @@ namespace ajs.navigation {
     import Router = ajs.routing.Router;
 
     /**
-     * Navigator, suprisingly, is used for navigation throughout the Ajs Application
+     * Navigator is used for navigation throughout the Ajs Application
      * <p>
      * Navigator takes care of capturing the browser navigation events when
      * Forward / Back buttons are pressed.
      * </p>
      * <p>
      * Navigator should be also used by the application to navigate over it. All a
-     * href links should be changed to javascript:ajs.Framework.navigator.navigate("url").
+     * href links should be changed to
+     * &lt;<a href="link" onclick="return ajs.Framework.navigator.linkClicked(event);&gt;
      * Also, all button presses or another dynamic events leading to the navigaton
      * should use the same method in order to keep the browser state consistent
      * with the framework. Links in templates are replaced automatically to correct value
@@ -87,20 +88,20 @@ namespace ajs.navigation {
          */
         public constructor(router: Router, redirections?: IRedirection[]) {
 
-            ajs.debug.log(debug.LogType.Constructor, "ajs.navigation", this, "Registering " +
-                (redirections ? redirections.length : 0) + " redirections");
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.navigation", this,
+                "Registering redirections (" + (redirections ? redirections.length : 0) + ")", redirections);
 
             this._canNavigate = false;
             this._router = router;
             this._lastUrl = null;
             this._redirections = redirections || [];
 
-            ajs.debug.log(debug.LogType.DomAddListener, "ajs.navigation", this, "window.popstate");
+            ajs.debug.log(debug.LogType.DomAddListener, 0, "ajs.navigation", this, "window.popstate");
             window.addEventListener("popstate", (event: PopStateEvent) => { this._onPopState(event); });
-            ajs.debug.log(debug.LogType.DomAddListener, "ajs.navigation", this, "window.hashchange");
+            ajs.debug.log(debug.LogType.DomAddListener, 0, "ajs.navigation", this, "window.hashchange");
             window.addEventListener("hashchange", (event: HashChangeEvent) => { this._onHashChange(event); });
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
 
         }
 
@@ -111,14 +112,14 @@ namespace ajs.navigation {
          */
         public registerRedirection(path: string, target: string): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs.navigation", this, "Registering redirection: " + path + " : " + target);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this, "Registering redirection: " + path + " : " + target);
 
             this._redirections.push({
                 path: path,
                 target: target
             });
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
         }
 
         /**
@@ -126,8 +127,8 @@ namespace ajs.navigation {
          */
         public navigated(): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs.navigation", this);
-            ajs.debug.log(debug.LogType.Info, "ajs.navigation", this, "navigation event occured: " + window.location.href);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this, "navigation event occured: " + window.location.href);
 
             if (window.location.href !== this._lastUrl && this._canNavigate) {
                 this._lastUrl = window.location.href;
@@ -136,7 +137,7 @@ namespace ajs.navigation {
                 }
             }
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
         }
 
         /**
@@ -145,8 +146,8 @@ namespace ajs.navigation {
          */
         public navigate(url: string): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs.navigation", this);
-            ajs.debug.log(debug.LogType.Info, "ajs.navigation", this, "Navigating to: " + url);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this, "Navigating to: " + url);
 
             if (window.location.href !== url) {
                 this._lastUrl = url;
@@ -157,7 +158,29 @@ namespace ajs.navigation {
                 }
             }
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
+        }
+
+        /**
+         * Should be called every time the user click the link to navigate
+         * to appropriate location or open new tab / window
+         * @param event The click MouseEvent event
+         */
+        public linkClicked(event: MouseEvent): boolean {
+            if (!event.ctrlKey && !event.shiftKey && !event.altKey) {
+                try {
+                    let element: HTMLElement = event.srcElement as HTMLElement;
+                    while (element !== null && !(element instanceof HTMLAnchorElement)) {
+                        element = element.parentElement;
+                    }
+                    if (element instanceof HTMLAnchorElement) {
+                        this.navigate((element as HTMLAnchorElement).href);
+                    }
+                } finally {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /**
@@ -166,12 +189,12 @@ namespace ajs.navigation {
          */
         protected _onPopState(event: PopStateEvent): void {
 
-            ajs.debug.log(debug.LogType.Enter, "ajs.navigation", this);
-            ajs.debug.log(debug.LogType.Info, "ajs.navigation", this, "window.popstate event occured");
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this, "window.popstate event occured");
 
             this.navigated();
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
         }
 
         /**
@@ -179,12 +202,12 @@ namespace ajs.navigation {
          * @param event Event data passed from the browser
          */
         protected _onHashChange(event: HashChangeEvent): void {
-            ajs.debug.log(debug.LogType.Enter, "ajs.navigation", this);
-            ajs.debug.log(debug.LogType.Info, "ajs.navigation", this, "window.hashchange event occured");
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this, "window.hashchange event occured");
 
             this.navigated();
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
         }
 
         /**
@@ -193,8 +216,8 @@ namespace ajs.navigation {
          * @returns true if redirection was performed or false if the ure was not found in registered paths for redirection
          */
         protected _redirect(url: string): boolean {
-            ajs.debug.log(debug.LogType.Enter, "ajs.navigation", this);
-            ajs.debug.log(debug.LogType.Info, "ajs.navigation", this, "Redirecting to " + url);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this, "Redirecting to " + url);
 
             let redirected: boolean = false;
 
@@ -207,7 +230,7 @@ namespace ajs.navigation {
                 }
             }
 
-            ajs.debug.log(debug.LogType.Exit, "ajs.navigation", this);
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
 
             return redirected;
 

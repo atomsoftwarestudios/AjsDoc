@@ -1,10 +1,15 @@
 <h1>Offline Application Support</h1>
 
 <p>
-    Offline application support was one of main requiremets the framework has to fullfil. The support is currently based on the Application Cache browser feature,
-    what is going to be deprecated and removed from web browsers. Once this will happen the framework will switch to Service Workers technology, what in the end
-    will have no impact to existing applications usig AJS as this change will be transparent to them (of course only if application will be properly designed and
-    will follow AJS best practices).
+    Offline application support was one of main requiremets the framework has to fullfil. The support is currently based on the Application Cache browser feature
+    and Ajs Framework <a href="/04-How-it-works/03-Boot-Process" onclick="return ajs.Framework.navigator.linkClicked(event)">boot process control</a> and
+    <a href="/04-How-it-works/05-Resource-Management-and-Caching" onclick="return ajs.Framework.navigator.linkClicked(event)">resource management.</a>
+</p>
+
+<p>
+    Application Cache feature is deprecated and will be removed from web browsers. Once this will happen the framework will switch to Service Workers technology, what
+    in the end will have no impact to existing applications usig AJS as this change will be transparent to them (of course only if application will be properly designed and
+    will follow Ajs Application Development practices).
 </p>
 
 <p>
@@ -35,29 +40,16 @@
     to the root of the web - /). All resources requested in the offline mode are then handled as the index.html file (even if request for image is made).
     In order to be possible to recognize the applicaion is oflline and cached resource should be returned (instead of index.html) the resource loader inspects
     the resource content returned by the browser and is checking for &lt;!--offline--&gt; tag in first 50 bytes of loaded resource. If the offline marker is found
-    the appropriate the resource loader returns 304 - Not modified instead of the resource loaded and resource manager uses the resource from the cache. So this means
-    the index.html file has to contain this offline marker the in order the application work properly. The index.html should look like the following example:
+    the resource loader returns 304 - Not modified and Resource Manager returns the appropriate resource from the cache instead of returning the resource provided
+    by the browser application cache (index.html). It means the index.html file has to contain this offline marker the in order the application work properly.
+    The index.html should look like the following example:
     
-    <pre class="ajsDocExample"><code class="html">&lt;!DOCTYPE html&gt;
+<pre class="ajsDocExample"><code class="html">&lt;!DOCTYPE html&gt;
 &lt;!--offline--&gt;
 &lt;html lang="en" manifest="/cache.manifest"&gt;
-    &lt;head&gt;
-        &lt;meta charset="utf-8" /&gt;
-        &lt;meta name="viewport" content="width=device-width, initial-scale=1; minimum-scale=1; maximum-scale=1; user-scalable=no"&gt;
-        &lt;meta name="apple-mobile-web-app-capable" content="yes" /&gt;
-        &lt;meta name="theme-color" content="#ffffff"&gt;
-        &lt;link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"&gt;
-        &lt;link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"&gt;
-        &lt;link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"&gt;
-        &lt;link rel="manifest" href="/manifest.json"&gt;
-        &lt;link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"&gt;
-        &lt;title&gt;AjsDoc - The Ajs Framework Documentation&lt;/title&gt;
-        &lt;script src="/js/ajs.boot.config.js"&gt;&lt;/script&gt;
-        &lt;script src="/js/ajs.js"&gt;&lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-    &lt;/body&gt;
-&lt;/html&gt;&lt;/code&gt;</code></pre>
+...
+&lt;/html&gt;
+</code></pre>
 </p>
 
 <p>
