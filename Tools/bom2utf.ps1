@@ -1,4 +1,4 @@
-﻿Function Write-Utf8([string] $path, [string] $filter='*.*')
+Function Write-Utf8([string] $path, [string] $filter='*.*')
 {
     [IO.SearchOption] $option = [IO.SearchOption]::AllDirectories;
     [String[]] $files = [IO.Directory]::GetFiles((Get-Item $path).FullName, $filter, $option);
@@ -20,4 +20,4 @@
     }
 }
 
-Write-Utf8 'D:\Documents\Visual Studio 2015\Projects\AjsDoc'
+Write-Utf8 '<replace by path to the solution folder>'
