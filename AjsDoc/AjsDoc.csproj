@@ -75,7 +75,6 @@
     <Content Include="static\appresources.json" />
     <Content Include="tsconfig.common.json" />
     <Content Include="tsconfig.Debug.json" />
-    <Content Include="tsconfig.json" />
     <Content Include="tsconfig.Release.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

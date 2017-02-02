@@ -29,9 +29,6 @@
     <Content Include="tsconfig.Debug.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="tsconfig.json" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="tsconfig.Release.json" />
   </ItemGroup>
   <ItemGroup>

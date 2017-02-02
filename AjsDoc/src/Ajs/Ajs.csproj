@@ -139,7 +139,6 @@
   <ItemGroup>
     <Content Include="changelog.txt" />
     <Content Include="tsconfig.Release.json" />
-    <Content Include="tsconfig.json" />
     <Content Include="tsconfig.common.json" />
     <None Include="tsconfig.Debug.json" />
     <Content Include="license.txt" />
