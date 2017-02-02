@@ -1,1 +1,1 @@
-{ "extends" : "./tsconfig.Debug.json" } 
+{ "extends" : "./tsconfig.Release.json" } 
