@@ -32,9 +32,7 @@ Please, report all issues with the compilation and running here on GitHub.
 # Usage
 
 ```
-Please note the implementation of templates for all data types is not currently complete
-and probably  will never be as the primary purpose is to document the Ajs and currently
-only the statements used there are in development and testing. Feel free to contibute.
+Please note the implementation of template(s) for all types is not currently complete. Feel free to contibute.
 ```
 
 The JSON data grabbed from the TypeDoc must be provided. The JSDoc code documentation can contain HTML tags to format the output as desired.
