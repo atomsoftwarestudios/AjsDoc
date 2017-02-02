@@ -22,15 +22,24 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="changelog.txt" />
+    <Content Include="cache.manifest" />
+    <None Include="changelog.txt" />
+    <Content Include="android-chrome-192x192.png" />
+    <Content Include="apple-touch-icon.png" />
+    <Content Include="browserconfig.xml" />
+    <Content Include="favicon-16x16.png" />
+    <Content Include="favicon-32x32.png" />
+    <Content Include="favicon.ico" />
     <Content Include="index.html" />
     <Content Include="js\ajs.boot.config.js" />
     <Content Include="js\ajs.js" />
     <Content Include="js\ajs.lib.js" />
     <Content Include="js\ajsdoc.lib.js" />
     <Content Include="js\ajsdocbrowser.js" />
-    <Content Include="license.txt" />
+    <None Include="license.txt" />
+    <Content Include="mstile-150x150.png" />
     <Content Include="res\img\atom-logo.gif" />
+    <Content Include="safari-pinned-tab.svg" />
     <Content Include="static\charts\appcache.svg" />
     <Content Include="static\content\03 Visual Studio Solution Setup.html" />
     <Content Include="static\content\04 Web Server Requirements and Configuration.html" />
@@ -74,6 +83,7 @@
     <Content Include="static\content\05 How it works.html" />
     <Content Include="static\toc.json" />
     <Content Include="static\appresources.json" />
+    <Content Include="manifest.json" />
     <None Include="WebDeploy.pubxml" />
     <None Include="tsconfig.common.json">
       <DependentUpon>tsconfig.json</DependentUpon>
