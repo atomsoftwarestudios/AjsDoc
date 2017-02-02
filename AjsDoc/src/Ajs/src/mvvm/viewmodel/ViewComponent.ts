@@ -173,6 +173,31 @@ namespace ajs.mvvm.viewmodel {
             return true;
         }
 
+        protected _domCleanup(element: HTMLElement): void {
+            let e: IComponentElement = element as IComponentElement;
+            if (e.ajsComponent) {
+                e.ajsComponent = null;
+                delete (e.ajsComponent);
+            }
+            if (e.ajsEventListeners) {
+                e.ajsEventListeners = null;
+                delete (e.ajsEventListeners)
+            }
+            if (e.ajsOwnerComponent) {
+                e.ajsEventListeners = null;
+                delete (e.ajsOwnerComponent);
+            }
+            if (e.ajsSkipUpdate) {
+                e.ajsSkipUpdate = null;
+                delete (e.ajsSkipUpdate);
+            }
+            for (let i: number = 0; i < element.children.length; i++) {
+                if (e.children.item(i) instanceof HTMLElement) {
+                    this._domCleanup(e.children.item(i) as HTMLElement);
+                }
+            }
+        }
+
         protected _destroy(): void {
 
             // unregister all event listeners
@@ -184,6 +209,7 @@ namespace ajs.mvvm.viewmodel {
                     );
                 }
             }
+            this._domEventListeners = [];
 
             // remove all children components
             this.clearState(false);
@@ -193,7 +219,9 @@ namespace ajs.mvvm.viewmodel {
 
             // if the component was rendered, remove it from the DOM tree
             if (this.ajsElement !== undefined && this.ajsElement !== null) {
+                this._domCleanup(this.ajsElement);
                 this.ajsElement.parentElement.removeChild(this.ajsElement);
+                this.ajsElement = null;
             }
 
             // unregister component instance from ViewComponent manager
@@ -1001,6 +1029,9 @@ namespace ajs.mvvm.viewmodel {
 
                 this._ajsTransitionOldElement.parentNode.removeChild(this._ajsTransitionOldElement);
             }
+
+            this._ajsTransitionOldElement = null;
+            this._ajsTransitionNewElement = null;
 
             /*if (this._ajsView.preventStateChange.indexOf(this) !== -1) {
                 this._ajsView.preventStateChange.splice(

@@ -471,6 +471,7 @@ namespace ajs.mvvm.view {
 
                         // remove any remaining nodes
                         while (source.childNodes.length < target.childNodes.length) {
+                            this._domCleanup(target.childNodes.item(source.childNodes.length));
                             target.removeChild(target.childNodes.item(source.childNodes.length));
                         }
                     }
@@ -484,6 +485,31 @@ namespace ajs.mvvm.view {
                 }
             }
 
+        }
+
+        protected _domCleanup(node: Node): void {
+            if (node instanceof HTMLElement) {
+                let e: viewmodel.IComponentElement = node;
+                if (e.ajsComponent) {
+                    e.ajsComponent = null;
+                    delete (e.ajsComponent);
+                }
+                if (e.ajsEventListeners) {
+                    e.ajsEventListeners = null;
+                    delete (e.ajsEventListeners)
+                }
+                if (e.ajsOwnerComponent) {
+                    e.ajsEventListeners = null;
+                    delete (e.ajsOwnerComponent);
+                }
+                if (e.ajsSkipUpdate) {
+                    e.ajsSkipUpdate = null;
+                    delete (e.ajsSkipUpdate);
+                }
+            }
+            for (let i: number = 0; i < node.childNodes.length; i++) {
+                this._domCleanup(node.childNodes.item(i));
+            }
         }
 
         protected _copyComponentElementProperties(source: Node, target: Node): void {

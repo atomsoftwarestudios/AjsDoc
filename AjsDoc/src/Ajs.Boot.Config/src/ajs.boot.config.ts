@@ -54,10 +54,10 @@ namespace ajs.boot {
                 // to manually control the console use the browser console 
                 // ajs.debug.console.show()
                 // ajs.debug.console.hide()
-                showOnBootDelay: 20000,
+                showOnBootDelay: 0,
                 loggerConfig: {
                     // logging enabled
-                    enabled: true,
+                    enabled: false,
                     // logging of the log records to the browser console
                     logDataToConsole: false,
                     // type of records to be logged
