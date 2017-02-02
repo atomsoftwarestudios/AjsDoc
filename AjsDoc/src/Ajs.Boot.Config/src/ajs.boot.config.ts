@@ -54,7 +54,7 @@ namespace ajs.boot {
                 // to manually control the console use the browser console 
                 // ajs.debug.console.show()
                 // ajs.debug.console.hide()
-                showOnBootDelay: 2000,
+                showOnBootDelay: 20000,
                 loggerConfig: {
                     // logging enabled
                     enabled: true,

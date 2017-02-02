@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cache.manifest" />
+    <None Include="WebDeploy-AjsFw.pubxml" />
     <None Include="changelog.txt" />
     <Content Include="android-chrome-192x192.png" />
     <Content Include="apple-touch-icon.png" />
@@ -84,7 +85,7 @@
     <Content Include="static\toc.json" />
     <Content Include="static\appresources.json" />
     <Content Include="manifest.json" />
-    <None Include="WebDeploy.pubxml" />
+    <None Include="WebDeploy-AjsDoc.pubxml" />
     <None Include="tsconfig.common.json">
       <DependentUpon>tsconfig.json</DependentUpon>
     </None>
@@ -132,9 +133,9 @@
     <TypeScriptCompile Include="src\program\INode.ts" />
     <TypeScriptCompile Include="src\program\IType.ts" />
     <Content Include="static\examples\ajs.boot.config.ts" />
-    <TypeScriptCompile Include="static\examples\viewComponent_placeholder.ts" />
+    <Content Include="static\examples\viewComponent_placeholder.ts" />
     <Content Include="static\templates\ajsdoc.css" />
-    <None Include="static\templates.json" />
+    <Content Include="static\templates.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="src\AjsDocLib\AjsDocLib.csproj">
