@@ -989,7 +989,7 @@ namespace ajs.resources {
                 if (resource.storage !== null) {
 
                     ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
-                        "Loaded resource is requested to be cached. Caching/Updating.");
+                        "Loaded resource is requested to be cached. Caching/Updating." + resource.url);
 
                     let cachedResource: ICachedResource = {
                         url: resource.url,
@@ -1008,10 +1008,10 @@ namespace ajs.resources {
             } else {
                 // not modified / failed (the resource loaded from cache is already set in the resource parameter)
                 if (resource.cached) {
-                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Not modified, using cached resource");
+                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Not modified, using cached resource" + resource.url);
                     loaded = true;
                 } else {
-                    ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this, "Resource failed to load and is not cached");
+                    ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this, "Resource failed to load and is not cached " + resource.url);
                     loaded = false;
                 }
             }
