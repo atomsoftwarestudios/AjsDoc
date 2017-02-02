@@ -15,7 +15,7 @@ AjsDoc/tsconfig.json
 AjsDoc/src/Ajs/tsconfig.json
 AjsDoc/src/AjsDocLib/tsconfig.json
 AjsDoc/src/AjsLib/tsconfig.json
-AjsDoc/AjsDoc/cache.manifest
+AjsDoc/cache.manifest
 
 # User-specific files
 *.suo
