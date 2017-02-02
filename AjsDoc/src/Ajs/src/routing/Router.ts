@@ -93,7 +93,7 @@ namespace ajs.routing {
                         this._view.rootViewComponentName = viewComponentName;
 
                     } else {
-                        ajs.debug.log(debug.LogType.Info, 0, "ajs.routing", this, "Notyfying component the navigation occured");
+                        ajs.debug.log(debug.LogType.Info, 0, "ajs.routing", this, "Notifying component the navigation occured");
                         this._view.onNavigate();
                     }
 
@@ -157,6 +157,7 @@ namespace ajs.routing {
             }
 
             ajs.debug.log(debug.LogType.Warning, 0, "ajs.routing", this, "Route not found");
+
             ajs.debug.log(debug.LogType.Exit, 0, "ajs.routing", this);
 
             return null;

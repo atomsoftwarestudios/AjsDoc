@@ -27,134 +27,129 @@ namespace ajsdoc {
      */
     export class AjsDocBrowser extends ajs.app.Application {
 
+        protected _config: IAjsDocBrowserConfig;
+
         /**
          * Starts application intitalization by loading template list file defined in the config
          */
         public initialize(): void {
 
-            config = this._config as IAjsDocBrowserConfig;
+            ajsdoc.config = this._config;
+            this._loadTemplatesList();
 
-            ajs.Framework.resourceManager.load(
-                (successfull: boolean) => {
-                    this._templateListLoaded(successfull);
-                },
-                config.templateList,
-                null,
-                config.storageType,
-                ajs.resources.CACHE_POLICY.PERMANENT
-            );
         }
 
-        protected _templateListLoaded(successfull: boolean): void {
-            if (successfull) {
-                this._loadTemplates();
-            } else {
-                throw new Error("Failed to load template list.");
-            }
+        /**
+         * Loads a list of templates to be loaded and continues with loadTemplates
+         */
+        protected _loadTemplatesList(): void {
+
+            // load template list (JSON file)
+            let templateList: Promise<ajs.resources.IResource> = ajs.Framework.resourceManager.getResource(
+                this._config.templateList,
+                this._config.storageType,
+                ajs.resources.CACHE_POLICY.PERMANENT,
+                this._config.templateLoadingPreference
+            );
+
+            templateList.
+                // on success parse the templates list and load templates
+                then((resource: ajs.resources.IResource) => {
+                    this._loadTemplates(JSON.parse(resource.data));
+                }).
+                // otherwise crash
+                catch((reason?: any) => {
+                    throw new Error("Failed to load template list." + reason);
+                });
         }
 
         /**
          * Initiate loading of templates defined in the template list
          */
-        protected _loadTemplates(): void {
+        protected _loadTemplates(templateUrls: string[]): void {
 
-            // get list of templates to be loaded
-            let res: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
-                config.templateList,
-                config.storageType
+            let templatePromise: Promise<ajs.templating.Template[]> = ajs.Framework.templateManager.loadTemplates(
+                templateUrls,
+                config.storageType,
+                ajs.resources.CACHE_POLICY.PERMANENT,
+                this._config.templateLoadingPreference
             );
 
-            let templates: string[] = JSON.parse(res.data);
-
-            ajs.Framework.templateManager.loadTemplateFiles(
-                (successfull: boolean) => {
-                    this._templatesLoaded(successfull);
-                },
-                templates,
-                config.storageType
+            templatePromise.then(
+                (templates: ajs.templating.Template[]) => {
+                    this._loadResourcesList();
+                }
+            ).catch(
+                (reason: any) => {
+                    throw new Error("Failed to load templates");
+                }
             );
-        }
 
-        /**
-         * Checks if loading of templates was successful and continues by loading of
-         * the resource list file
-         * @param successfull Information from template manager if templates were loaded successfully
-         */
-        protected _templatesLoaded(successfull: boolean): void {
-            if (successfull) {
-                this._loadResourceList();
-            } else {
-                throw new Error("Failed to load templates.");
-            }
         }
 
         /**
          * Initiates loading of the resources list file
          */
-        protected _loadResourceList(): void {
+        protected _loadResourcesList(): void {
 
-            ajs.Framework.resourceManager.load(
-                (successfull: boolean) => {
-                    this._resourcesConfigLoaded(successfull);
-                },
-                config.resourceList,
-                null,
-                config.storageType,
-                ajs.resources.CACHE_POLICY.PERMANENT
+            // load template list (JSON file)
+            let resourceList: Promise<ajs.resources.IResource> = ajs.Framework.resourceManager.getResource(
+                this._config.resourceList,
+                this._config.storageType,
+                ajs.resources.CACHE_POLICY.PERMANENT,
+                this._config.resourceLoadingPreference
             );
+
+            resourceList.
+                // on success parse the templates list and load templates
+                then((resource: ajs.resources.IResource) => {
+                    this._loadResources(JSON.parse(resource.data));
+                }).
+                // otherwise crash
+                catch((reason?: any) => {
+                    throw new Error("Failed to load resources configuration");
+                });
 
         }
 
-        /**
-         * Checks if loading of the resources file was successfull
-         * @param successfull Information from resource manager if resources list was loaded successfully
-         */
-        protected _resourcesConfigLoaded(successfull: boolean): void {
-            if (successfull) {
-                this._loadResources();
-            } else {
-                throw new Error("Failed to load resources configuration");
-            }
-        }
 
         /**
-         * Initiates loading of libraries (config file) and resources specified in the resources list file
+         * Initiates loading of resources specified in the resources list file + data
          */
-        protected _loadResources(): void {
+        protected _loadResources(resourceUrls: string[]): void {
 
-            // get list of resources to be loaded
-            let res: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
-                config.resourceList,
-                config.storageType
+            resourceUrls.push(config.dataSources.program);
+            resourceUrls.push(config.dataSources.toc);
+
+            let resources: Promise<ajs.resources.IResource>[] = resourceUrls.map(
+
+                (resourceUrl: string): Promise<ajs.resources.IResource> => {
+                    return ajs.Framework.resourceManager.getResource(
+                        resourceUrl,
+                        (this._config as IAjsDocBrowserConfig).storageType,
+                        ajs.resources.CACHE_POLICY.PERMANENT,
+                        this._config.resourceLoadingPreference
+                    );
+                }
+
             );
 
-            resources = config.libraries.concat(JSON.parse(res.data));
-            resources.push(config.dataSources.program);
-            resources.push(config.dataSources.toc);
+            // void promise, don't store/return, just resolve
+            /* tslint:disable */
+            new Promise<void>(
+                async (resolve: () => void, reject: (reason?: any) => void) => {
 
-            // load resources
-            ajs.Framework.resourceManager.loadMultiple(
-                (successfull: boolean) => {
-                    this._resourcesLoaded(successfull);
-                },
-                resources,
-                null,
-                config.storageType,
-                ajs.resources.CACHE_POLICY.PERMANENT
+                    try {
+                        await Promise.all(resources);
+                    } catch (e) {
+                        throw new Error("Failed to load templates");
+                    }
+
+                    this._initDone();
+                }
             );
+            /* tslint:enable */
 
-        }
-
-        /**
-         * Check if loading of all resources was sucessfull and finishes initialization of the application if so
-         * @param successfull
-         */
-        protected _resourcesLoaded(successfull: Boolean): void {
-            if (successfull) {
-                this._initDone();
-            } else {
-                throw new Error("Failed to load resources.");
-            }
         }
 
         /**

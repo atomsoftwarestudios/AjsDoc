@@ -23,42 +23,45 @@
     <br />
     <br />
 
+    <div>
+        <strong>
+            Please note the AjsDoc is the example application for the Ajs framework so it is available in offline mode too. It currently consumes about 3 megabytes of the application cache
+            for all (unoptimized) resources it is using so if you don't want to have these data stored in your browser you have to clean the application cache using developer tools or the
+            JavaScript console ( localStorage.clean() ). It is also using the Application Cache feature.             
+        </strong>
+    </div>
+
+    <br />
+    <br />
+
     <p>
-        AJS (pronounce /aɪs/) is JavaScript Single Page Application framework written in TypeScript focused to the rapid web browser application development. The resulting code
-        is still pure JavaScript (current target is ES5) so its features and possibilities were taken to the account during the development.
+        AJS (pronounce /aɪs/) is JavaScript MVVM Single Page Application framework written in TypeScript focused to the rapid web browser application development, team role separation, offline
+        web applications and great user experience. It is developed with TypeScript (currently 2.5.1 with transpillation target ECMA5 and focusing standard web browsers.
     </p>
 
     <p>
-        As it was required to support older versions of web browsers (mainly ie 10+, because Edge is still not fully completed) there are no features like
-        Promises or Service Workers used at this time but it should not take long to update the framework to support these technologies.
+        The code is written in the C# way so classes and interfaces are split to separate files and the design of the code overall is similar to the C#. Also, the MVVM concept has its inspiration
+        in "Windows Forms" or the Borland "Delphi" concept (its probably more similiar to WPF as it is using separate language for template definition) except the data binding which is not supported
+        now and the view state is managed in the React way. Ofcourse, everything is adopted to the Web environment so all the Web and Browser functionalities known to web users will stay the same.
     </p>
 
     <p>
-        The code was designed to be as simple as possible so no special features of the TypeScript language, like decorators, were not used. Also, there is no need to externally
-        inject anything to anywhere or load external libraries unless you specifically need it.
+        Ajs currently does not support any "dependency" loader such as require.js so the dependency and initialization of these libraries must be done manually according the documentation. Of course,
+        other methods, like web pack, can be used to for the JavaScript single packed library preparation.
     </p>
 
     <p>
-        The data binding is not and will not be supported directly by the framework as there is no direct support for it in the JavaScript (it is still necessary to anotate the
-        data with getters and setters what would not be that bad as need of converting arrays to object structures in order to be possible to monitor its changes. Unfortunately,
-        its too soon to use ES6 proxies.
+        Set of development tools will grow as there will be need for it. Everything will be focused on the Visual Studio and MS Build and the Windows platform but another fork to support other
+        development tools, IDEs and platforms can be maintained by the community.
     </p>
 
-    <p>
-        The ouptut code is not optimized as author wish, because although the TypeScript compiler is great it is still not ideal, but hopefully we can live with it. Also, the
-        TypeScript code itself is not optimized for maximum performance now even the attention was paid to it.
-    </p>
-
-    <p>
-        Set of development tools will grow as there will be need for it (ie. plans for the preprocessor allowing #IFDEFS exists, but it will take a while to be developed). It will be
-        mainly focused on the Visual Studio and MS Build so if you would like to have also other enviroments you have to contribute ;)
-    </p>
-
+    <!--
     <h2>What's new</h2>
 
     <p>
-        Everything. And still not complete.
+        As this is the initial release of the framework, everything is new.
     </p>
+    -->
 
     <h2>Features</h2>
 

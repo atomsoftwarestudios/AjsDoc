@@ -77,8 +77,10 @@ namespace ajsdoc {
             }
         }
 
-        protected _initialize(): void {
+        protected _initialize(): boolean {
             this.showMenu();
+
+            return true;
         }
 
         protected _finalize(): void {

@@ -21,13 +21,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.resources {
+namespace ajs.ui {
 
     "use strict";
 
-    /** Called when the resource finished loading even when the server request failed */
-    export interface IResourceLoadEndCallback {
-        (loaded: boolean, url: string, resource: IResource, userData?: any): void;
+    export declare class ProgressBar {
+
+        protected _total: number;
+        protected _current: number;
+        protected _update(): void;
+        public resourceLoading(label: string): void;
+        public resourceLoaded(e: string): void;
+
     }
 
 }

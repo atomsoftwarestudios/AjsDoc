@@ -25,7 +25,7 @@ namespace ajs.resources {
 
     "use strict";
 
-    /** Information about resource types and its extensions. Defined in the ResourceManager */
+    /** Information about resource types and its extensions. Defined as a constant in the ResourceManager */
     export interface IResourceTypes {
         /** Script resource type extensions (.js) */
         script: string[];

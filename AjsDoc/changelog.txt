@@ -38,10 +38,10 @@ Implemented features
 
 - HTML Code (both, static & code documentation)
 	- Supported tags:
-		#example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
+		# example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
 						  are properly replaced)
 						- Must be on the separate line
-		#chart url      - Includes svg chart to the HTML code
+		# chart url      - Includes svg chart to the HTML code
 						- Must be on the separate line
 
 - Ajs Feature Examples (directly in the code)
@@ -57,6 +57,10 @@ Implemented features
     - Session state management
 	- Models for the static JSON data
     - Debugging tools
+
+- Tools
+    - same tools as ajs
+    - tocgen.ps1 (powershell) -> generator of the toc.json file from the folder structure of the static html documents
 
 --------------------------------------------------------------------------------------------------------------------------------
 Change log
@@ -79,6 +83,11 @@ Change log
     - Members of extended lib.d.ts classes are not included anymore
     - Fixed problem with menu item unique keys
     - Fixed menu button disappearing when dialog frame was not shown
+
+- Patch #04/2017-02-02 FN
+    - slight documentation changes
+    - css's updated to support older browsers (problem with linear gradient on older chromiums)
+    - 3rd party libinit created / hoghlight movet to 3rd party libs project
 
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests
@@ -115,6 +124,16 @@ Accepted issues
 
 #05/201701
 - It seems highlighter is not started sometimes
+
+#01/201702
+- Typedoc does not work with --lib and Promises
+- Typedoc has a problem with tsconfig "extends" option
+
+#02/201702
+- IE10 has some problem with including charts
+
+#03/201703
+- tocgen tool has a problem when there is just single file in the folder
 
 --------------------------------------------------------------------------------------------------------------------------------
 Untagged ToDo's & Ideas

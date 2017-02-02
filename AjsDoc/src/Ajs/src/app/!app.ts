@@ -39,7 +39,9 @@ IN THE SOFTWARE.
 namespace ajs.app {
 
     "use strict";
-    
+
+    // following declarations / definitions are here to make sure the typedoc & ajsdoc browser works well
+
     /**
      * this is signature 1
      * @param test
@@ -107,7 +109,7 @@ namespace ajs.app {
     /**
      * This is interface 3
      */
-    interface Interface3{
+    interface Interface3 {
         [index: number]: string;
     }
 

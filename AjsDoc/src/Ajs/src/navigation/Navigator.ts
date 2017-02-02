@@ -88,7 +88,9 @@ namespace ajs.navigation {
          */
         public constructor(router: Router, redirections?: IRedirection[]) {
 
-            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.navigation", this,
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.navigation", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this,
                 "Registering redirections (" + (redirections ? redirections.length : 0) + ")", redirections);
 
             this._canNavigate = false;
@@ -112,7 +114,10 @@ namespace ajs.navigation {
          */
         public registerRedirection(path: string, target: string): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this, "Registering redirection: " + path + " : " + target);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this,
+                "Registering redirection (" + path + " : " + target + ")");
 
             this._redirections.push({
                 path: path,
@@ -128,7 +133,8 @@ namespace ajs.navigation {
         public navigated(): void {
 
             ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this, "navigation event occured: " + window.location.href);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this, "Navigation event occured: " + window.location.href);
 
             if (window.location.href !== this._lastUrl && this._canNavigate) {
                 this._lastUrl = window.location.href;
@@ -147,6 +153,7 @@ namespace ajs.navigation {
         public navigate(url: string): void {
 
             ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
+
             ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this, "Navigating to: " + url);
 
             if (window.location.href !== url) {
@@ -167,19 +174,29 @@ namespace ajs.navigation {
          * @param event The click MouseEvent event
          */
         public linkClicked(event: MouseEvent): boolean {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.navigation", this);
+
             if (!event.ctrlKey && !event.shiftKey && !event.altKey) {
                 try {
-                    let element: HTMLElement = event.srcElement as HTMLElement;
+                    let element: HTMLElement = event.target as HTMLElement;
                     while (element !== null && !(element instanceof HTMLAnchorElement)) {
                         element = element.parentElement;
                     }
                     if (element instanceof HTMLAnchorElement) {
+
+                        ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this,
+                            "Link clicked: " + (element as HTMLAnchorElement).href, element);
+
                         this.navigate((element as HTMLAnchorElement).href);
                     }
                 } finally {
+                    ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
                     return false;
                 }
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
             return true;
         }
 

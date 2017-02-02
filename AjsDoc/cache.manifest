@@ -1,16 +1,17 @@
 CACHE MANIFEST
-\index.html
-\js\ajs.js
-\js\ajs.boot.config.js
-\favicon.ico
-\favicon-16x16.png
-\favicon-32x32.png
-\android-chrome-192x192.png
-\apple-touch-icon.png
-\mstile-150x150.png
-\safari-pinned-tab.svg
-\manifest.json
-\browserconfig.xml
+/index.html
+/js/ajs.js
+/js/ajs.lib.js
+/js/ajs.boot.config.js
+/favicon.ico
+/favicon-16x16.png
+/favicon-32x32.png
+/android-chrome-192x192.png
+/apple-touch-icon.png
+/mstile-150x150.png
+/safari-pinned-tab.svg
+/manifest.json
+/browserconfig.xml
 
 NETWORK:
 *
@@ -18,5 +19,5 @@ NETWORK:
 FALLBACK:
 / /
 
-# HASH: 4F5F6042EB63E42750DFCA8135152A92
-# LASTCHANGE: 01/24/2017 00:01:21
+# HASH: 0B01E8B7913234D1963512DEE7EDF4BF
+# LASTCHANGE: 02/02/2017 02:04:52

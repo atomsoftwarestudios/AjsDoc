@@ -21,7 +21,7 @@
     height: 108px;
     margin: 0.5em;
     background-size: cover;
-    background-image: resource('/res/img/ajs-logo.png');
+    background-image: url('/res/img/ajs-logo.png');
 }
 
 .ajsDocArticleContent .atom-logo {
@@ -30,14 +30,14 @@
     height: 85px;
     margin: 0.5em;
     background-size: cover;
-    background-image: resource('/res/img/atom-logo.png');
+    background-image: url('/res/img/atom-logo.png');
 }
 
 .ajsDocArticleContent .edge {
     width: 24px;
     height: 24px;
     padding: 0.2em;
-    background-image: resource('/res/img/edge.png');
+    background-image: url('/res/img/edge.png');
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -46,7 +46,7 @@
     width: 24px;
     height: 24px;
     padding: 0.2em;
-    background-image: resource('/res/img/firefox.png');
+    background-image: url('/res/img/firefox.png');
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -55,7 +55,7 @@
     width: 24px;
     height: 24px;
     padding: 0.2em;
-    background-image: resource('/res/img/chrome.png');
+    background-image: url('/res/img/chrome.png');
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -64,7 +64,7 @@
     width: 24px;
     height: 24px;
     padding: 0.2em;
-    background-image: resource('/res/img/ie.png');
+    background-image: url('/res/img/ie.png');
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -73,7 +73,7 @@
     width: 24px;
     height: 24px;
     padding: 0.2em;
-    background-image: resource('/res/img/opera.png');
+    background-image: url('/res/img/opera.png');
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -82,12 +82,13 @@
     width: 24px;
     height: 24px;
     padding: 0.2em;
-    background-image: resource('/res/img/safari.png');
+    background-image: url('/res/img/safari.png');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .ajsDocArticleContent .feature {
+    background-color: #EAF4F8;
     background: linear-gradient(-3deg, #FAFCFD, #EAF4F8, #FAFCFD);
     margin-bottom: 0.5em;
     padding: 0.5em;

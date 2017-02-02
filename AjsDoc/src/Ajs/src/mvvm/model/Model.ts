@@ -23,6 +23,8 @@ IN THE SOFTWARE.
 
 namespace ajs.mvvm.model {
 
+    "use strict";
+
     export class Model {
 
         /** Hold reference to the model manager */
@@ -46,7 +48,7 @@ namespace ajs.mvvm.model {
         }
 
         /** Must be overriden in the inherited class */
-        protected _initialize() {
+        protected _initialize(): void {
             throw new NotImplementedException();
         }
 
@@ -60,7 +62,7 @@ namespace ajs.mvvm.model {
             if (!this._initialized) {
                 // if not initialized, wait for it up to 20 seconds (80 x 250ms)
                 let timeout: number = 80;
-                let w8timer = setInterval(
+                let w8timer: number = setInterval(
                     () => {
                         // if loaded, get menu and notify about it
                         if (this._initialized) {

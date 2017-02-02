@@ -91,28 +91,34 @@ namespace ajsdoc {
 
         protected _initialize(): void {
 
-            let res: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
+            let res: Promise<ajs.resources.IResource> = ajs.Framework.resourceManager.getResource(
                 config.dataSources.program,
-                config.storageType
+                config.storageType,
+                ajs.resources.CACHE_POLICY.PERMANENT,
+                ajs.resources.LOADING_PREFERENCE.CACHE
             );
 
-            if (res === null) {
-                throw new Error("Program data not loaded");
-            }
+            res.then(
+                (resource: ajs.resources.IResource) => {
 
-            // parse loaded data and prepare internal structures
-            this._itemsById = {};
-            this._jsonData = res.data;
-            this._data = JSON.parse(this._jsonData);
-            this._data.kindString = "";
-            this._data.name = "";
-            this._data.comment = { shortText: "<span></span>" };
-            this._data.kind = -1;
+                    // parse loaded data and prepare internal structures
+                    this._itemsById = {};
+                    this._jsonData = resource.data;
+                    this._data = JSON.parse(this._jsonData);
+                    this._data.kindString = "";
+                    this._data.name = "";
+                    this._data.comment = { shortText: "<span></span>" };
+                    this._data.kind = -1;
 
+                    this._prepareData(this._data, null);
 
-            this._prepareData(this._data, null);
-
-            this._initialized = true;
+                    this._initialized = true;
+                }
+            ).catch(
+                (reason: any) => {
+                    throw new Error("Unable to load program data");
+                }
+            );
         }
 
         // anotate the data with additional information
@@ -175,14 +181,14 @@ namespace ajsdoc {
                 items: []
             };
 
-            if (node.parent.kind != -1) {
+            if (node.parent.kind !== -1) {
                 menu.items.push({
                     key: "/ref" + node.path,
                     path: "/ref" + node.path,
                     label: node.kindString + " " + node.name,
                     selected: node.path === ("/" + navPath),
                     expandable: false
-                })
+                });
             }
 
             if (node.children) {
@@ -195,7 +201,7 @@ namespace ajsdoc {
                     }
 
                     let isFromLibDTs: boolean = false;
-                    // Ignore everyithing from lib.d.ts
+                    // ignore everyithing from lib.d.ts
                     if (node.children[i].sources instanceof Array) {
                         for (let j: number = 0; j < node.children[i].sources.length; j++) {
                             if (node.children[i].sources[j].fileName.indexOf("lib.d.ts") !== -1) {

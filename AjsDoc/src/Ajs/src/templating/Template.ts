@@ -25,13 +25,40 @@ namespace ajs.templating {
 
     "use strict";
 
+    /**
+     * Represents a HTML template containing a visual component tree
+     * <p>
+     * Instanced by the #see {ajs.templating.TemplateManager} when the template is requested to be loaded.
+     * </p>
+     * <p>
+     * Automatically parses the template data and register all defined visual components to the template manager.
+     * </p>
+     * <p>
+     * Stylesheets defined as the style tag directly in the template are stored in the stylesheets
+     * </p>
+     * <p>
+     * Stylesheets defined as the URL (template attribute stylesheets) must be explicitly asked to be loaded by
+     * the #see {ajs.templating.TemplateManager} once the constructor returns the Template object.
+     * </p>
+     */
     export class Template {
+
+        protected _templateManager: TemplateManager;
+        public get templateManager(): TemplateManager { return this._templateManager; }
 
         protected _name: string;
         public get name(): string { return this._name; }
 
         protected _storageType: resources.STORAGE_TYPE;
         public get storageType(): resources.STORAGE_TYPE { return this._storageType; }
+
+        protected _cachePolicy: resources.CACHE_POLICY;
+        public get cachePolicy(): resources.CACHE_POLICY { return this._cachePolicy; }
+
+        protected _styleSheetsUrls: string[];
+        public get styleSheetsUrls(): string[] { return this._styleSheetsUrls; }
+
+        protected _styleSheetsLoaded: boolean;
 
         protected _styleSheets: string[];
         public get styleSheets(): string[] { return this._styleSheets; }
@@ -42,127 +69,204 @@ namespace ajs.templating {
         protected _visualComponents: IVisualComponentCollection;
         public get visualComponents(): IVisualComponentCollection { return this._visualComponents; }
 
-        public constructor(name: string, html: string, stylesheets: string[], storageType: resources.STORAGE_TYPE) {
-            this._name = name;
+        /**
+         * Constructs the template object and loads the data from the template
+         * @param templateManager
+         * @param templateResource
+         * @param storageType
+         */
+        public constructor(
+            templateManager: TemplateManager,
+            templateResource: resources.IResource,
+            storageType: resources.STORAGE_TYPE,
+            cachePolicy: resources.CACHE_POLICY
+        ) {
+            this._templateManager = templateManager;
+            this._name = "";
             this._storageType = storageType;
-            this._template = document.implementation.createHTMLDocument(name);
-            this._template.body.innerHTML = html;
-            this._styleSheets = stylesheets;
-            this._visualComponents = this._getVisualComponents();
+            this._cachePolicy = cachePolicy;
+            this._template = document.implementation.createHTMLDocument("ajstemplate");
+            this._template.body.innerHTML = templateResource.data;
+            this._styleSheetsLoaded = false;
+            this._styleSheetsUrls = [];
+            this._styleSheets = [];
+            this._visualComponents = {};
+            this._getTemplateData();
         }
 
-        protected _getVisualComponents(): IVisualComponentCollection {
-            let components: IVisualComponentCollection = {};
+        /**
+         * Must be called from the template manager to load templates
+         */
+        public loadStyleSheets(): Promise<void> {
 
-            this._walkHTMLTree(this._template.body, (element: HTMLElement) => {
+            return new Promise<void>(
+                async (resolve: () => void, reject: (reason ?: any) => void) => {
 
-                if (element.nodeName === "COMPONENT" || element.hasAttribute("component")) {
-
-                    let name: string;
-
-                    if (element.nodeName === "COMPONENT" && element.hasAttribute("name")) {
-                        name = element.getAttribute("name").toUpperCase();
-                    } else {
-                        if (element.hasAttribute("component")) {
-                            name = element.getAttribute("component").toUpperCase();
-                        } else {
-                            throw new MissingVisualComponentNameException();
-                        }
-                    }
-
-                    components[name] = {
-                        component: element,
-                        template: this,
-                        templateName: this._name,
-                        children: this._getChildrenComponents(element),
-                        placeholders: this._getChildrenPlaceholders(element)
-                    };
+                // return immediately if stylesheets were loaded already or there are no stylesheets to be loaded
+                if (this._styleSheetsLoaded || this._styleSheetsUrls.length === 0) {
+                    resolve();
                 }
 
-            });
+                // prepare resources to be obtained from resource manager (cache/server)
+                let resourcePromises: Promise<resources.IResource>[] = [];
+                for (let i: number = 0; i < this._styleSheetsUrls.length; i++) {
+                    resourcePromises.push(
+                        this._templateManager.resourceManager.getResource(
+                            this._styleSheetsUrls[i],
+                            this._storageType,
+                            this._cachePolicy,
+                            resources.LOADING_PREFERENCE.CACHE
+                        )
+                    );
+                }
 
-            return components;
+                try {
+                    // wait till all resources are loaded
+                    let styleSheets: resources.IResource[] = await Promise.all(resourcePromises);
+
+                    // store stylesheets
+                    for (let i: number = 0; i < styleSheets.length; i++) {
+                        this._styleSheets.push(styleSheets[i].data);
+                    }
+
+                    // done
+                    this._styleSheetsLoaded = true;
+
+                } catch (e) {
+                    reject(new FailedToLoadTemplateStylesheetsException(e));
+                }
+
+                resolve();
+
+            });
         }
 
-        protected _walkHTMLTree(root: HTMLElement, elementCallback: Function): void {
-            if (root instanceof HTMLElement) {
-                for (let i: number = 0; i < root.children.length; i++) {
-                    if (root.children.item(i).nodeType === Node.ELEMENT_NODE) {
-                        elementCallback(root.children.item(i));
-                        this._walkHTMLTree(root.children.item(i) as HTMLElement, elementCallback);
+        /**
+         * Helper to walk the DOM of the loaded template
+         * @param element HTMLElement where to start
+         * @param parentComponent Parent visual component (if discovered already)
+         * @param elementProcessor Function to process the template elmenets 
+         */
+        protected _walkHTMLTree(
+            element: HTMLElement,
+            parentComponent: IVisualComponent,
+            elementProcessor: (element: HTMLElement, parentComponent: IVisualComponent) => IVisualComponent): void {
+
+            if (element instanceof HTMLElement) {
+                for (let i: number = 0; i < element.children.length; i++) {
+                    if (element.children.item(i).nodeType === Node.ELEMENT_NODE) {
+                        let pc: IVisualComponent = elementProcessor(element.children.item(i) as HTMLElement, parentComponent);
+                        this._walkHTMLTree(element.children.item(i) as HTMLElement, pc, elementProcessor);
                     }
                 }
             }
+
         }
 
-        protected _getChildrenComponents(element: HTMLElement, childrenComponents?: IVisualComponentChildren): IVisualComponentChildren {
+        /**
+         * Parses the template and gets the template info and visual components it contains
+         */
+        protected _getTemplateData(): void {
 
-            childrenComponents = childrenComponents || {};
+            this._walkHTMLTree(this._template.body, null,
 
-            for (let i: number = 0; i < element.childNodes.length; i++) {
-                let node: Node = element.childNodes.item(i);
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    if (ajs.utils.HTMLTags.indexOf(node.nodeName.toUpperCase()) === -1) {
-                        let nameAttribute: string = null;
-                        if (node.nodeName === "COMPONENT" && (node as HTMLElement).hasAttribute("name")) {
-                            nameAttribute = (node as HTMLElement).getAttribute("name");
+                (element: HTMLElement, parentComponent: IVisualComponent): IVisualComponent => {
+
+                    // parse the TEMPLATE tag information
+                    if (element.nodeName === "AJSTEMPLATE") {
+
+                        if (element.hasAttribute("name")) {
+                            this._name = element.getAttribute("name");
+                        } else {
+                            throw new MissingTemplateNameException();
                         }
-                        let id: string = null;
-                        if ((node as HTMLElement).hasAttribute("id")) {
-                            id = (node as HTMLElement).attributes.getNamedItem("id").nodeValue;
+
+                        if (element.hasAttribute("stylesheets")) {
+                            // get stylesheet from the stylesheets attribute (separated by ;)
+                            let styleSheetsToLoad: string[] = element.getAttribute("stylesheets").split(";");
+
+                            // trim urls
+                            for (let i: number = 0; i < styleSheetsToLoad.length; i++) {
+                                styleSheetsToLoad[i] = styleSheetsToLoad[i].trim();
+                            }
+
+                            // update stylesheets urls to be loaded - sheet load is done by template manager
+                            this._styleSheetsUrls = this._styleSheetsUrls.concat(styleSheetsToLoad);
                         }
-                        if (id !== null) {
-                            childrenComponents[id] = {
-                                tagName: node.nodeName.toUpperCase(),
-                                nameAttribute: nameAttribute
-                            };
-                        }
-                    } else
-                        if ((node as HTMLElement).hasAttribute("component") && (node as HTMLElement).hasAttribute("id")) {
-                            let id: string = (node as HTMLElement).getAttribute("id");
-                            let cn: string = (node as HTMLElement).getAttribute("component");
-                            childrenComponents[id] = {
-                                tagName: cn,
+                    }
+
+                    // is this tag a placeholder for dynamically added components? do we have parent visual component?
+                    if (parentComponent !== null && element.hasAttribute("placeholder")) {
+                        let id: string = element.getAttribute("placeholder");
+                        parentComponent.placeholders[id] = {
+                            placeholder: element
+                        };
+                    }
+
+                    // store style if defined
+                    if (parentComponent !== null && element.nodeName === "STYLE") {
+                        this._styleSheets.push(element.textContent);
+                    }
+
+                    // if the element has ID attribute it is instance of the view component
+                    if (parentComponent !== null && element.hasAttribute("id")) {
+
+                        let id: string = element.getAttribute("id");
+                        let name: string = element.getAttribute("name");
+                        let cname: string = element.getAttribute("component");
+
+                        if (cname !== null) {
+                            parentComponent.children[id] = {
+                                tagName: cname,
                                 nameAttribute: null
                             };
                         } else {
-                            this._getChildrenComponents(node as HTMLElement, childrenComponents);
+                            parentComponent.children[id] = {
+                                tagName: element.nodeName.toUpperCase(),
+                                nameAttribute: name
+                            };
                         }
-                }
-            }
 
-            return childrenComponents;
 
-        }
-
-        protected _getChildrenPlaceholders(
-            element: HTMLElement,
-            placeholders?: IVisualComponentPlaceholderCollection
-        ): IVisualComponentPlaceholderCollection {
-
-            placeholders = placeholders || {};
-
-            for (let i: number = 0; i < element.childNodes.length; i++) {
-                let node: Node = element.childNodes.item(i);
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    if ((node as HTMLElement).hasAttribute("placeholder")) {
-                        let id: string = (node as HTMLElement).attributes.getNamedItem("placeholder").nodeValue;
-                        placeholders[id] = {
-                            placeholder: node as HTMLElement
-                        };
-                        if (node.hasChildNodes()) {
-                            throw new PlaceholdersCantHaveChildrenNodesException();
-                        }
-                    } else {
-                        this._getChildrenPlaceholders(node as HTMLElement, placeholders);
                     }
-                }
-            }
 
-            return placeholders;
+                    // is the tag COMPONENT? (its name is component or it has attribute named component)
+                    if (element.nodeName === "COMPONENT" || element.hasAttribute("component")) {
+
+                        let name: string;
+                        if (element.nodeName === "COMPONENT" && element.hasAttribute("name")) {
+                            name = element.getAttribute("name").toUpperCase();
+                        } else {
+                            if (element.hasAttribute("component")) {
+                                name = element.getAttribute("component").toUpperCase();
+                            } else {
+                                throw new MissingVisualComponentNameException();
+                            }
+                        }
+
+                        // prepare visual component info
+                        let visualComponent: IVisualComponent = {
+                            component: element,
+                            template: this,
+                            templateName: this._name,
+                            children: {},
+                            placeholders: {}
+                        };
+
+                        // store visual component to the template
+                        this._visualComponents[name] = visualComponent;
+
+                        // register visual component to template manager (holds of all visual components)
+                        this._templateManager.registerVisualComponent(name, visualComponent);
+
+                        return this._visualComponents[name];
+                    }
+
+                    return parentComponent;
+
+            });
 
         }
-
 
     }
 

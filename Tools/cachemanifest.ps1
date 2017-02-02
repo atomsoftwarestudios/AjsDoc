@@ -51,6 +51,7 @@ $utf8 = new-object -TypeName System.Text.UTF8Encoding
 $fileList = `
     "\index.html", `
     "\js\ajs.js", `
+    "\js\ajs.lib.js", `
     "\js\ajs.boot.config.js", `
     "\favicon.ico", `
     "\favicon-16x16.png", `
@@ -72,7 +73,8 @@ $hash = "";
 $newestDate = Get-Date -Year 1900
 
 for ($i = 0; $i -lt $fileList.Length; $i++) {
-    $manifest += $fileList[$i] + "`r`n"
+    $filename = $fileList[$i] + "`r`n"
+    $manifest += $filename.replace("\", "/");
     $path = $rootPath + $fileList[$i]
     if (Test-Path $path -ErrorAction SilentlyContinue) {
         $fileDate = [IO.file]::GetLastWriteTime($path)

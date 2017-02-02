@@ -5,7 +5,7 @@ Last recent version of both projects the changelog can be always found here
 <h2>The Ajs Framework</h2>
 
 <p>
-    Since January, 19 2017, all changes are documented here as patch numbers and comments
+    Since January, 19 2017, all changes are documented here and patch numbers and comments
     at GitHub just reffers to the patch numbers defined bellow.
 
     As both projects (Ajs and AjsDoc are currently managed together, both change logs are here)
@@ -13,38 +13,89 @@ Last recent version of both projects the changelog can be always found here
 
 <pre class="nohighlight">
 --------------------------------------------------------------------------------------------------------------------------------
+Os, Devices & Browsers used for testing
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Desktop, Windows 10 64bit
+    - IE 11 + IE 10 under IE11 emulated mode
+    - Microsoft Edge 38.14393.0.0 (Microsoft EdgeHTML 14.14393)
+    - Google Chrome (55.0.2883.87) 64-bit
+    - Firefox 51.0.1 (32-bit)
+    - Opera 42.0.2393.517 (64-bit)
+- Samsung S3 Mini (GT-I8190N) - Android (JellyBean)
+    - Android Browser 4 (Web view)
+    - Chrome 55 (both, web and desktop modes)
+- Samsung S4 Mini (GT-I9195) - Android (KitKat)
+    - Chrome 28 (Web view)
+    - Chrome 55 (both, web and desktop modes)
+- NVidia Shield K1 1.5(24.3.70.8) (Android 6.0.1)
+    - Desktop Web Application
+    - Opera 42.1.2246.1127.88
+    - Opera Mini 21.0.2254.111920
+    - Firefox 50.1.0
+    - Chrome 55.0 (both, web and desktop modes)
+- IPad 2, iOS 9.3.5
+    - Safari 9 (both, desktop and web modes)
+- iPhone 5S, iOS 10.1.1
+    - Safari 10 (both, web and desktop modes)
+
+--------------------------------------------------------------------------------------------------------------------------------
 Implemented features:
 --------------------------------------------------------------------------------------------------------------------------------
 
+- Basic features    
+    - Developed in Visual Studio 2015
+    - Currently using TypeScript 2.5.1 transpiller
+    - Extenal (3rd party) JavaScript library support
+        - Packed to two lib files - ajs.lib.js and [appname].lib.ajs        
+        - Currently only "manual" dependency resolving and library initialization
+            - libinit function started automatically when library pack loads
+                - initialize libraries
+                - apply polyfills
+            - Planned support for require / system / common / ams to automatically resolve dependencies
+        - External libraries used:
+            - es6-promise
+
+- Index.html
+    - Offline support
+    - Progress bar, welcome page, error page
+    - Responsive UI support (meta tags)
+    - Favicon for various browsers / operating system support
+
 - Boot process control
+    - Offline support (application cache)
+    - Caches disposal on appcache.manifest change
 	- Support for wellcome / progress loading progress bar
-	- Loading of basic resources (mainly application JS)
-	- Framework initialization and setup
+    - Resource loading (various caches and caching policies)
+    - Framework and Application configuration
+	- Framework setup, initialization and startup
 
 - Resource management
+    - Rewritten according to "modern" requirements and is using Promise for almost all async functions now
 	- Key/Value storage (based on local/session storages)
-	- Three stores supported - Local / Session / Memory
-	- Caching policies supported - None, Permanent or Last Recently Used
-	- Automatic resource cache management
-	- Configurable size of the memory cache
-	- Support for wellcome / progress loading progress bar
+    - Support for both textual and binary data
+    - Automatic resource cache management
+	    - Three caching storages supported - Local / Session / Memory
+        - Configurable size of the memory cache
+	    - Caching policies supported - None, Permanent or Last Recently Used
+        - Loading preference support - Cache or server	
+	- Support for "loading" progress progress bar
 	- Automatic script evaluation uppon load
-	- Support for both textual and binary data
 
-- Routing
-	- Configurable routing based on RegExps to route request to appropriate model view
-		
 - Navigation
 	- Browser navigation event management (popstate / hashchange)
 	- Navigation to the same origin or remote origin resources
 	- Redirection Support (currently simple without RegExps, will be updated soon)
+
+- Routing
+	- Configurable routing based on RegExps to route request to appropriate model view
 
 - Application management
 	- Automatic application loading, configuration and instantiation
 	- User configuration is loaded during the boot process
 	- BeforeUnload event passed to the application to perform appropriate actions
 
-- Event "delegate"
+- Event Notifier
 	- Notifier based on Subscribe / Unsubcribe functionality
 
 - MVVM
@@ -84,17 +135,18 @@ Implemented features:
 	- Reusable view components
 	- Automated mapping of the data based on the data structure and View Component structure
 
-- Utilities
-
 - Debugging tools
     - Modular debugging console based on TSX templates
         - Limited reactive TSX renderer just to support debugging modules UI
 	- Together with the browser javascript console gives developed great overview about whole system
 	- Tools available:
 		- Logger with log browser
+            - Configurable logger
+            - Breakpoint support (breaks on n-th occurence of given log record type)
+            - Log records time measuring
 
-- Development Tools
-	- utf8.bom to utf file converter
+- Development Tools and Utilities
+	- utf8.bom to utf file converter (PowerShell)
 	- cache.manifest post-build generator (PowerShell)
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -159,33 +211,84 @@ Change log
 	- Code documentation slight changes
 		- Added / updated
 
+- Patch #04/2017-02-02 FN
+
+    Implemented Change Requests
+
+    #01/201701 HIGH
+        - Remove the resource option within the CSS template and rather check if url('...') is a cached resource and use it
+	    - This will require redesign of the resource manager to keep urls of released resources
+
+    #04/201701 HIGH
+        - Rework resource manager
+            - Add create/remove managed resource function (remove is not supported now)
+            - Access to managed/unmanaged resources only using getResource function (Sync/Async according the resource access preference)
+            - Implement resource access preference (CACHE get resource from cahce then update from server, SERVER get resource from server then update cache and call callback with the resource)
+
+    Implemented Feature Requests
+
+    #01/201701 HIGH
+        - Boot process control
+	        - AppCached files updates detection and autoreload to force the browser use them
+
+    Fixed issues
+
+    #01/201701 HIGH
+        - Strange behaviour during visual state transition
+	        - Components are removed and can't be rendered uppon unexpected user actions
+	        - (AjsDoc menu hide during the menu state transition)
+
+    Untagged changes and bug fixes
+        - TypeScript configuration moved to tsconfig
+            - Uses the "extends" option and supports Debug/Release configurations now
+            - Prebuild task to use correct tsconfig
+        - Added support for "manual" 3rd party JavaScript libraries loading and initialization
+        - Async rewritten to use Promises and async/await
+            - mainly boot, resource management and MVVM updated
+        - Added configuration options for Boot module
+        - Additional code documentation through all modules
+        - Additional logging support in various modules
+        - As everything is more async, view now waits for the root component to be initialized and for stylesheets to be loaded / updated with resources and added to the view
+            - ViewComponent async Initialized support added
+            - rootComponentChanged rewritten
+            - createViewComponent rewritten
+            - applyStyleSheetsFromTemplate rewritten
+        - Navigator is using target instead of srcElement now when processing the link click
+        - Resource manager rewritten
+            - async rewritten to use async/await/promises
+            - only getResource / getMultipleResources can be used to load / get cached resources instead of load/loadMultiple
+            - Fixed IE10 bug with UTC/GMT datetime (need to be tested properly)
+        - Template management updated
+            - optimalized loading of templates (templates are not browsed multiple times anymore)
+            - Stylesheets loaded with the template now
+            - Updated async parts to follow internal changes
+        - ProgressBar changed to be an object instead of static object (need to be instanced now)
+        - Tool cachemanifest bug with backslah fixed
+        - index.html
+            - now contains error info but is not used by ajs now
+            - support for 3rd party libs
+
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests
 --------------------------------------------------------------------------------------------------------------------------------
 
-#01/201701 HIGH
-- Remove the resource option within the CSS template and rather check if url('...') is a cached resource and use it
-	- This will require redesign of the resource manager to keep urls of released resources
+    #02/201701 HIGH
+    -  Refactoring
+    	- Refactor View DOM Update functions to look nicer
+	    - Refactor ViewComponent state change management to look nicer
+	    - Refactor ViewComponent rendering functions to look nicer
 
-#02/201701 HIGH
-- Refactoring
-	- Refactor View DOM Update functions to look nicer
-	- Refactor ViewComponent state change management to look nicer
-	- Refactor ViewComponent rendering functions to look nicer
+    #01/201702 HIGH
+        - Resource manager
+            - Finish the chache size checking and cleanup for the new feature of limiting max cache size
 
-#04/201701 HIGH
-- Rework resource manager
-    - Add create/remove managed resource function
-    - Access to managed/unmanaged resources  only using getResource function (Sync/Async according the resource access preference)
-    - Implement resource access preference (CACHE get resource from cahce then update from server, SERVER get resource from server then update cache and call callback with the resource)
+    #02/201702 HIGH
+    - State manager
+        - Implement size limitation of the space used for the Application and the Session states
 
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted feature requests
 --------------------------------------------------------------------------------------------------------------------------------
-
-#01/201701 HIGH
-- Boot process control
-	- AppCached files updates detection and autoreload to force the browser use them
 
 #02/201701 HIGH
 - Application management
@@ -258,22 +361,22 @@ Accepted feature requests
 #13/201701 HIGH
 - Template / ViewComponent - to the result component merge attributes from both, component definition and component instance
 
-#14/201701
-
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted issues
 --------------------------------------------------------------------------------------------------------------------------------
 
-#01/201701 HIGH
-- Strange behaviour during visual state transition
-	- Components are removed and can't be rendered uppon unexpected user actions
-	- (AjsDoc menu hide during the menu state transition)
+#01/201702 LOW
+- Review visual state transition / animationend on Android Browser 4 (JellyBean)
+    - AjsDoc menu sometimes disappearing when it is hiden/shown -> chech if it is CSS or Jas MVVM problem
+
+#01/201702 LOW
+- IE11/Emulated IE10 sometimes freezes / restarts in offline mode
 
 --------------------------------------------------------------------------------------------------------------------------------
 Untagged ToDo's & Ideas
 --------------------------------------------------------------------------------------------------------------------------------
 
-- Get rid of all warnings reported by the Visual Studio Intellisense
+- Get rid of all warnings reported by the TSLint
 
 - Documentation
 	- Code documentation
@@ -331,14 +434,11 @@ Optimizations:
 	
 A lot of optimizations can be done, at least:
 
-a) Template class - when it is getting components, children components and placeholders
-it is browsing the DOM structure multiple times. This can be done in a single step.
-
-b) ViewComponent - while creating a new array of components it calls functions to
+a) ViewComponent - while creating a new array of components it calls functions to
 get viewcomponent constructor and visual constructor in the loop, this can be done just
 once
 
-c) if undefined && not null can be optimized at many places
+b) if undefined && not null can be optimized at many places
 </pre>
 
 <h2>The AjsDoc Browser</h2>
@@ -356,10 +456,10 @@ Implemented features
 
 - HTML Code (both, static & code documentation)
 	- Supported tags:
-		#example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
+		# example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
 						  are properly replaced)
 						- Must be on the separate line
-		#chart url      - Includes svg chart to the HTML code
+		# chart url      - Includes svg chart to the HTML code
 						- Must be on the separate line
 
 - Ajs Feature Examples (directly in the code)
@@ -377,8 +477,8 @@ Implemented features
     - Debugging tools
 
 - Tools
-    - tocgen.ps1 -> generator of the toc.json file from the folder structure of the static html documents
-
+    - same tools as ajs
+    - tocgen.ps1 (powershell) -> generator of the toc.json file from the folder structure of the static html documents
 
 --------------------------------------------------------------------------------------------------------------------------------
 Change log
@@ -401,6 +501,11 @@ Change log
     - Members of extended lib.d.ts classes are not included anymore
     - Fixed problem with menu item unique keys
     - Fixed menu button disappearing when dialog frame was not shown
+
+- Patch #04/2017-02-02 FN
+    - slight documentation changes
+    - css's updated to support older browsers (problem with linear gradient on older chromiums)
+    - 3rd party libinit created / hoghlight movet to 3rd party libs project
 
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests
@@ -437,6 +542,16 @@ Accepted issues
 
 #05/201701
 - It seems highlighter is not started sometimes
+
+#01/201702
+- Typedoc does not work with --lib and Promises
+- Typedoc has a problem with tsconfig "extends" option
+
+#02/201702
+- IE10 has some problem with including charts
+
+#03/201703
+- tocgen tool has a problem when there is just single file in the folder
 
 --------------------------------------------------------------------------------------------------------------------------------
 Untagged ToDo's & Ideas

@@ -129,21 +129,27 @@ namespace ajs.mvvm.view {
             console.warn("IMPLEMENT: ajs.mvvm.View._rootUpdated - Finalization of previously created component tree");
             console.warn("IMPLEMENT: ajs.mvvm.View._rootUpdated - Navigation event notification");
 
-            this._cleanUpDocument();
-
             this._rootViewComponentName = rootComponentName;
-            this._rootViewComponent = this._createViewComponent(rootComponentName, "rootViewComponent");
 
-            this.render(this._rootViewComponent);
+            this._createViewComponent(rootComponentName, "rootViewComponent").then(
+                (viewComponent: ajs.mvvm.viewmodel.ViewComponent) => {
+                    this._cleanUpDocument();
+                    this.applyStyleSheetsFromTemplate(viewComponent.ajsVisualComponent.template).then(
+                        () => {
+                            this._rootViewComponent = viewComponent;
+                            this.render(this._rootViewComponent);
+                        }
+                    );
+                }
+            );
         }
 
-        protected _createViewComponent(name: string, id: string): ajs.mvvm.viewmodel.ViewComponent {
+        protected _createViewComponent(name: string, id: string): Promise<ajs.mvvm.viewmodel.ViewComponent> {
 
             let viewComponentConstructor: typeof ajs.mvvm.viewmodel.ViewComponent;
             viewComponentConstructor = this._viewComponentManager.getComponentConstructorByName(name);
 
             if (viewComponentConstructor === null) {
-                // throw new ViewComponentIsNotRegisteredException(rootComponentName);
                 viewComponentConstructor = ajs.mvvm.viewmodel.ViewComponent;
             }
 
@@ -153,9 +159,28 @@ namespace ajs.mvvm.view {
                 throw new VisualComponentNotRegisteredException(name);
             }
 
-            this.applyStyleSheetsFromTemplate(visualComponent.template);
+            let vcPromise: Promise<ajs.mvvm.viewmodel.ViewComponent> = new Promise<ajs.mvvm.viewmodel.ViewComponent>(
+                (resolve: (component: ajs.mvvm.viewmodel.ViewComponent) => void, reject: (reason?: any) => void) => {
 
-            return new viewComponentConstructor(this, this._viewComponentManager, id, null, visualComponent);
+                    let viewComponent: viewmodel.ViewComponent =
+                        new viewComponentConstructor(this, this._viewComponentManager, id, null, visualComponent);
+
+                    // wait for the component is ready (i.e. loads data from the model)
+                    function waitInitialized(): void {
+
+                        if (viewComponent.ajsInitialized) {
+                            resolve(viewComponent);
+                        } else {
+                            setTimeout(waitInitialized, 0);
+                        }
+
+                    }
+
+                    waitInitialized();
+                }
+            );
+
+            return vcPromise;
 
         }
 
@@ -171,33 +196,104 @@ namespace ajs.mvvm.view {
             this._appliedStyleSheets = [];
         }
 
-        public applyStyleSheetsFromTemplate(template: ajs.templating.Template): void {
-            // styleSheets defined in the stylesheets attribute of the template
-            let styleSheets: string[] = this.templateManager.getTemplateStyleSheetsData(template);
-            for (let i: number = 0; i < template.styleSheets.length; i++) {
-                this.appliedStyleSheets.push(template.styleSheets[i]);
-                let style: HTMLElement = document.createElement("style");
-                style.setAttribute("type", "text/css");
-                style.textContent = this._processStyleSheet(styleSheets[i], template.storageType);
-                document.head.appendChild(style);
-            }
+        public applyStyleSheetsFromTemplate(template: ajs.templating.Template): Promise<void> {
 
-            // styleSheets defied as tags in the template
-            if (this._appliedStyleSheets.indexOf(template.name) === -1) {
-                let styleSheets: NodeListOf<HTMLStyleElement> = template.template.getElementsByTagName("style");
-                for (let i: number = 0; i < styleSheets.length; i++) {
-                    let styleSheet: HTMLStyleElement = styleSheets.item(i);
-                    if (styleSheet.hasAttribute("type") && styleSheet.getAttribute("type") === "text/css") {
-                        this._appliedStyleSheets.push(template.name);
-                        let styleSheetData: string = styleSheet.innerText;
-                        let style: HTMLElement = document.createElement("style");
-                        style.setAttribute("type", "text/css");
-                        style.textContent = this._processStyleSheet(styleSheetData, template.storageType);
-                        document.head.appendChild(style);
+            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.view", this);
+
+            let styleSheetsToProcess: Promise<string>[] = [];
+
+            for (let i: number = 0; i < template.styleSheets.length; i++) {
+                let id: string = template.name + i;
+                if (this.appliedStyleSheets.indexOf(id) === -1) {
+                    styleSheetsToProcess.push(this._processStyleSheet(template, i));
+                }
+            };
+
+            let applyPromise: Promise<void> = new Promise<void>(
+
+                async (resolve: () => void, reject: (reason?: any) => void) => {
+                    try {
+                        let styleSheets: string[] = await Promise.all(styleSheetsToProcess);
+
+                        for (let i: number = 0; i < styleSheets.length; i++) {
+
+                            let id: string = template.name + i;
+                            this.appliedStyleSheets.push(id);
+
+                            let style: HTMLElement = document.createElement("style");
+                            style.setAttribute("type", "text/css");
+                            style.setAttribute("id", id);
+                            style.textContent = template.styleSheets[i];
+
+                            ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.view", this,
+                                "Adding processed stylesheet to the render target", template.styleSheets[i]);
+
+                            document.head.appendChild(style);
+                        }
+                    } catch (e) {
+
+                        throw new CSSRequiredResourceNotLoadedException(e);
+
                     }
+
+                    resolve();
                 }
 
+            );
+
+            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.view", this);
+
+            return applyPromise;
+
+        }
+
+        protected _processStyleSheet(template: ajs.templating.Template, index: number): Promise<string> {
+
+            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.view", this);
+
+            // resources to be checked
+            let resourcesPromises: Promise<ajs.resources.IResource>[] = [];
+
+            // find all url(...) in the stylesheet
+            let urls: RegExpMatchArray = template.styleSheets[index].match(/url\(('|")(.*)('|")\)/g);
+
+            // fix them to just the url and get all resources
+            if (urls !== null) {
+                for (let i: number = 0; i < urls.length; i++) {
+                    let url: RegExpExecArray = (/('|")(.*)('|")/g).exec(urls[i]);
+                    if (url.length < 2) {
+                        throw new CSSInvalidResourceSpecificationException();
+                    }
+                    resourcesPromises.push(
+                        this._templateManager.resourceManager.getResource(url[2], template.storageType)
+                    );
+                }
             }
+
+            // wait for all resources with given URLS
+            let styleSheetPromise: Promise<string> = new Promise<string>(
+
+                async (resolve: (styleSheet: string) => void, reject: (e: any) => void) => {
+
+                    try {
+                        let resources: ajs.resources.IResource[] = await Promise.all(resourcesPromises);
+
+                        for (let i: number = 0; i < resources.length; i++) {
+                            ajs.utils.replaceAll(
+                                template.styleSheets[index],
+                                resources[i].url,
+                                "data:image;base64," + resources[i].data);
+                        }
+
+                    } catch (e) {
+                        reject(e);
+                    }
+
+                    resolve(template.styleSheets[index]);
+
+                });
+
+            return styleSheetPromise;
         }
 
         public onNavigate(): void {
@@ -318,16 +414,16 @@ namespace ajs.mvvm.view {
                         // if the node is component update the component element
                         if (this._isComponent(source)) {
                             let id: number = this._getComponentId(source);
-                            let component: ajs.mvvm.viewmodel.ViewComponent = this._viewComponentManager.getComponentInstanceByComponentId(id);
+                            let component: viewmodel.ViewComponent = this._viewComponentManager.getComponentInstanceByComponentId(id);
                             component.ajsElement = adoptedNode as HTMLElement;
 
                         }
                         // if any register defined event listeners
-                        if ((source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners instanceof Array) {
-                            for (let i: number = 0; i < (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners.length; i++) {
+                        if ((source as viewmodel.IComponentElement).ajsEventListeners instanceof Array) {
+                            for (let i: number = 0; i < (source as viewmodel.IComponentElement).ajsEventListeners.length; i++) {
                                 adoptedNode.addEventListener(
-                                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners[i].eventType,
-                                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners[i].listener);
+                                    (source as viewmodel.IComponentElement).ajsEventListeners[i].eventType,
+                                    (source as viewmodel.IComponentElement).ajsEventListeners[i].listener);
                             }
                         }
                         this._updateDom(source, adoptedNode);
@@ -354,15 +450,18 @@ namespace ajs.mvvm.view {
                                 // if the node is component, update the component element and register defined event listeners
                                 if (this._isComponent(source.childNodes.item(i))) {
                                     let id: number = this._getComponentId(source.childNodes.item(i));
-                                    let component: ajs.mvvm.viewmodel.ViewComponent = ajs.Framework.viewComponentManager.getComponentInstanceByComponentId(id);
+                                    let component: viewmodel.ViewComponent =
+                                        ajs.Framework.viewComponentManager.getComponentInstanceByComponentId(id);
                                     component.ajsElement = adoptedNode as HTMLElement;
                                 }
                                 // if any register defined event listeners
-                                if ((source.childNodes.item(i) as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners instanceof Array) {
-                                    for (let i: number = 0; i < (source.childNodes.item(i) as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners.length; i++) {
+                                if ((source.childNodes.item(i) as viewmodel.IComponentElement).ajsEventListeners instanceof Array) {
+                                    for (let i: number = 0;
+                                        i < (source.childNodes.item(i) as viewmodel.IComponentElement).ajsEventListeners.length;
+                                        i++) {
                                         adoptedNode.addEventListener(
-                                            (source.childNodes.item(i) as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners[i].eventType,
-                                            (source.childNodes.item(i) as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners[i].listener);
+                                            (source.childNodes.item(i) as viewmodel.IComponentElement).ajsEventListeners[i].eventType,
+                                            (source.childNodes.item(i) as viewmodel.IComponentElement).ajsEventListeners[i].listener);
                                     }
                                 }
 
@@ -443,26 +542,6 @@ namespace ajs.mvvm.view {
             }
 
             return true;
-        }
-
-        protected _processStyleSheet(styleSheet: string, storageType: resources.STORAGE_TYPE): string {
-
-            styleSheet = styleSheet.replace(/resource\(.*\)/gm, (str: string): string => {
-                let tmp: RegExpExecArray = (/'(.*)'/g).exec(str);
-                if (tmp.length > 1) {
-                    let resource: ajs.resources.IResource = this._templateManager.resourceManager.getResource(tmp[1], storageType);
-                    if (resource !== null) {
-                        return "url(data:image;base64," + resource.data + ")";
-                    } else {
-                        throw new CSSRequiredResourceNotLoadedException();
-                    }
-
-                } else {
-                    throw new CSSInvalidResourceSpecificationException();
-                }
-            });
-
-            return styleSheet;
         }
 
     }

@@ -21,6 +21,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
+///<reference path="../utils/Utils.ts" />
+///<reference path="../debug/Console.ts" />
+///<reference path="../debug/log.ts" />
+
 namespace ajs.boot {
 
     "use strict";
@@ -47,57 +51,73 @@ namespace ajs.boot {
     export let getApplicationConfig: IGetAjsApplicationConfig;
 
     /**
-     * Represents single set of resources loading
+     * Holds collected ajs config
      */
-    interface IResourceLoadingInfo {
-        resources: string[];
-        storageType: ajs.resources.STORAGE_TYPE;
-        cachePolicy: ajs.resources.CACHE_POLICY;
-        loadingEnd: boolean;
-        loaded: boolean;
+    let config: IAjsConfig;
+
+    let bootStarted: boolean = false;
+
+    /**
+     * Return default boot config
+     */
+    function _defaultConfig(): IBootConfig {
+        return {
+            bootResourcesCachePreference: resources.LOADING_PREFERENCE.CACHE
+        };
     }
 
     /**
-     * Stores information about resources being loaded
-     */
-    let _resourcesLoadingInfo: IResourceLoadingInfo[];
-
-    /**
-     * Main entry point (executed when browser fires the window.onload event)
-     * <li>if ajsloader configured, loads and starts it</li>
-     * <li>initializes framework</li>
-     * <li>loads ajs resources configured in the ajs.boot.config file</li>
-     * @throws GetAjsConfigFunctionNotDefinedException Thrown when the ajs.boot namespace has no
-     *                                                 getAjsConfig function defined
+     * Main entry point (executed on application cache events cahced/noupdate/error or window.onload event)
+     * Initializes the framework and initiate loading of configured resources)
      */
     function _boot(): void {
 
-        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
-
+        // get Ajs config
         if (!(getAjsConfig instanceof Function)) {
-            alert("error");
             throw new GetAjsConfigFunctionNotDefinedException();
         }
 
-        // get config
-        let config: IAjsConfig = getAjsConfig();
+        config = getAjsConfig();
 
         // if debugging is configured, start it up
         if (config.debugging) {
             ajs.debug.init(config.debugging);
         }
 
+        if (config.boot === undefined) {
+            config.boot = _defaultConfig();
+        }
+
+        // do some basic logging
+        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", null, "Ajs Framework, (c)2016-2017 Atom Software Studios, s.r.o");
+
+        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
+
+        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", null, "Booting up Ajs Framework");
+
         // initialize config
         ajs.Framework.initialize(config);
+
+        // continue by loading resources and application configuration
         _loadResources();
 
         ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
 
     }
 
-    /** Loads resources and continues to the _config function
-     *  @throws GetResourceListFunctionNotDefinedException Thrown when the ajs.boot namespace has no
-     *                                                     getResourceList function defined
+    /**
+     * Performs update of cached files (cleans all caches and forces window to reload)
+     * It is called when the application cache recognizes there are updated files on the server.
+     * It is simplest possible solution to load updated application resources.
+     */
+    function _update(): void {
+        let resMan: ajs.resources.ResourceManager = new ajs.resources.ResourceManager();
+        resMan.cleanCaches();
+        window.location.reload();
+    }
+
+    /** 
+     * Loads resources and continues to the _config function
      */
     function _loadResources(): void {
 
@@ -109,106 +129,57 @@ namespace ajs.boot {
 
         let res: IResourceLists = getResourceLists();
 
-        // prepare information about resources to be loaded
-        _resourcesLoadingInfo = [
-            {
-                resources: res.localPermanent, storageType: ajs.resources.STORAGE_TYPE.LOCAL,
-                cachePolicy: ajs.resources.CACHE_POLICY.PERMANENT, loadingEnd: false, loaded: false
-            },
-            {
-                resources: res.localLastRecentlyUsed, storageType: ajs.resources.STORAGE_TYPE.LOCAL,
-                cachePolicy: ajs.resources.CACHE_POLICY.LASTRECENTLYUSED, loadingEnd: false, loaded: false
-            },
-            {
-                resources: res.sessionPermanent, storageType: ajs.resources.STORAGE_TYPE.SESSION,
-                cachePolicy: ajs.resources.CACHE_POLICY.PERMANENT, loadingEnd: false, loaded: false
-            },
-            {
-                resources: res.sessionLastRecentlyUsed, storageType: ajs.resources.STORAGE_TYPE.SESSION,
-                cachePolicy: ajs.resources.CACHE_POLICY.LASTRECENTLYUSED, loadingEnd: false, loaded: false
-            },
-            {
-                resources: res.memoryPermanent, storageType: ajs.resources.STORAGE_TYPE.MEMORY,
-                cachePolicy: ajs.resources.CACHE_POLICY.PERMANENT, loadingEnd: false, loaded: false
-            },
-            {
-                resources: res.memoryLastRecentlyUsed, storageType: ajs.resources.STORAGE_TYPE.MEMORY,
-                cachePolicy: ajs.resources.CACHE_POLICY.LASTRECENTLYUSED, loadingEnd: false, loaded: false
-            },
-            {
-                resources: res.direct, storageType: undefined,
-                cachePolicy: undefined, loadingEnd: false, loaded: false
-            }
+        // prepare information about resources to be loaded - always prefer to update resources prior using them from cache
+        // review if it is possible to use cached resources rather than server ones
+        let _resourcesLoadingInfo: any[] = [
+            Framework.resourceManager.getMultipleResources(
+                res.localPermanent, resources.STORAGE_TYPE.LOCAL, resources.CACHE_POLICY.PERMANENT,
+                config.boot.bootResourcesCachePreference),
+            Framework.resourceManager.getMultipleResources(
+                res.localLastRecentlyUsed, resources.STORAGE_TYPE.LOCAL, resources.CACHE_POLICY.LASTRECENTLYUSED,
+                config.boot.bootResourcesCachePreference),
+            Framework.resourceManager.getMultipleResources(
+                res.sessionPermanent, resources.STORAGE_TYPE.SESSION, resources.CACHE_POLICY.PERMANENT,
+                config.boot.bootResourcesCachePreference),
+            Framework.resourceManager.getMultipleResources(
+                res.sessionLastRecentlyUsed, resources.STORAGE_TYPE.SESSION, resources.CACHE_POLICY.LASTRECENTLYUSED,
+                config.boot.bootResourcesCachePreference),
+            Framework.resourceManager.getMultipleResources(
+                res.memoryPermanent, resources.STORAGE_TYPE.MEMORY, resources.CACHE_POLICY.PERMANENT,
+                config.boot.bootResourcesCachePreference),
+            Framework.resourceManager.getMultipleResources(
+                res.memoryLastRecentlyUsed, resources.STORAGE_TYPE.MEMORY, resources.CACHE_POLICY.LASTRECENTLYUSED,
+                config.boot.bootResourcesCachePreference),
+            Framework.resourceManager.getMultipleResources(
+                res.direct, undefined, undefined)
         ];
 
-        // load resources configured in the boot config 
-        for (let i: number = 0; i < _resourcesLoadingInfo.length; i++) {
-            if (_resourcesLoadingInfo[i].resources !== undefined) {
-                ajs.Framework.resourceManager.loadMultiple(
-                    (allLoaded: boolean, resources: ajs.resources.IResource[], userData: IResourceLoadingInfo) => {
-                        _resourcesLoadingFinished(allLoaded, resources, userData);
-                    },
-                    _resourcesLoadingInfo[i].resources,
-                    _resourcesLoadingInfo[i],
-                    _resourcesLoadingInfo[i].storageType,
-                    _resourcesLoadingInfo[i].cachePolicy,
-                    true
-                );
-            }
-        }
-
-        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
-
-    }
-
-    /**
-     * Called when the ResourceManager finishes loading of resources with whatever result.
-     * If all resources are successfully loaded, _config function is called.
-     * @param allLoaded Indicates if all resources were loaded
-     * @param resources List of resource loading information / caching information / resources
-     * @throws ResourcesLoadingFailedException Thrown when loading of some of specified resource fails
-     */
-    function _resourcesLoadingFinished(allLoaded: boolean, resources: ajs.resources.IResource[], userData: IResourceLoadingInfo): void {
-
-        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
-
-        userData.loaded = allLoaded;
-        userData.loadingEnd = true;
-
-        // check if all loaded and if loaded sucesfuly
-        let allDone: boolean = true;
-        let allSuccess: boolean = true;
-        for (let i: number = 0; i < _resourcesLoadingInfo.length; i++) {
-            if (_resourcesLoadingInfo[i].resources !== undefined) {
-                allDone = allDone && _resourcesLoadingInfo[i].loadingEnd;
-                allSuccess = allSuccess && _resourcesLoadingInfo[i].loaded;
-            }
-        }
-
-        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", this, "allDone=" + allDone + ", allSuccess=" + allSuccess);
-
-        // throw an exception if loading is done but not all resources loaded succesfully
-        if (allDone) {
-            if (allLoaded) {
-                _configureApplication();
-            } else {
-                ajs.debug.log(debug.LogType.Error, 0, this, "ResourcesLoadingFailedException");
+        // wait till resources are loaded and
+        Promise.all(_resourcesLoadingInfo).
+            // continue by configuring application
+            then(
+                () => {
+                    _configureApplication();
+                }
+            ).
+            // catch the problem
+            catch((e: Error) => {
+                ajs.debug.log(debug.LogType.Error, 0, "ajs.boot", this,
+                    "Something went wrong during resource loading " + e, e);
                 throw new ResourcesLoadingFailedException();
-            }
-        }
+            });
 
         ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
-
     }
 
     /**
      * Configures the application before it is started
-     * @throws GetApplicationConfigFunctionNotDefinedException Thrown when the ajs.boot namespace has no
-     *                                                         getApplicationConfig function defined
      */
     function _configureApplication(): void {
 
         ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
+
+        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", this, "Getting the Application config");
 
         if (!(getApplicationConfig instanceof Function)) {
             ajs.debug.log(debug.LogType.Error, 0, this, "GetApplicationConfigFunctionNotDefinedException");
@@ -230,11 +201,71 @@ namespace ajs.boot {
 
         ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
 
+        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", this, "Starting the framework");
+
         ajs.Framework.start();
 
         ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
     }
 
-    // call _boot function when the HTML document finishes loading
-    window.onload = _boot;
+    /**
+     * Setup listeners used to start the booting process
+     */
+    function _setupEventListeners(): void {
+
+        if (window.applicationCache) {
+
+            window.applicationCache.addEventListener("cached", () => {
+                if (!bootStarted) {
+                    bootStarted = true;
+                    _boot();
+                }
+            });
+
+            window.applicationCache.addEventListener("noupdate", () => {
+                if (!bootStarted) {
+                    bootStarted = true;
+                    _boot();
+                }
+            });
+
+            window.applicationCache.addEventListener("error", (e: Event) => {
+                if (!bootStarted) {
+                    bootStarted = true;
+                    _boot();
+                }
+            });
+
+            window.applicationCache.addEventListener("updateready", () => {
+                //alert("UPDATE!");
+                applicationCache.swapCache();
+                if (!bootStarted) {
+                    bootStarted = true;
+                    _update();
+                }
+            });
+
+            // if appcache is not supported make sure the framework will boot
+        }
+
+        // this is fallback if no event is called
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                if (!bootStarted) {
+                    bootStarted = true;
+                    _boot();
+                }
+            }, 2000);
+        });
+
+
+    }
+
+    // ********************************************************************************
+    // this code is executed immediately when the ajs.js script is loaded and evaluated
+    // takes care of the debug console initialization and starts the ajs boot process
+    // ********************************************************************************
+
+    _setupEventListeners();
+
 }

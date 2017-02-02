@@ -22,7 +22,7 @@
 						"isExported": true
 					},
 					"comment": {
-						"shortText": "Contains base classes for the Ajs Application, application configuration and exceptions.\n<p>The Application class has to be derived by the user code to initialize the\napplication, load necessary resources and setup routes.</p>\n<p>The derived application class is construced and initialized during the\nframework boot process. The boot manager calls the framework to instantiate,\nconfigure and initialize the application.</p>\n<p>As the application initialization can be an asynchronous process (resources\ncould be loading and additional user tasks can be done during the initialization)\nso it is necessary to call the _initDone method once the initialization is completed.</p>\n<h5>Application Initialization Example</h5>\n#example app_init"
+						"shortText": "Contains base classes for the Ajs Application, application configuration and exceptions.\n<p>The Application class has to be derived by the user code to initialize the\napplication, load necessary resources and setup routes.</p>\n<p>The derived application class is construced and initialized during the\nframework boot process. The boot manager calls the framework to instantiate,\nconfigure and initialize the application.</p>\n<p>As the application initialization can be an asynchronous process (resources\ncould be loading and additional user tasks can be done during the initialization)\nso it is necessary to call the _initDone method once the initialization is completed.</p>\n<h5>Application Initialization Example</h5>\n#example /static/examples/app_init.ts"
 					},
 					"children": [
 						{

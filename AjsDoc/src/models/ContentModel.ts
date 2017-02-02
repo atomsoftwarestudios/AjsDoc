@@ -70,53 +70,64 @@ namespace ajsdoc {
 
         protected _initialize(): void {
 
-            let res: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(
+            let resPromise: Promise<ajs.resources.IResource> = ajs.Framework.resourceManager.getResource(
                 config.dataSources.toc,
-                config.storageType
+                config.storageType,
+                ajs.resources.CACHE_POLICY.PERMANENT,
+                ajs.resources.LOADING_PREFERENCE.CACHE
             );
 
-            if (res === null) {
-                throw new Error("TOC resource not loaded");
-            }
+            resPromise.then(
+                async (resource: ajs.resources.IResource) => {
 
-            this._data = JSON.parse(res.data);
+                    try {
+                        this._data = JSON.parse(resource.data);
 
-            // get all links from the data
-            let contents: string[] = [];
-            contents.push(this._data.defaultPath);
-            this._getResourcesFromData(this._data.toc, contents);
+                        // get all links from the data and load them
+                        let contents: Promise<ajs.resources.IResource>[] = [];
+                        contents.push(
+                            ajs.Framework.resourceManager.getResource(
+                                this._data.defaultPath,
+                                config.storageType,
+                                ajs.resources.CACHE_POLICY.PERMANENT,
+                                ajs.resources.LOADING_PREFERENCE.CACHE
+                            )
+                        );
 
-            // load all content resources
-            ajs.Framework.resourceManager.loadMultiple(
-                (allLoaded: boolean, resources: ajs.resources.IResource[]) => {
-                    this._contentsLoaded(allLoaded, resources);
-                },
-                contents,
-                null,
-                config.storageType,
-                config.articlesStoragePolicy
-            );;
+                        this._getResourcesFromData(this._data.toc, contents);
+
+                        await Promise.all(contents);
+
+                    } catch (e) {
+                        throw new Error("Failed to load documentation contents");
+                    }
+
+                    this._prepareData();
+                    this._initialized = true;
+
+                }
+            ).catch((e: any) => {
+                throw new Error("Failed to load table of contents");
+            });
+
         }
 
-        protected _getResourcesFromData(article: IArticleData, contents: string[]): void {
-            if (article.path && contents.indexOf(article.path) === -1) {
-                contents.push(article.path);
+        protected _getResourcesFromData(article: IArticleData, contents: Promise<ajs.resources.IResource>[]): void {
+            if (article.path) {
+                contents.push(
+                    ajs.Framework.resourceManager.getResource(
+                        article.path,
+                        config.storageType,
+                        ajs.resources.CACHE_POLICY.PERMANENT,
+                        ajs.resources.LOADING_PREFERENCE.CACHE
+                    )
+                );
             }
             if (article.children) {
                 for (let i: number = 0; i < article.children.length; i++) {
                     this._getResourcesFromData(article.children[i], contents);
                 }
             }
-        }
-
-        protected _contentsLoaded(allLoaded: boolean, resources: ajs.resources.IResource[]): void {
-            if (!allLoaded) {
-                throw "Failed to load documentation contents";
-            }
-
-            this._prepareData();
-
-            this._initialized = true;
         }
 
         protected _prepareData(article?: IArticleData, parent?: IArticleData, key?: string): void {
@@ -209,16 +220,30 @@ namespace ajsdoc {
 
             let article: IArticleData = this.navigate(path);
 
-            let desc: string = "";
             if (article.path) {
-                let resource: ajs.resources.IResource = ajs.Framework.resourceManager.getResource(article.path, config.storageType);
-                if (resource === null) {
-                    throw "Resource " + path + " was not loaded";
-                }
-                desc = resource.data;
+
+                let resource: Promise<ajs.resources.IResource> = ajs.Framework.resourceManager.getResource(
+                    article.path,
+                    config.storageType,
+                    ajs.resources.CACHE_POLICY.PERMANENT,
+                    ajs.resources.LOADING_PREFERENCE.CACHE);
+
+                resource.then(
+                    (resource: ajs.resources.IResource) => {
+                        this._dataReadyNotifier.notify(this, { articleState: resource.data });
+                    }
+                ).catch(
+                    (reason: any) => {
+                        throw "Resource " + article.path + " was not loaded";
+                    }
+                );
+
+            } else {
+
+                this._dataReadyNotifier.notify(this, { articleState: "" });
+
             }
 
-            this._dataReadyNotifier.notify(this, { articleState: desc } );
         }
 
         protected _getNavBar(path: string): void {

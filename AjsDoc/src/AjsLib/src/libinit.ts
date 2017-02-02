@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/*! ************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -21,27 +21,24 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.resources {
+/**
+ * Initializes libraries in the correct order
+ */
+
+namespace ajs.libinit {
 
     "use strict";
 
-    /** Information about currently loading resources */
-    export interface IResourcesLoadingInfo {
-        /** Array of information about particular resources */
-        loadingData: {
-            /** Unique resource locator */
-            url: string;
-            /** Flag if the resource loading is over */
-            loadingFinished: boolean;
-            /** Flag if the resource was loaded (from server or cache) sucessfully */
-            loaded: boolean;
-            /** Resource currently loading */
-            resource: IResource;
-        }[];
-        /** User data to be passed to the callback when loading finished */
-        userData: any;
-        /** Callback to be called when all resources finished loading */
-        loadEndCallback: IResourcesLoadEndCallback;
-    }
+    export let libinitdone: boolean;
 
+    if (!libinitdone) {
+
+        // 01 - es6-promise.js
+        if (!(window as any).Promise) {
+            (window as any).Promise = (window as any).ES6Promise;
+        }
+
+        libinitdone = true;
+    }
 }
+

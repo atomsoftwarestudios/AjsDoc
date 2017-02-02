@@ -10,7 +10,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>2.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -34,11 +34,11 @@
     <TypeScriptCompile Include="src\boot\!boot.ts" />
     <TypeScriptCompile Include="src\boot\boot.ts" />
     <TypeScriptCompile Include="src\boot\Exceptions.ts" />
+    <TypeScriptCompile Include="src\boot\IBootConfig.ts" />
     <TypeScriptCompile Include="src\boot\IGetAjsApplicationConfig.ts" />
     <TypeScriptCompile Include="src\boot\IGetAjsConfig.ts" />
     <TypeScriptCompile Include="src\boot\IGetResourceLists.ts" />
     <TypeScriptCompile Include="src\boot\IResourceLists.ts" />
-    <TypeScriptCompile Include="src\boot\IResourceLoadingInfo.ts" />
     <TypeScriptCompile Include="src\debug\!debug.ts" />
     <TypeScriptCompile Include="src\debug\IConsoleConfig.ts" />
     <TypeScriptCompile Include="src\debug\IConsoleModuleCollection.ts" />
@@ -60,12 +60,13 @@
     <TypeScriptCompile Include="src\debug\tsx\IViewComponent.ts" />
     <TypeScriptCompile Include="src\debug\tsx\tsx.ts" />
     <TypeScriptCompile Include="src\events\!events.ts" />
-    <TypeScriptCompile Include="src\mvvm\viewmodel\!mvvm.ts" />
+    <TypeScriptCompile Include="src\mvvm\!mvvm.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IComponentElement.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\ITransitionBeginHandler.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\IDomEventListenerInfo.ts" />
     <TypeScriptCompile Include="src\mvvm\viewmodel\ITransitionType.ts" />
     <TypeScriptCompile Include="src\mvvm\view\!view.ts" />
+    <TypeScriptCompile Include="src\mvvm\view\IStyleSheetProcessedCallback.ts" />
     <TypeScriptCompile Include="src\mvvm\view\Exceptions.ts" />
     <TypeScriptCompile Include="src\mvvm\model\!model.ts" />
     <TypeScriptCompile Include="src\mvvm\model\Exceptions.ts" />
@@ -91,21 +92,17 @@
     <TypeScriptCompile Include="src\resources\AjsStorage.ts" />
     <TypeScriptCompile Include="src\resources\Exceptions.ts" />
     <TypeScriptCompile Include="src\resources\ICachedResource.ts" />
+    <TypeScriptCompile Include="src\resources\IManagedResource.ts" />
     <TypeScriptCompile Include="src\resources\IResource.ts" />
-    <TypeScriptCompile Include="src\resources\IResourceLoadEndCallback.ts" />
     <TypeScriptCompile Include="src\resources\IResourceLoadEndHandler.ts" />
-    <TypeScriptCompile Include="src\resources\IResourceLoadingInfo.ts" />
     <TypeScriptCompile Include="src\resources\IResourceManagerConfig.ts" />
     <TypeScriptCompile Include="src\resources\IResourceRequest.ts" />
     <TypeScriptCompile Include="src\resources\IResourceRequestData.ts" />
     <TypeScriptCompile Include="src\resources\IResourceResponseData.ts" />
-    <TypeScriptCompile Include="src\resources\IResourcesLoadEndCallback.ts" />
-    <TypeScriptCompile Include="src\resources\IResourcesLoadingInfo.ts" />
     <TypeScriptCompile Include="src\resources\IResourceTypes.ts" />
     <TypeScriptCompile Include="src\resources\IStorageProvider.ts" />
     <TypeScriptCompile Include="src\resources\ResourceLoader.ts" />
     <TypeScriptCompile Include="src\resources\ResourceManager.ts" />
-    <TypeScriptCompile Include="src\resources\StorageBrowser.ts" />
     <TypeScriptCompile Include="src\resources\StorageLocal.ts" />
     <TypeScriptCompile Include="src\resources\MemoryStorageProvider.ts" />
     <TypeScriptCompile Include="src\resources\StorageMemory.ts" />
@@ -122,7 +119,6 @@
     <TypeScriptCompile Include="src\templating\!templating.ts" />
     <TypeScriptCompile Include="src\templating\Exceptions.ts" />
     <TypeScriptCompile Include="src\templating\ITemplatesCollection.ts" />
-    <TypeScriptCompile Include="src\templating\ITemplatesLoadEndHandler.ts" />
     <TypeScriptCompile Include="src\templating\IVisualComponent.ts" />
     <TypeScriptCompile Include="src\templating\IVisualComponentChildInfo.ts" />
     <TypeScriptCompile Include="src\templating\IVisualComponentChildren.ts" />
@@ -132,7 +128,7 @@
     <TypeScriptCompile Include="src\templating\Template.ts" />
     <TypeScriptCompile Include="src\templating\TemplateManager.ts" />
     <TypeScriptCompile Include="src\ui\!ui.ts" />
-    <TypeScriptCompile Include="src\ui\InitialProgressBar.ts" />
+    <TypeScriptCompile Include="src\ui\ProgressBar.ts" />
     <TypeScriptCompile Include="src\utils\Base64.ts" />
     <TypeScriptCompile Include="src\utils\DeepMerge.ts" />
     <TypeScriptCompile Include="src\utils\HTMLTags.ts" />
@@ -142,7 +138,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="changelog.txt" />
+    <Content Include="tsconfig.Release.json" />
+    <Content Include="tsconfig.json" />
+    <Content Include="tsconfig.common.json" />
+    <None Include="tsconfig.Debug.json" />
     <Content Include="license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AjsLib\AjsLib.csproj">
+      <Project>{42e6f448-acfe-451c-a63a-63030fb59d56}</Project>
+      <Name>AjsLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
@@ -205,8 +211,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>echo { "extends" : "./tsconfig.$(ConfigurationName).json" } &gt; "$(ProjectDir)tsconfig.json"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>

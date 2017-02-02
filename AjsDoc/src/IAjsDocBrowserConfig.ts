@@ -24,14 +24,16 @@ namespace ajsdoc {
 
     export interface IAjsDocBrowserConfig extends ajs.app.IApplicationUserConfig {
         storageType: ajs.resources.STORAGE_TYPE;
-        articlesStoragePolicy: ajs.resources.CACHE_POLICY;
-        libraries: string[];
+        storagePolicy: ajs.resources.CACHE_POLICY;
         templateList: string;
+        templateLoadingPreference: ajs.resources.LOADING_PREFERENCE;
         resourceList: string;
+        resourceLoadingPreference: ajs.resources.LOADING_PREFERENCE;
         dataSources: {
             toc: string;
             program: string;
         };
+        dataLoadingPreference: ajs.resources.LOADING_PREFERENCE;
     }
 
 }

@@ -92,6 +92,17 @@ namespace ajs.utils {
         return new Date(8640000000000000);
     }
 
+
+    export function ie10UTCDate(date: Date): string {
+        let utc: string = date.toUTCString().replace("UTC", "GMT");
+        let parts: string[] = utc.split(" ");
+        if (parts[1].length === 1) {
+            parts[1] = "0" + parts[1];
+        }
+        return parts.join(" ");
+    };
+
+
     /**
      * Measures the deep size of object. Levels to be measured could be limited
      * @param object Object to be measured
@@ -173,6 +184,22 @@ namespace ajs.utils {
 
     }
 
+    /**
+     * Escapes string to be usable in the regullar expression
+     * @param str String to be escaped
+     */
+    export function escapeRegExp(str: string): string {
+        return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    }
 
+    /**
+     * Replaces all occurences of the searchValue by replaceValue in str
+     * @param str String to be searched for occurences of searchValue and replaced with replaceValue
+     * @param searchValue Value to be replaced
+     * @param replaceValue Value to be used as replacement
+     */
+    export function replaceAll(str: string, searchValue: string, replaceValue: string): string {
+        return str.replace(new RegExp(escapeRegExp(searchValue), "g"), replaceValue);
+    }
 
 }

@@ -26,21 +26,20 @@ namespace ajs.resources {
     "use strict";
 
     /**
-     * Represents the memory storage (persistent reload / close)
+     * Represents the memory storage (persistent until reload / close)
      */
-    export class StorageMemory extends StorageBrowser {
+    export class StorageMemory extends AjsStorage {
 
         /** Returns type of the storage */
         public get type(): STORAGE_TYPE { return STORAGE_TYPE.MEMORY; }
 
         /** Constructs the StorageLocal object */
-        public constructor() {
+        protected _initialize(): void {
 
-            super();
-
-            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
 
             this._supported = true;
+
             if (this._supported) {
                 this._storageProvider = new MemoryStorageProvider();
                 this._usedSpace = 0;

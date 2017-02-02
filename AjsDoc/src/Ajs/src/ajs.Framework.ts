@@ -141,6 +141,8 @@ namespace ajs {
         public static configureApplication(config: ajs.app.IApplicationConfig): void {
             ajs.debug.log(debug.LogType.Enter, 0, "ajs", this);
 
+            ajs.debug.log(debug.LogType.Info, 0, "ajs", this, "Configuring application");
+
             Framework._appConfig = config;
 
             ajs.debug.log(debug.LogType.Exit, 0, "ajs", this);
@@ -156,16 +158,19 @@ namespace ajs {
 
             ajs.debug.log(debug.LogType.Enter, 0, "ajs", this);
 
-            if (Framework._appConfig === null) {
-                ajs.debug.log(debug.LogType.Error, 0, "ajs", this, "ApplicationNotConfiguredException");
+            ajs.debug.log(debug.LogType.Info, 0, "ajs", this, "Frameowrk is starting the application");
+
+            if (Framework._appConfig === undefined || Framework._appConfig === null) {
+                ajs.debug.log(debug.LogType.Error, 0, "ajs", this, "Application not configured");
                 throw new ApplicationNotConfiguredException();
             }
 
             if (typeof (Framework._appConfig.appConstructor) === typeof (Function)) {
                 Framework._application = new Framework._appConfig.appConstructor(Framework._appConfig.userConfig);
+                ajs.debug.log(debug.LogType.Info, 0, "ajs", this, "Initializing the application");
                 Framework._application.initialize();
             } else {
-                ajs.debug.log(debug.LogType.Error, 0, "ajs", this, "AppConstructorMustBeAFunctionException");
+                ajs.debug.log(debug.LogType.Error, 0, "ajs", this, "Application constructor is not a function!");
                 throw new AppConstructorMustBeAFunctionException();
             }
 
@@ -182,7 +187,7 @@ namespace ajs {
          */
         protected static _errorHandler(msg: string | Error, url: string, line: number, col: number, error: Error): void {
 
-            let text: string = "";
+            /*let text: string = "";
             let err: string = "";
 
             if (msg instanceof Error) {
@@ -198,7 +203,7 @@ namespace ajs {
                 "Exception: " +
                 "<br />Message: (" + text + ")<br /> At: " + url +
                 "<br />line " + line + " column " + col + err
-            );
+            );*/
         }
 
     }

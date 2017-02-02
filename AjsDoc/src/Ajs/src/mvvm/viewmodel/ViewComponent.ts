@@ -29,6 +29,9 @@ namespace ajs.mvvm.viewmodel {
 
     export class ViewComponent {
 
+        protected _ajsInitialized: boolean;
+        public get ajsInitialized(): boolean { return this._ajsInitialized; }
+
         /** Stores the attribute id value of the component instance specified in the tag in the template */
         protected _ajsid: string;
         /** Returns the value of the id attribute specified at the view component instance in the template */
@@ -104,6 +107,7 @@ namespace ajs.mvvm.viewmodel {
             }
 
             // initialize properties
+            this._ajsInitialized = false;
             this._ajsid = id;
             this._ajsComponentId = view.getComponentId;
             this._ajsView = view;
@@ -161,12 +165,12 @@ namespace ajs.mvvm.viewmodel {
             this._ajsView.notifyParentsChildrenStateChange(this._ajsParentComponent);
             // ???????????????????????????????????????????????????????????????
 
-            this._initialize();
+            this._ajsInitialized = this._initialize();
         }
 
 
-        protected _initialize(): void {
-            return;
+        protected _initialize(): boolean {
+            return true;
         }
 
         protected _destroy(): void {
@@ -793,8 +797,14 @@ namespace ajs.mvvm.viewmodel {
         protected _attrIf(toRemove: string[], attr: Attr): boolean {
 
             let condition: string = attr.nodeValue;
-            if (!eval(condition)) {
-                return false;
+            try {
+                /* tslint:disable */
+                if (!eval(condition)) {
+                /* tslint:enable */
+                    return false;
+                }
+            } catch (e) {
+                throw new InvalidAttributeIfValueException(e);
             }
             toRemove.push(attr.nodeName);
             return true;

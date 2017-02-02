@@ -59,6 +59,8 @@ namespace ajs {
          * If ommited, no debugging will be performed
          */
         debugging?: ajs.debug.IConsoleConfig;
+        
+        boot?: ajs.boot.IBootConfig;
 
         /** 
          * Configuration of the resource manager

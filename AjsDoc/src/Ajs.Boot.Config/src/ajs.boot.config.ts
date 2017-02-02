@@ -29,6 +29,7 @@ namespace ajs.boot {
 
         return {
             localPermanent: [
+                "/js/ajsdoc.lib.js",
                 "/js/ajsdocbrowser.js",
             ]
         };
@@ -53,16 +54,16 @@ namespace ajs.boot {
                 // to manually control the console use the browser console 
                 // ajs.debug.console.show()
                 // ajs.debug.console.hide()
-                showOnBootDelay: 5000,
+                showOnBootDelay: 2000,
                 loggerConfig: {
                     // logging enabled
                     enabled: true,
-                    // logger configuration
+                    // logging of the log records to the browser console
                     logDataToConsole: false,
                     // type of records to be logged
                     logTypes: [
-                        ajs.debug.LogType.Enter,
-                        ajs.debug.LogType.Exit,
+                        /*ajs.debug.LogType.Enter,
+                        ajs.debug.LogType.Exit,*/
                         ajs.debug.LogType.Constructor,
                         ajs.debug.LogType.Info,
                         ajs.debug.LogType.Warning,
@@ -79,8 +80,8 @@ namespace ajs.boot {
 
             resourceManager: {
                 memoryCacheSize: 20 * 1024 * 1024,
-                sessionCacheSize: 4 * 1024 * 1024,
-                localCacheSize: 4 * 1024 * 1024,
+                sessionCacheSize: 2 * 1024 * 1024,
+                localCacheSize: 2 * 1024 * 1024,
                 removeResourcesOlderThan: ajs.utils.maxDate()
             },
 
@@ -102,19 +103,20 @@ namespace ajs.boot {
 
     };
 
-
     getApplicationConfig = function(): ajs.app.IApplicationConfig {
 
         let userConfig: ajsdoc.IAjsDocBrowserConfig = {
-            storageType: ajs.resources.STORAGE_TYPE.SESSION,
-            articlesStoragePolicy: ajs.resources.CACHE_POLICY.LASTRECENTLYUSED,
-            libraries: ["/js/lib/highlight.pack.js"],
+            storageType: ajs.resources.STORAGE_TYPE.LOCAL,
+            storagePolicy: ajs.resources.CACHE_POLICY.LASTRECENTLYUSED,
             templateList: "/static/templates.json",
+            templateLoadingPreference: ajs.resources.LOADING_PREFERENCE.CACHE,
             resourceList: "/static/appresources.json",
+            resourceLoadingPreference: ajs.resources.LOADING_PREFERENCE.CACHE,
             dataSources: {
                 toc: "/static/toc.json",
                 program: "/static/program.json"
-            }
+            },
+            dataLoadingPreference: ajs.resources.LOADING_PREFERENCE.CACHE,
         };
 
         return {

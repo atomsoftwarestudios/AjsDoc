@@ -10,7 +10,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>2.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -26,24 +26,26 @@
     <Content Include="index.html" />
     <Content Include="js\ajs.boot.config.js" />
     <Content Include="js\ajs.js" />
+    <Content Include="js\ajs.lib.js" />
+    <Content Include="js\ajsdoc.lib.js" />
     <Content Include="js\ajsdocbrowser.js" />
-    <Content Include="js\lib\highlight.pack.js" />
     <Content Include="license.txt" />
     <Content Include="res\img\atom-logo.gif" />
     <Content Include="static\charts\appcache.svg" />
     <Content Include="static\content\03 Visual Studio Solution Setup.html" />
+    <Content Include="static\content\04 Web Server Requirements and Configuration.html" />
     <Content Include="static\content\03\02 Contributors.html" />
     <Content Include="static\content\03\01 Application developers.html" />
-    <Content Include="static\content\05 Debugging tools.html" />
-    <Content Include="static\content\04\02 Offline Application Support.html" />
-    <Content Include="static\content\04\05 Resource Management and Caching.html" />
-    <Content Include="static\content\04\04 Navigation and Routing.html" />
-    <Content Include="static\content\04\03 Boot Process.html" />
-    <Content Include="static\content\04\01 Overview.html" />
-    <Content Include="static\content\04\06\02 Models.html" />
-    <Content Include="static\content\04\06\01 View and its components.html" />
-    <Content Include="static\content\05\02 Resource manager info.html" />
-    <Content Include="static\content\05\01 Logger.html" />
+    <Content Include="static\content\06 Debugging tools.html" />
+    <Content Include="static\content\05\02 Offline Application Support.html" />
+    <Content Include="static\content\05\05 Resource Management and Caching.html" />
+    <Content Include="static\content\05\04 Navigation and Routing.html" />
+    <Content Include="static\content\05\03 Boot Process.html" />
+    <Content Include="static\content\05\01 Overview.html" />
+    <Content Include="static\content\05\06\02 Models.html" />
+    <Content Include="static\content\05\06\01 View and its components.html" />
+    <Content Include="static\content\06\02 Resource manager info.html" />
+    <Content Include="static\content\06\01 Logger.html" />
     <Content Include="static\content\98 License.html" />
     <Content Include="static\templates\content.css" />
     <Content Include="res\img\ajs-logo.png" />
@@ -57,10 +59,10 @@
     <Content Include="res\img\safari.png" />
     <Content Include="static\content\01 Introduction.html" />
     <Content Include="static\content\02 Design requirements.html" />
-    <Content Include="static\content\04\06\01\01 View.html" />
-    <Content Include="static\content\04\06\01\03 View Components.html" />
-    <Content Include="static\content\04\06\01\02 Visual Components and Visual Styles.html" />
-    <Content Include="static\content\04\06 MVVM Architecture.html" />
+    <Content Include="static\content\05\06\01\01 View.html" />
+    <Content Include="static\content\05\06\01\03 View Components.html" />
+    <Content Include="static\content\05\06\01\02 Visual Components and Visual Styles.html" />
+    <Content Include="static\content\05\06 MVVM Architecture.html" />
     <Content Include="static\content\97 Special thanks.html" />
     <Content Include="static\content\99 Changelog.html" />
     <Content Include="static\templates\ajsdoc.html" />
@@ -68,9 +70,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="static\program.json" />
-    <Content Include="static\content\04 How it works.html" />
+    <Content Include="static\content\05 How it works.html" />
     <Content Include="static\toc.json" />
     <Content Include="static\appresources.json" />
+    <Content Include="tsconfig.common.json" />
+    <Content Include="tsconfig.Debug.json" />
+    <Content Include="tsconfig.json" />
+    <Content Include="tsconfig.Release.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -114,6 +120,10 @@
     <None Include="static\templates.json" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="src\AjsDocLib\AjsDocLib.csproj">
+      <Project>{9840c9ac-d37c-42c3-8c0a-05e9f6233379}</Project>
+      <Name>AjsDocLib</Name>
+    </ProjectReference>
     <ProjectReference Include="src\Ajs\Ajs.csproj">
       <Project>{267086da-ab24-4d8d-bd5f-d7d3b3d7db67}</Project>
       <Name>Ajs</Name>
@@ -183,7 +193,6 @@ powershell.exe -ExecutionPolicy Bypass -File "..\..\Tools\tocgen.ps1" "$(Project
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>echo { "extends" : "./tsconfig.$(ConfigurationName).json" } &gt; "$(ProjectDir)tsconfig.json"</PreBuildEvent>
   </PropertyGroup>
 </Project>

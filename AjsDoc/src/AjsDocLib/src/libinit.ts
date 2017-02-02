@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/*! ************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -21,13 +21,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.resources {
+/**
+ * Initializes libraries in the correct order
+ */
 
-    "use strict";
+namespace ajsdoc.libinit {
 
-    /** Called when all resources finished loading even if errors occured */
-    export interface IResourcesLoadEndCallback {
-        (allLoaded: boolean, resources: IResource[], userData?: any): void;
+    export let libinitdone: boolean;
+
+    if (!libinitdone) {
+
+        // 01 - highlight.pack.js - does not require initialization
+
+        libinitdone = true;
     }
-
 }

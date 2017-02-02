@@ -21,13 +21,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.templating {
+namespace ajs.resources {
 
     "use strict";
 
-    /** Defines the handler which is called when requested templates are loaded from the server */
-    export interface ITemplatesLoadEndHandler {
-        (successfull: boolean): void;
+    /** Managed resource descriptor */
+    export interface IManagedResource {
+        url: string;
+        storageType: STORAGE_TYPE;
+        cachePolicy: CACHE_POLICY;
     }
 
 }

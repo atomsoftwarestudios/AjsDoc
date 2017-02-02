@@ -26,48 +26,16 @@ namespace ajs.boot {
     "use strict";
 
     /** Fired if the ajs.boot.getAjsConfig function is not defined */
-    export class GetAjsConfigFunctionNotDefinedException extends Error {
-        constructor(msg?: string) {
-            let message: string = "GetAjsConfigFunctionNotDefinedException";
-            if (msg) {
-                message = message + ": " + msg;
-            }
-            super(message);
-        }
-    }
+    export class GetAjsConfigFunctionNotDefinedException extends Error { }
 
     /** Fired if the ajs.boot.getAjsConfig function is not defined */
-    export class GetApplicationConfigFunctionNotDefinedException extends Error {
-        constructor(msg?: string) {
-            let message: string = "GetApplicationConfigFunctionNotDefinedException";
-            if (msg) {
-                message = message + ": " + msg;
-            }
-            super(message);
-        }
-    }
+    export class GetApplicationConfigFunctionNotDefinedException extends Error { }
 
     /** Fired if the ajs.boot.getResourceList function is not defined */
-    export class GetResourceListFunctionNotDefinedException extends Error {
-        constructor(msg?: string) {
-            let message: string = "GetResourceListFunctionNotDefinedException";
-            if (msg) {
-                message = message + ": " + msg;
-            }
-            super(message);
-        }
-    }
+    export class GetResourceListFunctionNotDefinedException extends Error { }
 
     /** Fired when loading resources specified in the configuration file fails */
-    export class ResourcesLoadingFailedException extends Error {
-        constructor(msg?: string) {
-            let message: string = "ResourcesLoadingFailedException";
-            if (msg) {
-                message = message + ": " + msg;
-            }
-            super(message);
-        }
-    }
+    export class ResourcesLoadingFailedException extends Error { }
 
 }
 

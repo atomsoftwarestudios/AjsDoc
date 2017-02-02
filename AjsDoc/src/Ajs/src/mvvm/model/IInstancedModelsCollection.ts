@@ -29,7 +29,7 @@ namespace ajs.mvvm.model {
         [index: string]: {
             referenceCount: number;
             model: Model;
-        }
+        };
     }
 
 }

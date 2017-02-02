@@ -25,10 +25,10 @@ namespace ajs.resources {
 
     "use strict";
 
+    /** Represents the data available with the request sent to the server */
     export interface IResourceRequestData {
         url: string;
         isBinary: boolean;
-        userData: any;
         lastModified: Date;
         startTime: Date;
         loadEndHandler: IResourceLoadEndHandler;

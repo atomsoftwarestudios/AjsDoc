@@ -48,35 +48,37 @@ namespace ajs.resources {
          * @param userData User data object to be passed to the handler
          * @param lastModified Information about resource last modification date/time
          */
-        public loadResource(
-            loadEndHandler: IResourceLoadEndHandler,
-            url: string,
-            isBinary: boolean,
-            userData?: any,
-            lastModified?: Date
-        ): void {
+        public loadResource(url: string, isBinary: boolean, lastModified?: Date): Promise<IResourceResponseData> {
 
             ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
-                "Loading resource '" + url + "'", isBinary, userData, lastModified );
+            let response: Promise<IResourceResponseData> = new Promise<IResourceResponseData>(
+                (resolve: (data: IResourceResponseData) => void, reject: (reason?: any) => void) => {
 
-            // prepare data for the loader
-            lastModified = lastModified || ajs.utils.minDate();
-            let requestData: IResourceRequestData = {
-                url: url,
-                isBinary: isBinary,
-                userData: userData,
-                lastModified: lastModified,
-                startTime: new Date(),
-                loadEndHandler: loadEndHandler
-            };
+                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                        "Requesting [GET] resource '" + url + "'", isBinary, lastModified);
 
-            // initiate loading of the resource
-            this._loadResource(requestData);
+                    // prepare data for the loader
+                    lastModified = lastModified || ajs.utils.minDate();
+
+                    let requestData: IResourceRequestData = {
+                        url: url,
+                        isBinary: isBinary,
+                        lastModified: lastModified,
+                        startTime: new Date(),
+                        loadEndHandler: (responseData: IResourceResponseData): void => {
+                            resolve(responseData);
+                        }
+                    };
+
+                    this._loadResource(requestData);
+
+                }
+            );
 
             ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
 
+            return response;
         }
 
         /**
@@ -86,6 +88,9 @@ namespace ajs.resources {
         protected _loadResource(requestData: IResourceRequestData): void {
 
             ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                "Initializing the XHR");
 
             // setup the xhr
             let xhr: IResourceRequest = new XMLHttpRequest() as IResourceRequest;
@@ -103,7 +108,7 @@ namespace ajs.resources {
             });
 
             if (requestData.lastModified !== null) {
-                xhr.setRequestHeader("If-Modified-Since", requestData.lastModified.toUTCString());
+                xhr.setRequestHeader("If-Modified-Since", ajs.utils.ie10UTCDate(requestData.lastModified));
             }
 
             // send request to the server
@@ -133,14 +138,13 @@ namespace ajs.resources {
                 let responseData: IResourceResponseData = {
                     type: xhr.responseType,
                     data: requestData.isBinary ? xhr.response : xhr.responseText,
-                    userData: requestData.userData,
                     httpStatus: xhr.status,
                     startTime: requestData.startTime,
                     endTime: new Date()
                 };
 
                 ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
-                    "XHR ready in " + (responseData.endTime.getTime() - responseData.startTime.getTime()) +
+                    "XHR for '" + requestData.url + "' ready in " + (responseData.endTime.getTime() - responseData.startTime.getTime()) +
                     "ms with " + xhr.status + " " + xhr.statusText);
 
                 // for text data

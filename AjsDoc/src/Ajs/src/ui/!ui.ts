@@ -25,4 +25,6 @@ namespace ajs.ui {
 
     "use strict";
 
+    export let progressBar: ProgressBar = ajs.ui.progressBar || null;
+
 }

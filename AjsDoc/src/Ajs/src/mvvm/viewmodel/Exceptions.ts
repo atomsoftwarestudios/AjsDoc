@@ -25,15 +25,5 @@ namespace ajs.mvvm.viewmodel {
 
     "use strict";
 
-    export class NotImplementedException extends Error {
-        constructor(msg?: string) {
-            let message: string = "NotImplementedException";
-            if (msg) {
-                message = message + ": " + msg;
-            }
-            super(message);
-        }
-    }
-
-
+    export class InvalidAttributeIfValueException extends Error { }
 }

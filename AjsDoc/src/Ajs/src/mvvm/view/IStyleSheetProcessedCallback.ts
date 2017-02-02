@@ -21,20 +21,12 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.resources {
+namespace ajs.mvvm.view {
 
     "use strict";
 
-    /** Information about currently loading resource passed from load method to IResourceLoadEnd method */
-    export interface IResourceLoadingInfo {
-        /** Current resource info */
-        resource: IResource;
-        /** User data passed to the callback when loading of the resource finishes */
-        userData: any;
-        /** Information if the sucessfully loaded script resources should be evaluated automatically */
-        execScript: boolean;
-        /** Callback to be called when the resource loading finishes */
-        callback: IResourceLoadEndCallback;
+    export interface IStyleSheetProcessedCallback{
+        (styleSheet: string): void;
     }
 
 }

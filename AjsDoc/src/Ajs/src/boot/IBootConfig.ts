@@ -25,13 +25,13 @@ namespace ajs.boot {
 
     "use strict";
 
-    /** Represents single set of resources being loaded */
-    interface IResourceLoadingInfo {
-        resources: string[];
-        storageType: ajs.resources.STORAGE_TYPE;
-        cachePolicy: ajs.resources.CACHE_POLICY;
-        loadingEnd: boolean;
-        loaded: boolean;
+    /**
+     * Defines the function returning the ajs application configuration
+     * This function must be implemented in the cofiguration file (namepace ajs.boot)
+     * and loaded by html page. It is expcected to be defined in the ajs.boot namespace.
+     */
+    export interface IBootConfig {
+        bootResourcesCachePreference: resources.LOADING_PREFERENCE;
     }
 
 }

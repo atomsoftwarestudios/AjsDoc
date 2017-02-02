@@ -25,9 +25,6 @@ namespace ajs.resources {
 
     "use strict";
 
-    /** Function is not implemented (probably must be implemented in derived class */
-    export class NotImplementedException extends Error { }
-
     /** The required storage type is not supported by the browser */
     export class StorageTypeNotSupportedException extends Error { }
 
@@ -45,4 +42,13 @@ namespace ajs.resources {
 
     /** Load end handler passed must be a function */
     export class LoadEndHandlerIsNotFunctionException extends Error { }
+
+    /** Invalid callback specified for getResource function */
+    export class InvalidResourceReadyCallbackException extends Error { }
+
+    /** Requested local resource does not exist */
+    export class LocalResourceRequestedDoesNotExistException extends Error { }
+
+    /** Thrown when resource failed to load and was not located in the cache */
+    export class ResourceFailedToLoadException extends Error { }
 }

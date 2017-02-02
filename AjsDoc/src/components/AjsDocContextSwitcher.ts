@@ -38,7 +38,7 @@ namespace ajsdoc {
 
         protected _navigatedListener: ajs.events.IListener;
 
-        protected _initialize(): void {
+        protected _initialize(): boolean {
 
             this._lastGuidePath = ajs.Framework.stateManager.getSessionState(sessionStateGuidePath);
             if (this._lastGuidePath === null) {
@@ -58,6 +58,8 @@ namespace ajsdoc {
             this._ajsView.navigationNotifier.subscribe(this._navigatedListener);
 
             this._navigated();
+
+            return true;
         }
 
         protected _finalize(): void {

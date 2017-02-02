@@ -28,24 +28,27 @@ namespace ajs.resources {
     /**
      * Represents the browser session storage (persistent until window is closed)
      */
-    export class StorageSession extends StorageBrowser {
-
+    export class StorageSession extends AjsStorage {
 
         /** Returns type of the storage */
         public get type(): STORAGE_TYPE { return STORAGE_TYPE.SESSION; }
 
         /** Constructs the StorageSession object */
-        public constructor() {
+        protected _initialize(): void {
 
-            super();
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this);
+            this._supported = window.sessionStorage !== undefined;
 
-            this._supported = window.localStorage !== undefined;
             if (this._supported) {
+
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Session storage is supported.");
+
                 this._storageProvider = window.sessionStorage;
                 this._usedSpace = 0;
                 this._resources = this._getResourcesInfo();
+            } else {
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Session storage is not supported!");
             }
 
             ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);

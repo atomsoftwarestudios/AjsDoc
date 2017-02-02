@@ -27,45 +27,32 @@ namespace ajs.resources {
 
     /**
      * Represents the browser local storage (persistent until explicitly cleared)
-     * <p>
-     * Implementation is in the StorageBrowser, the storage provider is set here
-     * </p>
-     * <p>
-     * The total amount of the data storable to the session storage is about 5MB
-     * </p>
-     * <p>
-     * updateResource method should be called after each resource data change
-     * </p>
-     * <p>
-     * Items are stored under two keys in the storage:
-     * AJSRESOURCESINFO<br />
-     * - JSONed ICachedResource[] where data at all items is set to null<br />
-     * AJSRESOURCES.%URL%<br />
-     * - JSONed resource data where %URL% is URL of the data<br />
-     * AJSADDTEST<br />
-     * - string of spaces for testing if it is possible to add / update resource<br />
-     * </p>
      */
-    export class StorageLocal extends StorageBrowser {
+    export class StorageLocal extends AjsStorage {
 
         /** Returns type of the storage */
         public get type(): STORAGE_TYPE { return STORAGE_TYPE.LOCAL; }
 
         /** Constructs the StorageLocal object */
-        public constructor() {
+        protected _initialize(): void {
 
-            super();
-
-            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this);
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
 
             this._supported = window.localStorage !== undefined;
+
             if (this._supported) {
+
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Local storage is supported.");
+
                 this._storageProvider = window.localStorage;
                 this._usedSpace = 0;
                 this._resources = this._getResourcesInfo();
+            } else {
+                ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this, "Local storage is not supported!");
             }
 
             ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
         }
+
     }
 }

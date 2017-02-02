@@ -62,6 +62,7 @@ namespace ajs.events {
 
             ajs.debug.log(debug.LogType.Info, 0, "ajs.events", this,
                 "Registered subscribers: " + this._listeners.length, this._listeners);
+
             ajs.debug.log(debug.LogType.Exit, 0, "ajs.events", this);
         }
 
@@ -79,6 +80,7 @@ namespace ajs.events {
 
             ajs.debug.log(debug.LogType.Info, 0, "ajs.events", this,
                 "Registered subscribers: " + this._listeners.length, this._listeners);
+
             ajs.debug.log(debug.LogType.Exit, 0, "ajs.events", this);
         }
 
@@ -90,7 +92,10 @@ namespace ajs.events {
          */
         public notify(sender: any, data?: any): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.events", this, "Sender: " + ajs.utils.getClassName(sender));
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.events", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.events", this,
+                "Notifying subscribers. Sender: " + ajs.utils.getClassName(sender), sender, data);
 
             for (let i: number = 0; i < this._listeners.length; i++) {
                 let result: boolean = this._listeners[i](sender, data);

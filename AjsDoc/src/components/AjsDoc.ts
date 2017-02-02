@@ -27,8 +27,6 @@ namespace ajsdoc {
 
     export class AjsDoc extends ajs.mvvm.viewmodel.ViewComponent {
 
-        protected _initialized: boolean;
-
         /** Layout view component state */
         public ajsDocLayout: IAjsDocLayoutState;
 
@@ -46,7 +44,7 @@ namespace ajsdoc {
 
         /** Content data ready listener */
         protected _contentDataReady: ajs.events.IListener;
-
+    
         /**
          * Synchronous initialization of the view component
          * Subscribes to the navigation notifier, inititalizes the view component and
@@ -54,9 +52,7 @@ namespace ajsdoc {
          * method is called to finish the initialization and perform initial state
          * set call
          */
-        protected _initialize(): void {
-
-            this._initialized = false;
+        protected _initialize(): boolean {
 
             // set default state
             this._applyState({
@@ -78,36 +74,37 @@ namespace ajsdoc {
 
             // subscribe to _navigated event
             this._navigatedListener = (sender: ajs.mvvm.viewmodel.ViewComponent) => {
-                if (this._initialized) {
-                    this._navigated();
-                }
+                this._navigated();
                 return true;
             };
             this._ajsView.navigationNotifier.subscribe(this._navigatedListener);
 
             // subscribe to program model data ready notifier
             this._programDataReady = (sender: ProgramModel, data: IProgramDataReadyData) => {
-                if (this._initialized) {
-                    this._processProgramData(data);
-                }
+
+                this._ajsInitialized = true;
+
+                this._processProgramData(data);
+
                 return true;
             };
             this._progModel.dataReadyNotifier.subscribe(this._programDataReady);
 
             // subscribe to content model data ready notifier
             this._contentDataReady = (sender: ContentModel, data: IContentDataReadyData) => {
-                if (this._initialized) {
-                    this._processContentData(data);
-                }
+
+                this._ajsInitialized = true;
+
+                this._processContentData(data);
+
                 return true;
             };
             this._contentModel.dataReadyNotifier.subscribe(this._contentDataReady);
 
-            // initialization finished
-            this._initialized = true;
-
             // initiate loading of the data for the current path
             this._navigated();
+
+            return false;
         }
 
         /**
@@ -126,7 +123,7 @@ namespace ajsdoc {
          * This method is called from the notifier registered in the _initialize method
          */
         protected _navigated(): void {
-            this._updateView(false);
+            this._updateView();
         }
 
         /**
@@ -147,9 +144,13 @@ namespace ajsdoc {
             }
 
             if (data.articleState) {
-                let articleState: IAjsDocArticleStateSet = this._prepareArticleState(data.articleState as INode);
-                this.ajsDocLayout.ajsDocArticle.clearState(false);
-                this.ajsDocLayout.ajsDocArticle.setState(articleState);
+                let articleState: Promise<IAjsDocArticleStateSet> = this._prepareArticleState(data.articleState as INode);
+                articleState.then(
+                    (state: IAjsDocArticleStateSet) => {
+                        this.ajsDocLayout.ajsDocArticle.clearState(false);
+                        this.ajsDocLayout.ajsDocArticle.setState(state);
+                    }
+                );
             }
 
 
@@ -174,17 +175,24 @@ namespace ajsdoc {
 
             if (data.articleState) {
 
-                let articleState: IAjsDocArticleStateSet = {
-                    caption: "",
-                    description: this._setupHTMLContent("<div class=\"ajsDocArticleContent\">" + (data.articleState as string) + "</div>")
-                };
+                let descPromise: Promise<string> =
+                    this._setupHTMLContent("<div class=\"ajsDocArticleContent\">" + (data.articleState as string) + "</div>");
 
-                this.ajsDocLayout.ajsDocArticle.clearState(false);
-                this.ajsDocLayout.ajsDocArticle.setState(articleState);
+                descPromise.then((desc: string) => {
 
-                /*let articleState: IAjsDocArticleStateSet = this._prepareArticleState(data.articleState);
-                this.ajsDocLayout.ajsDocArticle.clearState(false);
-                this.ajsDocLayout.ajsDocArticle.setState(articleState);*/
+                    let articleState: IAjsDocArticleStateSet = {
+                        caption: "",
+                        description: desc
+                    };
+
+                    this.ajsDocLayout.ajsDocArticle.clearState(false);
+                    this.ajsDocLayout.ajsDocArticle.setState(articleState);
+
+                    /*let articleState: IAjsDocArticleStateSet = this._prepareArticleState(data.articleState);
+                    this.ajsDocLayout.ajsDocArticle.clearState(false);
+                    this.ajsDocLayout.ajsDocArticle.setState(articleState);*/
+                });
+
             }
 
         }
@@ -194,7 +202,7 @@ namespace ajsdoc {
          * updates the view based on the navigation path
          * @param updateLayout Specifies if the full layout render should be performed at once or if separate components should be rendered
          */
-        protected _updateView(updateLayout: boolean): void {
+        protected _updateView(): void {
 
             let path: string;
             let routeInfo: ajs.routing.IRouteInfo = ajs.Framework.router.currentRoute;
@@ -222,55 +230,71 @@ namespace ajsdoc {
          * Prepares the article state based on the current navigation path and data types to be displayed
          * @param node Node from the data has to be collected
          */
-        protected _prepareArticleState(node: INode): IAjsDocArticleStateSet {
+        protected _prepareArticleState(node: INode): Promise<IAjsDocArticleStateSet> {
 
-            let hierarchyNode: IHierarchyNodeState = this._buildHierarchy(node);
+            return new Promise<IAjsDocArticleStateSet>(
+                (resolve: (state: IAjsDocArticleStateSet) => void, reject: (reason?: any) => void) => {
 
-            let retVal: IAjsDocArticleStateSet = {};
+                    let hierarchyNode: IHierarchyNodeState = this._buildHierarchy(node);
 
-            retVal.caption = node.kindString + " " + node.name;
+                    let retVal: IAjsDocArticleStateSet = {};
 
-            let syntaxes: INode[] = [];
+                    retVal.caption = node.kindString + " " + node.name;
 
-            //if (node.kindString === "Function" || node.kindString === "Interface" || node.kindString === "Method") {
-                let desc: string = this._getComment(node);
-                syntaxes.push(node);
-                if (node.signatures && node.signatures.length > 0) {
-                    for (let i = 0; i < node.signatures.length; i++) {
-                        syntaxes.push(node.signatures[i]);
-                        if (desc === "DOCUMENTATION IS MISSING!") {
-                            desc = "";
+                    let syntaxes: INode[] = [];
+
+                    // if (node.kindString === "Function" || node.kindString === "Interface" || node.kindString === "Method") {
+
+                        let desc: string = this._getComment(node);
+                        syntaxes.push(node);
+                        if (node.signatures && node.signatures.length > 0) {
+                            for (let i: number = 0; i < node.signatures.length; i++) {
+                                syntaxes.push(node.signatures[i]);
+                                if (desc === "DOCUMENTATION IS MISSING!") {
+                                    desc = "";
+                                }
+                                desc += "<p>" + this._getComment(node.signatures[i]) + "</p>";
+                            }
                         }
-                        let com: string = this._getComment(node.signatures[i]);
-                        desc += "<p>" + this._getComment(node.signatures[i]) + "</p>";
-                    }
+
+                        this._setupHTMLContent(desc)
+
+                            .then((desc: string) => {
+
+                                retVal.description = desc;
+
+                                if (hierarchyNode) {
+                                    retVal.hierarchy = hierarchyNode;
+                                }
+
+                                if (syntaxes.length > 0) {
+                                    retVal.syntaxes = syntaxes;
+                                }
+
+                                if (node.implementedTypes) {
+                                    retVal.implements = [];
+                                    for (let i: number = 0; i < node.implementedTypes.length; i++) {
+                                        retVal.implements.push({
+                                            key: node.implementedTypes[i].id.toString(),
+                                            name: node.implementedTypes[i].name,
+                                            path: this._progModel.getItemById(node.implementedTypes[i].id).path
+                                        });
+                                    }
+                                }
+                                retVal.members = node.children;
+
+                                resolve(retVal);
+                            })
+                            .catch((reason?: any) => {
+                                reject(reason);
+                            });
+
+                    /*} else {
+                        retVal.description = this._setupHTMLContent(this._getComment(node));
+                    }*/
+
                 }
-                retVal.description = this._setupHTMLContent(desc);
-            /*} else {
-                retVal.description = this._setupHTMLContent(this._getComment(node));
-            }*/
-
-            if (hierarchyNode) {
-                retVal.hierarchy = hierarchyNode;
-            }
-
-            if (syntaxes.length > 0) {
-                retVal.syntaxes = syntaxes;
-            }
-
-            if (node.implementedTypes) {
-                retVal.implements = [];
-                for (let i: number = 0; i < node.implementedTypes.length; i++) {
-                    retVal.implements.push({
-                        key: node.implementedTypes[i].id.toString(),
-                        name: node.implementedTypes[i].name,
-                        path: this._progModel.getItemById(node.implementedTypes[i].id).path
-                    });
-                }
-            }
-            retVal.members = node.children;
-
-            return retVal;
+            );
         }
 
         /**
@@ -350,55 +374,120 @@ namespace ajsdoc {
          * to the string
          * @param text The text to be converted and updated
          */
-        protected _setupHTMLContent(text: string): string {
+        protected _setupHTMLContent(text: string): Promise<string> {
 
-            text = "#ASHTML:" + text;
+            return new Promise<string>(
+                async (resolve: (text: string) => void, reject: (reason?: any) => void) => {
+
+                    try {
+                        text = "#ASHTML:" + text;
+                        text = await this._includeExamples(text);
+                        text = await this._includeCharts(text);
+                    } catch (e) {
+                        reject(e);
+                    }
+
+                    resolve(text);
+
+                }
+            );
+        }
+
+        protected _includeExamples(text: string): Promise<string> {
 
             let examples: RegExpMatchArray = text.match(/#example.*/g);
+            let resourcePromises: Promise<ajs.resources.IResource>[] = [];
+
             if (examples && examples !== null) {
+
                 for (let i: number = 0; i < examples.length; i++) {
                     let example: string = examples[i].substring(9, examples[i].length);
-
-                    for (let j: number = 0; j < resources.length; j++) {
-                        if (resources[j].indexOf(example) !== -1) {
-                            let resource: ajs.resources.IResource;
-                            resource = ajs.Framework.resourceManager.getResource(
-                                resources[j],
-                                config.storageType
-                            );
-                            if (resource === null) {
-                                throw new Error("Example resource '" + resources[j] + "' not loaded");
-                            }
-                            text = text.replace(new RegExp("#example " + example + ".*", "g"),
-                                "<pre class=\"ajsDocExample\"><code class=\"typescript\">" + resource.data + "</pre></code>");
-                        }
-                    }
+                    resourcePromises.push(
+                        ajs.Framework.resourceManager.getResource(
+                            example,
+                            config.storageType,
+                            ajs.resources.CACHE_POLICY.PERMANENT,
+                            ajs.resources.LOADING_PREFERENCE.CACHE
+                        )
+                    );
                 }
+
+                return new Promise<string>(
+                    async (resolve: (text: string) => void, reject: (reason?: any) => void) => {
+
+                        try {
+                            let resources: ajs.resources.IResource[] = await Promise.all(resourcePromises);
+
+                            for (let i: number = 0; i < resources.length; i++) {
+                                text = text.replace(new RegExp("#example " + resources[i].url + ".*", "g"),
+                                    "<pre class=\"ajsDocExample\"><code class=\"typescript\">" + resources[i].data + "</pre></code>");
+                            }
+
+                        } catch (e) {
+                            reject(e);
+                        }
+
+                        resolve(text);
+                    }
+                );
+
+            } else {
+
+                return new Promise<string>((resolve: (text: string) => void) => {
+                    resolve(text);
+                });
+
             }
+        }
+
+        protected _includeCharts(text: string): Promise<string> {
 
             let charts: RegExpMatchArray = text.match(/#chart.*/g);
+            let resourcePromises: Promise<ajs.resources.IResource>[] = [];
+
             if (charts && charts !== null) {
+
                 for (let i: number = 0; i < charts.length; i++) {
                     let chart: string = charts[i].substring(7, charts[i].length);
 
-                    for (let j: number = 0; j < resources.length; j++) {
-                        if (resources[j].indexOf(chart) !== -1) {
-                            let resource: ajs.resources.IResource;
-                            resource = ajs.Framework.resourceManager.getResource(
-                                resources[j],
-                                config.storageType
-                            );
-                            if (resource === null) {
-                                throw new Error("Example resource '" + resources[j] + "' not loaded");
-                            }
-                            text = text.replace(new RegExp("#chart " + chart + ".*", "g"),
-                                "<div class=\"ajsDocChart\">" + resource.data + "</div>");
-                        }
-                    }
+                    resourcePromises.push(
+                        ajs.Framework.resourceManager.getResource(
+                            chart,
+                            config.storageType,
+                            ajs.resources.CACHE_POLICY.PERMANENT,
+                            ajs.resources.LOADING_PREFERENCE.CACHE
+                        )
+                    );
                 }
-            }
 
-            return text;
+                return new Promise<string>(
+                    async (resolve: (text: string) => void, reject: (reason?: any) => void) => {
+
+                        try {
+
+                            let resources: ajs.resources.IResource[] = await Promise.all(resourcePromises);
+
+                            for (let i: number = 0; i < resources.length; i++) {
+                                text = text.replace(new RegExp("#chart " + resources[i].url + ".*", "g"),
+                                    "<div class=\"ajsDocChart\">" + resources[i].data + "</div>");
+                            }
+
+                        } catch (e) {
+                            reject(e);
+                        }
+
+                        resolve(text);
+
+                    }
+                );
+
+            } else {
+
+                return new Promise<string>((resolve: (text: string) => void) => {
+                    resolve(text);
+                });
+
+            }
 
         }
 

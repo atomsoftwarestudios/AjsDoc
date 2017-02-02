@@ -36,6 +36,8 @@
 }
 
 .ajsDocLayoutHeaderContainer {
+    background-color: white;
+    background-color: white;
     background: linear-gradient(-3deg, #EAF4F8, white);
     text-align: center;
     padding: 3px;
@@ -90,7 +92,7 @@
     top: 3px;
     width: 48px;
     height: 48px;
-    background-image: resource('/res/img/ajs-logo.png');
+    background-image: url('/res/img/ajs-logo.png');
     background-repeat: no-repeat;
     background-size: cover;
     z-index: 9999;
@@ -232,6 +234,7 @@
 .ajsDocNavBar {
     border-bottom: solid 1px #EAF4F8;
     padding: 3px;
+    background-color: white;
     background: linear-gradient(-3deg, #EAF4F8, white)
 }
 
@@ -291,24 +294,24 @@
     box-sizing: border-box;
 }
     
-@keyframes ajsDocContextSwitcherButton {
-    from { background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
-    to { background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black; }
+@keyframes ajsDocContextSwitcherButton {    
+    from { background-color: #16355D; background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
+    to { background-color: #FAFCFD; background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black; }
 }
 
 @-webkit-keyframes ajsDocContextSwitcherButton {
-    from { background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
-    to { background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black; }
+    from { background-color: #16355D; background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
+    to { background-color: #FAFCFD; background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black; }
 }
 
 @keyframes ajsDocContextSwitcherButtonSelected {
-    from { background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8); color: black; }
-    to { background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
+    from { background-color: #FAFCFD; background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8); color: black; }
+    to { background-color: #16355D; background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
 }
     
 @-webkit-keyframes ajsDocContextSwitcherButtonSelected {
-    from { background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8); color: black; }
-    to { background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
+    from { background-color: #FAFCFD; background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8); color: black; }
+    to { background-color: #16355D; background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
 }
 
 .ajsDocContextSwitcherButton {
@@ -321,11 +324,15 @@
     outline: 0;
     font-family: inherit;
     font-size: inherit;
+    background-color: #FAFCFD;
+    background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black;
     animation: ajsDocContextSwitcherButton 350ms forwards;
     -webkit-animation: ajsDocContextSwitcherButton 350ms forwards;
 }
 
 .ajsDocContextSwitcherButton[selected="true"] {
+    background-color: #16355D;
+    background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white;
     animation: ajsDocContextSwitcherButtonSelected 350ms forwards;
     -webkit-animation: ajsDocContextSwitcherButtonSelected 350ms forwards;
 }
@@ -394,6 +401,7 @@
 }
 
 .ajsDocMenu {
+    background-color: #FAFCFD;
     background: linear-gradient(-90deg, white, #FAFCFD);
     white-space: nowrap;
     overflow-y: auto;
@@ -440,8 +448,9 @@
 .ajsDocMenuLabel {
     display: table-cell;
     width: 350px;
+    background-color: #EAF4F8;
     background: linear-gradient(-3deg, #FAFCFD, #EAF4F8);
-    //text-align: center;
+    text-align: center;
     vertical-align: middle;
 }
 

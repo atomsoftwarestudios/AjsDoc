@@ -25,7 +25,7 @@ namespace ajs.resources {
 
     "use strict";
 
-    /** Represents managed resource */
+    /** Resource descriptor */
     export interface IResource {
         /** Unique resource locator */
         url: string;

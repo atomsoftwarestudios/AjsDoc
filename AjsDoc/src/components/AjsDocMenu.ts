@@ -53,12 +53,14 @@ namespace ajsdoc {
         protected _previousRefNode: INode;
         protected _previousArticle: IArticleData;
 
-        protected _initialize(): void {
+        protected _initialize(): boolean {
             this._contentModel = ajs.Framework.modelManager.getModelInstance(ContentModel) as ContentModel;
             this._programModel = ajs.Framework.modelManager.getModelInstance(ProgramModel) as ProgramModel;
             this._previousContext = null;
             this._previousRefNode = null;
             this._previousArticle = null;
+
+            return true;
         }
 
         public touchMove(e: Event): void {

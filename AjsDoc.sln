@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ajs.Boot.Config", "AjsDoc\s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ajs", "AjsDoc\src\Ajs\Ajs.csproj", "{267086DA-AB24-4D8D-BD5F-D7D3B3D7DB67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AjsLib", "AjsDoc\src\AjsLib\AjsLib.csproj", "{42E6F448-ACFE-451C-A63A-63030FB59D56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AjsDocLib", "AjsDoc\src\AjsDocLib\AjsDocLib.csproj", "{9840C9AC-D37C-42C3-8C0A-05E9F6233379}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{267086DA-AB24-4D8D-BD5F-D7D3B3D7DB67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{267086DA-AB24-4D8D-BD5F-D7D3B3D7DB67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{267086DA-AB24-4D8D-BD5F-D7D3B3D7DB67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42E6F448-ACFE-451C-A63A-63030FB59D56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42E6F448-ACFE-451C-A63A-63030FB59D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42E6F448-ACFE-451C-A63A-63030FB59D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42E6F448-ACFE-451C-A63A-63030FB59D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9840C9AC-D37C-42C3-8C0A-05E9F6233379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9840C9AC-D37C-42C3-8C0A-05E9F6233379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9840C9AC-D37C-42C3-8C0A-05E9F6233379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9840C9AC-D37C-42C3-8C0A-05E9F6233379}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,7 +28,6 @@ namespace ajs.resources {
     export interface IResourceResponseData {
         type: string;
         data: any;
-        userData: any;
         httpStatus: number;
         startTime: Date;
         endTime: Date;

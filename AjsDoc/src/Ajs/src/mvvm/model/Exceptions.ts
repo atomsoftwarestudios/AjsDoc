@@ -25,24 +25,8 @@ namespace ajs.mvvm.model {
 
     "use strict";
 
-    export class NotImplementedException extends Error {
-        constructor(msg?: string) {
-            let message: string = "NotImplementedException";
-            if (msg) {
-                message = message + ": " + msg;
-            }
-            super(message);
-        }
-    }
+    export class NotImplementedException extends Error { }
 
-    export class ModelConstructorIsNotFunctionException extends Error {
-        constructor(msg?: string) {
-            let message: string = "ModelConstructorIsNotFunctionException";
-            if (msg) {
-                message = message + ": " + msg;
-            }
-            super(message);
-        }
-    }
+    export class ModelConstructorIsNotFunctionException extends Error { }
 
 }
