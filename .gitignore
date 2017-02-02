@@ -11,11 +11,6 @@ AjsDoc/bin*
 AjsDoc/obj*
 AjsDoc/js/ajs*
 AjsDoc/lib/ajs*
-AjsDoc/tsconfig.json
-AjsDoc/src/Ajs/tsconfig.json
-AjsDoc/src/AjsDocLib/tsconfig.json
-AjsDoc/src/AjsLib/tsconfig.json
-AjsDoc/src/Ajs.Boot.Config/tsconfig.json
 AjsDoc/cache.manifest
 
 # User-specific files

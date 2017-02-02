@@ -74,10 +74,15 @@
     <Content Include="static\content\05 How it works.html" />
     <Content Include="static\toc.json" />
     <Content Include="static\appresources.json" />
-    <Content Include="tsconfig.common.json" />
-    <Content Include="tsconfig.Debug.json" />
-    <Content Include="tsconfig.Release.json" />
-    <None Include="AjsDoc - Web Deploy.pubxml" />
+    <None Include="tsconfig.common.json">
+      <DependentUpon>tsconfig.json</DependentUpon>
+    </None>
+    <None Include="tsconfig.Debug.json">
+      <DependentUpon>tsconfig.json</DependentUpon>
+    </None>
+    <None Include="tsconfig.Release.json">
+      <DependentUpon>tsconfig.json</DependentUpon>
+    </None>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
