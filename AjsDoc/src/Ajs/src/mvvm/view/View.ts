@@ -279,7 +279,7 @@ namespace ajs.mvvm.view {
                         let resources: ajs.resources.IResource[] = await Promise.all(resourcesPromises);
 
                         for (let i: number = 0; i < resources.length; i++) {
-                            ajs.utils.replaceAll(
+                            template.styleSheets[index] = ajs.utils.replaceAll(
                                 template.styleSheets[index],
                                 resources[i].url,
                                 "data:image;base64," + resources[i].data);
