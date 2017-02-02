@@ -253,3 +253,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /AjsDoc/AjsDoc - Web Deploy.pubxml
+/AjsDoc/AjsDoc - Web Deploy (2).pubxml
+*.pubxml
