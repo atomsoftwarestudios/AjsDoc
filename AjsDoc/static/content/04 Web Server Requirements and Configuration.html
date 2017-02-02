@@ -7,7 +7,7 @@
 <h4>Cache control</h4>
 
 <p>
-    The Cache-Control HTTP header must be set to no-cache, must-revalidate at least on App Cached files (index.html, ajs.js, ajs.lib.js, ajs.boot.config.js, application.js and application.lib.js)
+    The Cache-Control HTTP header must be set to no-cache, must-revalidate at least on App Cached files (index.html, ajs.js, ajs.lib.js, ajs.boot.config.js and all favicons and manifests)
     otherwise the AppCache does not work with the FireFox properly. It is recommended to have the same setup for all application files and resources as resource manager relies on the last modified
     date header instead of cache control headers.
 
