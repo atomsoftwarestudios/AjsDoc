@@ -1,7 +1,7 @@
 # AjsDoc
 TypeScript documentation browser
 
-Currently, there is an example running on http://ajsfw.azurewebsites.com
+Currently, there is an example running on http://ajsfw.azurewebsites.net
 
 This repository is under construction and both projects are still under development.
 
