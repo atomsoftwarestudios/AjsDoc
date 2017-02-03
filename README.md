@@ -48,4 +48,4 @@ Following statements already are or will available (as TypeDoc filters the origi
 
 # Contribution
 
-Contribution is wellcome, but its provbably too early.
+Contribution is wellcome, but its probably too early.
