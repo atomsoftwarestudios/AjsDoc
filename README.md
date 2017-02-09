@@ -1,9 +1,14 @@
+This repository is under construction and both projects are still under development.
+
 # AjsDoc
 TypeScript documentation browser
 
-Currently, there is an example running on http://ajsfw.azurewebsites.net
+Currently, there are two examples running publicly:
 
-This repository is under construction and both projects are still under development.
+http://ajsfw.azurewebsites.net - logging off
+http://ajsdoc.azurewebsites.net - logging on
+
+both versions are not optimized from the size perspective (no uglify or other tools used yet).
 
 AjsDoc is an example application using the Ajs Framework. Currently, the Ajs Visual Studio Project is included in the AjsDoc Visual Studio Solution and the last recent version of the Ajs Framework is sotred in this repository as both projects are currently developed and debugged together.
 
