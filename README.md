@@ -9,7 +9,7 @@ http://ajsfw.azurewebsites.net - logging off
 
 http://ajsdoc.azurewebsites.net - logging on (console will popup 15s after refresh, its quiet expensive but logging to memory only)
 
-both versions are not optimized from the size perspective (no uglify or other tools used yet).
+both versions are not optimized from the size perspective (no uglify or other tools used yet) and are cappable of running offline in browser or as a web app for mobiles (icon on homescreens).
 
 AjsDoc is an example application using the Ajs Framework. Currently, the Ajs Visual Studio Project is included in the AjsDoc Visual Studio Solution and the last recent version of the Ajs Framework is sotred in this repository as both projects are currently developed and debugged together.
 
