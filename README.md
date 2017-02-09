@@ -6,7 +6,8 @@ TypeScript documentation browser
 Currently, there are two examples running publicly:
 
 http://ajsfw.azurewebsites.net - logging off
-http://ajsdoc.azurewebsites.net - logging on
+
+http://ajsdoc.azurewebsites.net - logging on (console will popup 15s after refresh, its quiet expensive but logging to memory only)
 
 both versions are not optimized from the size perspective (no uglify or other tools used yet).
 
