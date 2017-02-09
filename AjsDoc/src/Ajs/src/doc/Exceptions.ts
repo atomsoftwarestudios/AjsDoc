@@ -21,24 +21,20 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.ui {
+/**
+ * dom namespace contains the DOM updater and related interfaces
+ */
+namespace ajs.doc {
 
     "use strict";
 
-    export declare class ProgressBar {
+    export class RenderTargetNotInManagedDocumentException extends Error { };
 
-        protected _total: number;
-        public total: number;
+    export class TargetOrParentIsUnknownException extends Error { };
 
-        protected _current: number;
-        public current: number;
+    export class SourceNodeHasNoComponentAssignedException extends Error { };
 
-        protected _update(): void;
+    export class CSSRequiredResourceNotLoadedException extends Error { };
 
-        public resourceLoading(label: string): void;
-        public resourceLoaded(e: string): void;
-        public show();
-        public hide();
-    }
-
+    export class CSSInvalidResourceSpecificationException extends Error { };
 }

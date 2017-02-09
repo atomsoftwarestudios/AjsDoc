@@ -38,7 +38,7 @@ namespace ajsdoc {
 
         protected _navigatedListener: ajs.events.IListener;
 
-        protected _initialize(): boolean {
+        protected _initialize(): void {
 
             this._lastGuidePath = ajs.Framework.stateManager.getSessionState(sessionStateGuidePath);
             if (this._lastGuidePath === null) {
@@ -55,35 +55,39 @@ namespace ajsdoc {
                 return true;
             };
 
-            this._ajsView.navigationNotifier.subscribe(this._navigatedListener);
+            this.ajs.view.navigationNotifier.subscribe(this._navigatedListener);
+        }
 
-            this._navigated();
-
-            return true;
+        protected _defaultState(): ajs.mvvm.viewmodel.IViewStateSet {
+            return this._prepareState();
         }
 
         protected _finalize(): void {
-            this._ajsView.navigationNotifier.unsubscribe(this._navigatedListener);
+            this.ajs.view.navigationNotifier.unsubscribe(this._navigatedListener);
         }
 
-        protected _navigated(): void {
+        protected _prepareState(): ajs.mvvm.viewmodel.IViewStateSet {
             let routeInfo: ajs.routing.IRouteInfo = ajs.Framework.router.currentRoute;
 
             if (routeInfo.base.substr(0, 4) === "ref/" || routeInfo.base === "ref") {
                 ajs.Framework.stateManager.setSessionState(sessionStateReferencePath, routeInfo.base);
-                this.setState({
+                this._lastReferencePath = routeInfo.base;
+                return {
                     guides: false,
                     references: true
-                });
-                this._lastReferencePath = routeInfo.base;
+                };
             } else {
                 ajs.Framework.stateManager.setSessionState(sessionStateGuidePath, routeInfo.base);
-                this.setState({
+                this._lastGuidePath = routeInfo.base;
+                return{
                     guides: true,
                     references: false
-                });
-                this._lastGuidePath = routeInfo.base;
+                };
             }
+        }
+
+        protected _navigated(): void {
+            this.setState(this._prepareState());
         }
 
         public onGuidesClick(e: Event): void {

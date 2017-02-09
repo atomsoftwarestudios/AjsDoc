@@ -25,5 +25,7 @@ namespace ajs.mvvm.viewmodel {
 
     "use strict";
 
+    export class VisualComponentNotRegisteredException extends Error { }
+
     export class InvalidAttributeIfValueException extends Error { }
 }

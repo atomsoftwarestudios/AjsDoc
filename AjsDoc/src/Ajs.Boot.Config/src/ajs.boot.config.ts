@@ -38,12 +38,19 @@ namespace ajs.boot {
 
     getAjsConfig = function(): IAjsConfig {
 
+        let doc: Document = window.document.implementation.createHTMLDocument("test");
+
         // const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
         // const anyPath: string = "(\\/.*|.*)";
 
         return {
             logErrors: true,
             showErrors: true,
+
+            boot: {
+                //bootResourcesLoadingPreference: ajs.resources.LOADING_PREFERENCE.SERVER
+                bootResourcesLoadingPreference: ajs.resources.LOADING_PREFERENCE.CACHE
+            },
 
             debugging: {
                 // styleSheet render target
@@ -62,16 +69,33 @@ namespace ajs.boot {
                     logDataToConsole: false,
                     // type of records to be logged
                     logTypes: [
-                        /*ajs.debug.LogType.Enter,
-                        ajs.debug.LogType.Exit,*/
-                        ajs.debug.LogType.Constructor,
-                        ajs.debug.LogType.Info,
-                        ajs.debug.LogType.Warning,
-                        ajs.debug.LogType.Error,
-                        ajs.debug.LogType.DomAddListener,
-                        ajs.debug.LogType.DomRemoveListener,
-                        ajs.debug.LogType.DomAppendChild,
-                        ajs.debug.LogType.DomRemoveChild
+                         /*ajs.debug.LogType.Enter,
+                         ajs.debug.LogType.Exit,*/
+                         ajs.debug.LogType.Constructor,
+                         ajs.debug.LogType.Info,
+                         ajs.debug.LogType.Warning,
+                         ajs.debug.LogType.Error,
+                         ajs.debug.LogType.DomAddListener,
+                         ajs.debug.LogType.DomRemoveListener,
+                         ajs.debug.LogType.DomAppendChild,
+                         ajs.debug.LogType.DomRemoveChild,
+                         ajs.debug.LogType.DomReplaceChild
+                    ],
+                    sourceModules: [
+                         "ajs.app",
+                         "ajs.boot",
+                         "ajs.doc",
+                         "ajs.events",
+                         "ajs.mvvm.model",
+                         "ajs.mvvm.view",
+                         "ajs.mvvm.viewmodel",
+                         "ajs.navigation",
+                         "ajs.resources",
+                         "ajs.routing",
+                         "ajs.state",
+                         "ajs.templating",
+                         "ajs.ui",
+                         "ajs.utils"
                     ],
                     // max logging level
                     maxLevel: 9
@@ -97,7 +121,11 @@ namespace ajs.boot {
                     paths: [{ base: ".*", params: "" }],
                     viewComponentName: "AjsDoc"
                 }
-            ]
+            ],
+
+            view: {
+                renderTarget: document.getElementById("ajsRenderTarget")
+            }
 
         };
 
@@ -105,18 +133,21 @@ namespace ajs.boot {
 
     getApplicationConfig = function(): ajs.app.IApplicationConfig {
 
+        // const APP_RESOURCES_LOADING_PREFERENCE: ajs.resources.LOADING_PREFERENCE = ajs.resources.LOADING_PREFERENCE.SERVER;
+        const APP_RESOURCES_LOADING_PREFERENCE: ajs.resources.LOADING_PREFERENCE = ajs.resources.LOADING_PREFERENCE.CACHE;
+
         let userConfig: ajsdoc.IAjsDocBrowserConfig = {
             storageType: ajs.resources.STORAGE_TYPE.LOCAL,
             storagePolicy: ajs.resources.CACHE_POLICY.LASTRECENTLYUSED,
             templateList: "/static/templates.json",
-            templateLoadingPreference: ajs.resources.LOADING_PREFERENCE.CACHE,
+            templateLoadingPreference: APP_RESOURCES_LOADING_PREFERENCE,
             resourceList: "/static/appresources.json",
-            resourceLoadingPreference: ajs.resources.LOADING_PREFERENCE.CACHE,
+            resourceLoadingPreference: APP_RESOURCES_LOADING_PREFERENCE,
             dataSources: {
                 toc: "/static/toc.json",
                 program: "/static/program.json"
             },
-            dataLoadingPreference: ajs.resources.LOADING_PREFERENCE.CACHE,
+            dataLoadingPreference: APP_RESOURCES_LOADING_PREFERENCE,
         };
 
         return {

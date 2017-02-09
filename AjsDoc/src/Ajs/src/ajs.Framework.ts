@@ -124,9 +124,9 @@ namespace ajs {
             Framework._resourceManager = new ajs.resources.ResourceManager(config.resourceManager);
             Framework._stateManager = new ajs.state.StateManager(Framework._resourceManager);
             Framework._templateManager = new ajs.templating.TemplateManager(Framework._resourceManager);
-            Framework._viewComponentManager = new ajs.mvvm.viewmodel.ViewComponentManager();
+            Framework._viewComponentManager = new ajs.mvvm.viewmodel.ViewComponentManager(Framework._templateManager);
             Framework._modelManager = new ajs.mvvm.model.ModelManager();
-            Framework._view = new ajs.mvvm.view.View(Framework._templateManager, Framework._viewComponentManager);
+            Framework._view = new ajs.mvvm.view.View(Framework._viewComponentManager, config.view);
             Framework._router = new ajs.routing.Router(Framework._view, Framework._config.router);
             Framework._navigator = new ajs.navigation.Navigator(Framework._router, Framework._config.navigator);
 
@@ -187,7 +187,7 @@ namespace ajs {
          */
         protected static _errorHandler(msg: string | Error, url: string, line: number, col: number, error: Error): void {
 
-            /*let text: string = "";
+            let text: string = "";
             let err: string = "";
 
             if (msg instanceof Error) {
@@ -203,7 +203,7 @@ namespace ajs {
                 "Exception: " +
                 "<br />Message: (" + text + ")<br /> At: " + url +
                 "<br />line " + line + " column " + col + err
-            );*/
+            );
         }
 
     }

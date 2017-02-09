@@ -21,24 +21,20 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.ui {
+namespace ajs.doc {
 
     "use strict";
 
-    export declare class ProgressBar {
-
-        protected _total: number;
-        public total: number;
-
-        protected _current: number;
-        public current: number;
-
-        protected _update(): void;
-
-        public resourceLoading(label: string): void;
-        public resourceLoaded(e: string): void;
-        public show();
-        public hide();
+    /**
+     * Holds information about event listeners to be registered to the target Node by the DOM updater
+     */
+    export interface INodeEventListenerInfo {
+        /** source node (usually from the template - used to identify the same nodes on both sides) */
+        source: INode;
+        /** event type, such as click */
+        eventType: string;
+        /** event listener (usually ViewComponent method) */
+        eventListener: EventListener;
     }
 
 }

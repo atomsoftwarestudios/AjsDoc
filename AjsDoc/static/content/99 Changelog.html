@@ -22,6 +22,8 @@ Os, Devices & Browsers used for testing
     - Google Chrome (55.0.2883.87) 64-bit
     - Firefox 51.0.1 (32-bit)
     - Opera 42.0.2393.517 (64-bit)
+- Desktop, macOS Sierra, 10.12.13
+    - Safari 10.0.3 12602.4.8
 - Samsung S3 Mini (GT-I8190N) - Android (JellyBean)
     - Android Browser 4 (Web view)
     - Chrome 55 (both, web and desktop modes)
@@ -38,6 +40,8 @@ Os, Devices & Browsers used for testing
     - Safari 9 (both, desktop and web modes)
 - iPhone 5S, iOS 10.1.1
     - Safari 10 (both, web and desktop modes)
+- XCode Simulators
+    - All available (except Apple Watches and AppleTV)
 
 --------------------------------------------------------------------------------------------------------------------------------
 Implemented features:
@@ -98,11 +102,17 @@ Implemented features:
 - Event Notifier
 	- Notifier based on Subscribe / Unsubcribe functionality
 
+- Document manager
+    - Support for render target (output can be rendered to any HTML DOM Document and any Element tag)
+    - DOM Updater based on React.js idea with the full Ajs component support
+        - Only changed elements / attributes / text nodes are updated for the maximum performance
+    - Support for document style management
+    - Currently, support for loading of stylesheets from the template (will be moved to Template class, this will be more logical and makes DocMan more independent on the rest of the framework)
+
 - MVVM
 	- View
 		- Full support of templating features
-		- Automatic DOM updating based on View Component state changes
-			- Only changed elements / attributes / text nodes are updated for the maximum performance
+		- Automatic DOM updating based on View Component state changes usind the DOM Manager
 			
 	- View Component (view model)
 		- Full support of templting features
@@ -137,13 +147,13 @@ Implemented features:
 
 - Debugging tools
     - Modular debugging console based on TSX templates
-        - Limited reactive TSX renderer just to support debugging modules UI
+        - Limited reactive TSX renderer just to support debugging modules UI without DOM update support
 	- Together with the browser javascript console gives developed great overview about whole system
 	- Tools available:
 		- Logger with log browser
             - Configurable logger
             - Breakpoint support (breaks on n-th occurence of given log record type)
-            - Log records time measuring
+            - Log records time difference measuring
 
 - Development Tools and Utilities
 	- utf8.bom to utf file converter (PowerShell)
@@ -269,13 +279,60 @@ Change log
             - now contains error info but is not used by ajs now
             - support for 3rd party libs
 
+- Patch #05/2017-02-09 FN
+
+    Implemented Change Requests
+
+    #02/201701 HIGH
+    -  Refactoring
+    	- Refactor View DOM Update functions to look nicer
+            - New namespace / class created: ajs.doc.DocumentManager
+            - Currently it contain css from template management - will be moved to Template to make the DOM Updater less dependant on whole system
+
+
+    Implemented Feature Requests
+
+    #03/201701 HIGH
+    - MVVM
+	    - View
+		    - Automatic DOM updating based on View Component state changes
+			    - Support for render target
+				    - Rendering can be performed to the window document, shadow document or any existing configurable tag
+
+    Untagged changes and bug fixes
+
+    - Fixed bug: Navigator incorrectly handles the link clicked path
+    - Fixed bug: Style URL was not updated with the base64 value
+    - Fixed bug: Safari crashing with new rendering system (touch events in the template now has the postfix _ajs to prevent their registration in the shadow dom)
+    - Fixed bug: DOM memory leaks (detached DOM nodes) seems to be finally fully fixed with DocumentManager
+    - View
+        - Refactored to use the document manager and cleaned up a lot
+        - Better notification of view copmonents the navigation event occurs (it is not necessary to call render or onNavigate internally inside the component)
+    - ViewComponent
+        - support for the changes related to implemented document manager, code cleanup
+        - ajs properties moved to the avoid Intellisense to mix the App developer defined properties and ajs properties
+        - _initialize reverted back to be synchrnous but it can initiate asynchronous tasks (such as model instantiation and data loading or whatever else)
+    - Added ajs.doc namespace including the DocumentManager (see features for descritption)
+    - Show/Hide functions added to the ProgressBar (possible because of implemented render target)
+        - Boot fine tunning for offline
+        - Execution of the fallback when no App Cache events are received was decreased to 500ms
+        - bootResourcesCachePreference config option renamed to more logical bootResourcesLoadingPreference
+    - Link click does not use onclick attribute anymore, the mousedown using the assEventListener is in use now
+    - Resource manager is using the constant for the timer waiting before the resource promise is resolved instead of the value used directly in the setTimeout
+    - Framework initialization updated to follow mentioned changes (some dependencies are not injected anymore, some additional are)
+    - Logging added to various Ajs modules but still not fully complete
+    - Code documentation updated in various Ajs modules but still not fully complete
+    - Fine tunning of projects and git
+        - tsconfig can be currently in Debug/Release versions
+        - support for Azure publishing (more related to AjsDoc project)
+    - Additional light changes and fine tunning for going online
+
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests
 --------------------------------------------------------------------------------------------------------------------------------
 
     #02/201701 HIGH
     -  Refactoring
-    	- Refactor View DOM Update functions to look nicer
 	    - Refactor ViewComponent state change management to look nicer
 	    - Refactor ViewComponent rendering functions to look nicer
 
@@ -287,6 +344,10 @@ Accepted change requests
     - State manager
         - Implement size limitation of the space used for the Application and the Session states
 
+    #03/201702 HIGH
+    - Document Manager
+        - Implement lookup table for elements with the ViewId
+
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted feature requests
 --------------------------------------------------------------------------------------------------------------------------------
@@ -294,13 +355,6 @@ Accepted feature requests
 #02/201701 HIGH
 - Application management
 	- Global Error (exception) handling
-
-#03/201701 HIGH
-- MVVM
-	- View
-		- Automatic DOM updating based on View Component state changes
-			- Support for render target
-				- Rendering can be performed to the window document, shadow document or any existing configurable tag
 
 #04/201701 HIGH
 - MVVM
@@ -362,6 +416,9 @@ Accepted feature requests
 #13/201701 HIGH
 - Template / ViewComponent - to the result component merge attributes from both, component definition and component instance
 
+#14/201702 HIGH
+- During the boot and framework / application start better captrue exceptions and reload / display error page based on the configuration
+
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted issues
 --------------------------------------------------------------------------------------------------------------------------------
@@ -372,6 +429,16 @@ Accepted issues
 
 #01/201702 LOW
 - IE11/Emulated IE10 sometimes freezes / restarts in offline mode
+    - This will require deeper debugging of the IE process as it was not possible to discover where the problem is till now
+
+#02/201702 HIGH
+- According to https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/5579311/ the DOM updater currently
+  crashes with Edge 14 during the SVG DOM update as attribute names are incorrectly returned in UPPER CASE although
+  referencing them in lower case works. Workaround mentioned on the web page will not be used now. Please use another
+  browser until better workaround / fix will be available.
+
+  Current workaround just catches the exception and stops attribute processing what is not definitely good, but at least the
+  SVG is displayed.
 
 --------------------------------------------------------------------------------------------------------------------------------
 Untagged ToDo's & Ideas
@@ -395,10 +462,7 @@ Untagged ToDo's & Ideas
 - Resource management
 	- performance optiomizations
 		- creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
-		- multiple calls of getResource during single operation can be optimized
 		- review cycles
-	- Implement state management
-		- Implement application state resource storage
 
 - View, View Components, Visual Components
 	- Don't render the component tag to the output
@@ -507,6 +571,12 @@ Change log
     - slight documentation changes
     - css's updated to support older browsers (problem with linear gradient on older chromiums)
     - 3rd party libinit created / hoghlight movet to 3rd party libs project
+
+- Patch #05/2017-02-09 FN
+    - Project tunning for online
+    - Azure publishing is better supported now
+    - Slight changes following the Ajs changes (see ajs patch #05)
+    - The new documentation added can't be currently tested. At least until TypeDoc will be fixed or it will be decided to rewrite it by own
 
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests

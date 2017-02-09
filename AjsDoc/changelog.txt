@@ -89,6 +89,12 @@ Change log
     - css's updated to support older browsers (problem with linear gradient on older chromiums)
     - 3rd party libinit created / hoghlight movet to 3rd party libs project
 
+- Patch #05/2017-02-09 FN
+    - Project tunning for online
+    - Azure publishing is better supported now
+    - Slight changes following the Ajs changes (see ajs patch #05)
+    - The new documentation added can't be currently tested. At least until TypeDoc will be fixed or it will be decided to rewrite it by own
+
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests
 --------------------------------------------------------------------------------------------------------------------------------

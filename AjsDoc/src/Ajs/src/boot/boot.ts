@@ -62,7 +62,7 @@ namespace ajs.boot {
      */
     function _defaultConfig(): IBootConfig {
         return {
-            bootResourcesCachePreference: resources.LOADING_PREFERENCE.CACHE
+            bootResourcesLoadingPreference: resources.LOADING_PREFERENCE.CACHE
         };
     }
 
@@ -134,22 +134,22 @@ namespace ajs.boot {
         let _resourcesLoadingInfo: any[] = [
             Framework.resourceManager.getMultipleResources(
                 res.localPermanent, resources.STORAGE_TYPE.LOCAL, resources.CACHE_POLICY.PERMANENT,
-                config.boot.bootResourcesCachePreference),
+                config.boot.bootResourcesLoadingPreference),
             Framework.resourceManager.getMultipleResources(
                 res.localLastRecentlyUsed, resources.STORAGE_TYPE.LOCAL, resources.CACHE_POLICY.LASTRECENTLYUSED,
-                config.boot.bootResourcesCachePreference),
+                config.boot.bootResourcesLoadingPreference),
             Framework.resourceManager.getMultipleResources(
                 res.sessionPermanent, resources.STORAGE_TYPE.SESSION, resources.CACHE_POLICY.PERMANENT,
-                config.boot.bootResourcesCachePreference),
+                config.boot.bootResourcesLoadingPreference),
             Framework.resourceManager.getMultipleResources(
                 res.sessionLastRecentlyUsed, resources.STORAGE_TYPE.SESSION, resources.CACHE_POLICY.LASTRECENTLYUSED,
-                config.boot.bootResourcesCachePreference),
+                config.boot.bootResourcesLoadingPreference),
             Framework.resourceManager.getMultipleResources(
                 res.memoryPermanent, resources.STORAGE_TYPE.MEMORY, resources.CACHE_POLICY.PERMANENT,
-                config.boot.bootResourcesCachePreference),
+                config.boot.bootResourcesLoadingPreference),
             Framework.resourceManager.getMultipleResources(
                 res.memoryLastRecentlyUsed, resources.STORAGE_TYPE.MEMORY, resources.CACHE_POLICY.LASTRECENTLYUSED,
-                config.boot.bootResourcesCachePreference),
+                config.boot.bootResourcesLoadingPreference),
             Framework.resourceManager.getMultipleResources(
                 res.direct, undefined, undefined)
         ];
@@ -209,7 +209,7 @@ namespace ajs.boot {
     }
 
     /**
-     * Setup listeners used to start the booting process
+     * Setup listeners related to Application cache feature used to start the booting process
      */
     function _setupEventListeners(): void {
 
@@ -237,7 +237,6 @@ namespace ajs.boot {
             });
 
             window.applicationCache.addEventListener("updateready", () => {
-                //alert("UPDATE!");
                 applicationCache.swapCache();
                 if (!bootStarted) {
                     bootStarted = true;
@@ -255,7 +254,7 @@ namespace ajs.boot {
                     bootStarted = true;
                     _boot();
                 }
-            }, 2000);
+            }, 500);
         });
 
 

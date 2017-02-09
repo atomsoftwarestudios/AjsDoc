@@ -21,24 +21,17 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.ui {
+namespace ajs.mvvm.view {
 
     "use strict";
 
-    export declare class ProgressBar {
+    export interface IViewConfig {
 
-        protected _total: number;
-        public total: number;
+        /**
+         * Render target for the view. Can be any element, it is usually the window.document.body
+         */
+        renderTarget: Element;
 
-        protected _current: number;
-        public current: number;
-
-        protected _update(): void;
-
-        public resourceLoading(label: string): void;
-        public resourceLoaded(e: string): void;
-        public show();
-        public hide();
     }
 
 }

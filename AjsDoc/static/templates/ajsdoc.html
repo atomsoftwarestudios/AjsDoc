@@ -162,18 +162,18 @@
                 </code>
             </div>
             <div style="padding: 0.25em; ">
-                <span if="(!this.comment || !this.comment.shortText || this.comment.shortText.trim() === '') && this._ajsid !== 'syntaxes'">
+                <span if="(!this.comment || !this.comment.shortText || this.comment.shortText.trim() === '') && this.ajs.id !== 'syntaxes'">
                     <strong>!!! DOCUMENTATION IS MISSING !!!</strong>
                 </span>
                 <span component="AjsDocMemberDescription" id="comment">
-                    <span if="this._ajsParentComponent._ajsid !== 'syntaxes' && this.shortText !== ''">{shortText}</span>
+                    <span if="this.ajs.parentComponent.ajs.id !== 'syntaxes' && this.shortText !== ''">{shortText}</span>
                 </span>
             </div>
         </a>
 
     </div>
 
-    <component name="AjsDocArticle">
+    <component name="AjsDocArticle" aria-live="assertive" tabindex="-1">
 
         <div style="padding-left: 0.5em; padding-right: 0.5em">
 

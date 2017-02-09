@@ -484,7 +484,7 @@
     padding-left: 1em;
 }
 
-.ajsDocMenuItemLinkNonGrouped {
+.ajsDocMenuItemLinkNonGrouped .ajsDocLink {
     padding-left: 0.25em;
 }
 

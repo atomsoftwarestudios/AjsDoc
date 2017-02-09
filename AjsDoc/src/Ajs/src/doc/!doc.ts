@@ -21,12 +21,13 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.mvvm.view {
+/**
+ * Document namespace contains the document manager and related interfaces
+ * It is used internally by the view to manage document stylesheets and update
+ * the DOM node tree if it is changed.
+ */
+namespace ajs.doc {
 
     "use strict";
-
-    export interface IStyleSheetProcessedCallback{
-        (styleSheet: string): void;
-    }
 
 }

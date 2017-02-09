@@ -43,6 +43,8 @@ namespace ajs.resources {
     const SESSION_CACHE_SIZE: number = 4 * 1024 * 1024;
     const LOCAL_CACHE_SIZE: number = 4 * 1024 * 1024;
 
+    const WAIT: number = 0;
+
     /** Indicates if loaded scripts should executed using the eval function or by adding the &lt;script&gt; tag */
     const USE_EVAL: boolean = true;
 
@@ -539,7 +541,7 @@ namespace ajs.resources {
 
                             setTimeout(() => {
                                 resolve(resource);
-                            }, 0);
+                            }, WAIT);
 
                         });
 
@@ -860,7 +862,7 @@ namespace ajs.resources {
 
                     setTimeout(() => {
                         resolve(resource);
-                    }, 0);
+                    }, WAIT);
 
                 }
             );

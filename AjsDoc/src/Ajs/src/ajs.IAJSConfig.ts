@@ -59,7 +59,7 @@ namespace ajs {
          * If ommited, no debugging will be performed
          */
         debugging?: ajs.debug.IConsoleConfig;
-        
+
         boot?: ajs.boot.IBootConfig;
 
         /** 
@@ -79,6 +79,12 @@ namespace ajs {
          * For additional details #see {ajs.routing.IRoutes}
          */
         router?: ajs.routing.IRoutes[];
+
+        /**
+         * View configuration
+         * For additional details #see {ajs.mvvm.view.IViewConfig}
+         */
+        view?: ajs.mvvm.view.IViewConfig;
     }
 
 }

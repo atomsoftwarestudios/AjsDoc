@@ -56,10 +56,10 @@ class UserComponent extends ajs.mvvm.viewmodel.ViewComponent {
         if (componentName !== this._lastContent) {
 
             if (this._lastContent !== "") {
-                this.removeChildComponent("content", this._lastContent);
+                // this.removeChildComponent("content", this._lastContent);
             }
 
-            this.insertChildComponent(componentName, componentName, null, "content");
+            // this.insertChildComponent(componentName, componentName, null, "content");
             this._lastContent = componentName;
         }
 

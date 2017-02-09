@@ -44,18 +44,9 @@ namespace ajsdoc {
 
         /** Content data ready listener */
         protected _contentDataReady: ajs.events.IListener;
-    
-        /**
-         * Synchronous initialization of the view component
-         * Subscribes to the navigation notifier, inititalizes the view component and
-         * initiates loading of resources. Once resources are loaded the _initAsync
-         * method is called to finish the initialization and perform initial state
-         * set call
-         */
-        protected _initialize(): boolean {
 
-            // set default state
-            this._applyState({
+        protected _defaultState(): ajs.mvvm.viewmodel.IViewStateSet {
+            return {
                 ajsDocLayout: {
                     menuVisible: true,
                     ajsDocHeader: {},
@@ -66,7 +57,17 @@ namespace ajsdoc {
                     ajsDocNavBar: {},
                     ajsDocFooter: {}
                 }
-            });
+            };
+        }
+
+        /**
+         * Synchronous initialization of the view component
+         * Subscribes to the navigation notifier, inititalizes the view component and
+         * initiates loading of resources. Once resources are loaded the _initAsync
+         * method is called to finish the initialization and perform initial state
+         * set call
+         */
+        protected _initialize(): void {
 
             // create models
             this._progModel = ajs.Framework.modelManager.getModelInstance(ProgramModel) as ProgramModel;
@@ -77,41 +78,29 @@ namespace ajsdoc {
                 this._navigated();
                 return true;
             };
-            this._ajsView.navigationNotifier.subscribe(this._navigatedListener);
+            this.ajs.view.navigationNotifier.subscribe(this._navigatedListener);
 
             // subscribe to program model data ready notifier
             this._programDataReady = (sender: ProgramModel, data: IProgramDataReadyData) => {
-
-                this._ajsInitialized = true;
-
                 this._processProgramData(data);
-
                 return true;
             };
             this._progModel.dataReadyNotifier.subscribe(this._programDataReady);
 
             // subscribe to content model data ready notifier
             this._contentDataReady = (sender: ContentModel, data: IContentDataReadyData) => {
-
-                this._ajsInitialized = true;
-
                 this._processContentData(data);
-
                 return true;
             };
             this._contentModel.dataReadyNotifier.subscribe(this._contentDataReady);
-
-            // initiate loading of the data for the current path
-            this._navigated();
-
-            return false;
         }
+
 
         /**
          * Unsubscribe event listeners and frees models
          */
         protected _finalize(): void {
-            this._ajsView.navigationNotifier.unsubscribe(this._navigatedListener);
+            this.ajs.view.navigationNotifier.unsubscribe(this._navigatedListener);
             this._progModel.dataReadyNotifier.unsubscribe(this._programDataReady);
             this._contentModel.dataReadyNotifier.unsubscribe(this._contentDataReady);
             ajs.Framework.modelManager.freeModelInstance(ProgramModel);
@@ -188,9 +177,6 @@ namespace ajsdoc {
                     this.ajsDocLayout.ajsDocArticle.clearState(false);
                     this.ajsDocLayout.ajsDocArticle.setState(articleState);
 
-                    /*let articleState: IAjsDocArticleStateSet = this._prepareArticleState(data.articleState);
-                    this.ajsDocLayout.ajsDocArticle.clearState(false);
-                    this.ajsDocLayout.ajsDocArticle.setState(articleState);*/
                 });
 
             }

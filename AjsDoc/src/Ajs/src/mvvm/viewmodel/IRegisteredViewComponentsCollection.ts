@@ -25,7 +25,7 @@ namespace ajs.mvvm.viewmodel {
 
     "use strict";
 
-    export interface IRegisteredViewComponentsCollection {
+    export interface IRegisteredViewComponentsDict {
         [name: string]: typeof ViewComponent;
     }
 

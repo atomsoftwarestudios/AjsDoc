@@ -21,45 +21,64 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
+///<reference path="../viewmodel/ViewComponentManager.ts" />
+
 namespace ajs.mvvm.view {
 
     "use strict";
 
-    import TemplateManager = ajs.templating.TemplateManager;
     import ViewComponentManager = ajs.mvvm.viewmodel.ViewComponentManager;
-    import IVisualComponent = ajs.templating.IVisualComponent;
+    import DocumentManager = ajs.doc.DocumentManager;
 
     /**
-     * View class represents a view composed from the view components. Automatically builds the view component tree
-     * based on the passed rootViewComponentName. It automatically instantiates the root component which takes care
-     * of instantiating children view components. The initial state of the root component must be set in this
-     * component, it is not possible to pass the state from the View.
-     *
-     * View also catches state changes occured in the children view components and performs rendering at the end of
-     * the state change. Rendering occurs only if the state was really changed (this is evaluated in the view component).
-     * Rendering starts from the component which was root for the state change and renders also all children if necessary.
-     *
-     * View additionally provides a unique component ID generator so each component in the view tree will obtain unique
-     * identification number when created. This ID can is not currently used internally.
+     * View class represents a view composed from the view components. It manages the tree of instanced view components to be displayed.
+     * <p>
+     * It is recommended to keep just one view for one render target (and basically, only one view for the whole HTML document) as
+     * it the code is not designed to exchange the data between multiple views and also interferrences can occur during the style sheet
+     * management if multiple views are trying to add / remove style sheets.
+     * </p>
+     * <p>
+     * Automatically builds the view component tree based on the passed rootViewComponentName. It automatically instantiates the root
+     * component which takes care of instantiating children view components. The initial state of the root component must be set in this
+     * component as it is not possible to pass the default state from the View.
+     * </p>
+     * <p>
+     * View also catches state changes occured in the children view components and initiates the ViewComponent tree rendering
+     * to the shadow DOM it manages and performs the final DOM update (using the DocumentManager) at the end of the state change.
+     * Rendering and the DOM update occurs only if the state of the "state change" root component or its children was really changed.
+     * This is evaluated in the particular view component. If only one of children view components of the root state change components
+     * was changed the whole state chane root view component will get rendered to the shadow DOM but only changed nodes are transferred
+     * to the render target so the target DOM manipulation is minimized as much as possible.
+     * </p>
      */
     export class View {
 
-        /** Reference to the template manager */
-        protected _templateManager: TemplateManager;
-        /** Returns reference to the template manager used during the view construction */
-        public get templateManager(): TemplateManager { return this._templateManager; }
+        protected _config: IViewConfig;
+        public get config(): IViewConfig { return this._config; }
 
         /** Reference to the view component manager */
         protected _viewComponentManager: ViewComponentManager;
         /** Returns reference to the view manager used during the view construction */
         public get viewComponentManager(): ViewComponentManager { return this._viewComponentManager; }
 
+        /** Reference to the document manager */
+        protected _documentManager: DocumentManager;
+        /** Returns reference to the document manager */
+        public get documentManager(): DocumentManager { return this._documentManager; }
+
+        /** Reference to the element serving as a render target for the root view component */
+        protected _renderTarget: Element;
+        /** Returns reference to the element serving as a render target for the root view component */
+        public get renderTarget(): Element { return this._renderTarget; };
+
         /** Stores name of the view component used as the root for the view */
         protected _rootViewComponentName: string;
         /** Returns currently set name of the root view component */
         public get rootViewComponentName(): string { return this._rootViewComponentName; }
-        /** Sets the name of the root view component and internally instantiates it and its tree. 
-         *  Additionally, it destroys the previously assigned root component and its tree
+
+        /**
+         * Sets the name of the root view component and internally instantiates it and its tree.
+         * Additionally, it destroys the previously assigned root component and its tree and performs necessary cleanup
          */
         public set rootViewComponentName(value: string) { this._rootUpdated(value); }
 
@@ -68,506 +87,319 @@ namespace ajs.mvvm.view {
         /** Returns root view component currently in use */
         public get rootViewComponent(): ajs.mvvm.viewmodel.ViewComponent { return this._rootViewComponent; }
 
-        /** Specifies the root component for the current state change. 
-         *  This component is then rendered (including its children) if neccessary
-         */
-        protected _changeRootComponent: ajs.mvvm.viewmodel.ViewComponent;
+        /** Specifies the root component for the current state change. Component is then rendered (including its children) if neccessary. */
+        protected _stateChangeRootComponent: ajs.mvvm.viewmodel.ViewComponent;
         /** Returns the current change root component. Valid when the stage change is in progress only */
-        public get changeRootComponent(): ajs.mvvm.viewmodel.ViewComponent { return this._changeRootComponent; }
+        public get stateChangeRootComponent(): ajs.mvvm.viewmodel.ViewComponent { return this._stateChangeRootComponent; }
 
-        /** Used for shadow rendering of the view component after the state change and it for comparing changes against the target DOM */
+        /** Used for rendering of view components after the state change and applying the changes to the render target */
         protected _shadowDom: Document;
+
+        /** Notifies subscribers (usually view components) the Navigation event occured */
+        protected _navigationNotifier: ajs.events.Notifier;
+        public get navigationNotifier(): ajs.events.Notifier { return this._navigationNotifier; }
+
+        /** Notifies subcribers (usually view components) the rendering of the component is finished */
+        protected _renderDoneNotifier: ajs.events.Notifier;
+        public get renderDoneNotifier(): ajs.events.Notifier { return this._renderDoneNotifier; }
 
         /** Unique component ID generator -> increments by 1 every time it is asked for the new value */
         protected _lastComponentId: number;
         /** Returns unique ID number each time it is asked for it. Currently, the view component
          *  is using this generator to assign view component unique identification, but this identification is not in use now
          */
-        public get getComponentId(): number { this._lastComponentId++; return this._lastComponentId; }
-
-        /** Holds style sheets (template names / StyleSheet URIs) applied to the current view */
-        protected _appliedStyleSheets: string[];
-        /** Returns style sheets (template names) applied to the current view */
-        public get appliedStyleSheets(): string[] { return this._appliedStyleSheets; }
-
-        protected _navigationNotifier: ajs.events.Notifier;
-        public get navigationNotifier(): ajs.events.Notifier { return this._navigationNotifier; }
-
-        protected _renderDoneNotifier: ajs.events.Notifier;
-        public get renderDoneNotifier(): ajs.events.Notifier { return this._renderDoneNotifier; }
-
+        public getNewComponentId(): number { this._lastComponentId++; return this._lastComponentId; }
 
         /**
          * Constructs a view. This constructor is called from the ajs.Framework during initialization
+         * <p>
          * View is supposed to be just one in the application. All the "view" functionality should be
          * in view components itself.
+         * </p>
          * @param templateManager template manager must be instantiated before the view
          * @param viewComponentManager view component manager must be instantiated before the view
          */
-        public constructor(templateManager: TemplateManager, viewComponentManager: ViewComponentManager) {
+        public constructor(viewComponentManager: ViewComponentManager, config?: IViewConfig) {
 
+            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.mvvm.view", this, "", ViewComponentManager, config);
+
+            // store the configuration
+            if (config) {
+                this._config = config;
+            } else {
+                this._config = this._defaultConfig();
+            }
+
+            // instantiate notifiers
             this._navigationNotifier = new ajs.events.Notifier();
             this._renderDoneNotifier = new ajs.events.Notifier();
 
-            this._templateManager = templateManager;
+            // store references to the template and view component managers
             this._viewComponentManager = viewComponentManager;
 
+            // store the render target for the root view component and instantiate the document manager
+            this._renderTarget = this._config.renderTarget;
+            this._documentManager = new DocumentManager(this._renderTarget);
+
+            // basic initialization of the view
             this._rootViewComponentName = null;
             this._rootViewComponent = null;
+            this._stateChangeRootComponent = null;
 
-            this._changeRootComponent = null;
-
+            // prepare shadow DOM as a ViewComponent render target
             this._shadowDom = document.implementation.createHTMLDocument("shadowDom");
-
-            this._appliedStyleSheets = [];
+            this._shadowDom.body.innerHTML = "";
 
             this._lastComponentId = 0;
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.mvvm.view", this);
         }
 
-        protected _rootUpdated(rootComponentName: string): void {
-
-            console.warn("IMPLEMENT: ajs.mvvm.View._rootUpdated - Finalization of previously created component tree");
-            console.warn("IMPLEMENT: ajs.mvvm.View._rootUpdated - Navigation event notification");
-
-            this._rootViewComponentName = rootComponentName;
-
-            this._createViewComponent(rootComponentName, "rootViewComponent").then(
-                (viewComponent: ajs.mvvm.viewmodel.ViewComponent) => {
-                    this._cleanUpDocument();
-                    this.applyStyleSheetsFromTemplate(viewComponent.ajsVisualComponent.template).then(
-                        () => {
-                            this._rootViewComponent = viewComponent;
-                            this.render(this._rootViewComponent);
-                        }
-                    );
-                }
-            );
-        }
-
-        protected _createViewComponent(name: string, id: string): Promise<ajs.mvvm.viewmodel.ViewComponent> {
-
-            let viewComponentConstructor: typeof ajs.mvvm.viewmodel.ViewComponent;
-            viewComponentConstructor = this._viewComponentManager.getComponentConstructorByName(name);
-
-            if (viewComponentConstructor === null) {
-                viewComponentConstructor = ajs.mvvm.viewmodel.ViewComponent;
-            }
-
-            let visualComponent: IVisualComponent;
-            visualComponent = this._templateManager.getVisualComponent(name);
-            if (visualComponent === null) {
-                throw new VisualComponentNotRegisteredException(name);
-            }
-
-            let vcPromise: Promise<ajs.mvvm.viewmodel.ViewComponent> = new Promise<ajs.mvvm.viewmodel.ViewComponent>(
-                (resolve: (component: ajs.mvvm.viewmodel.ViewComponent) => void, reject: (reason?: any) => void) => {
-
-                    let viewComponent: viewmodel.ViewComponent =
-                        new viewComponentConstructor(this, this._viewComponentManager, id, null, visualComponent);
-
-                    // wait for the component is ready (i.e. loads data from the model)
-                    function waitInitialized(): void {
-
-                        if (viewComponent.ajsInitialized) {
-                            resolve(viewComponent);
-                        } else {
-                            setTimeout(waitInitialized, 0);
-                        }
-
-                    }
-
-                    waitInitialized();
-                }
-            );
-
-            return vcPromise;
-
-        }
-
-        protected _cleanUpDocument(): void {
-            document.body.innerHTML = "";
-            let styleSheets: NodeListOf<HTMLStyleElement> = document.head.getElementsByTagName("style");
-            for (let i: number = 0; i < styleSheets.length; i++) {
-                if (styleSheets.item(i).hasAttribute("id") &&
-                    this._appliedStyleSheets.indexOf(styleSheets.item(i).getAttribute("id")) !== -1) {
-                    document.head.removeChild(styleSheets.item(i));
-                }
-            }
-            this._appliedStyleSheets = [];
-        }
-
-        public applyStyleSheetsFromTemplate(template: ajs.templating.Template): Promise<void> {
-
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.view", this);
-
-            let styleSheetsToProcess: Promise<string>[] = [];
-
-            for (let i: number = 0; i < template.styleSheets.length; i++) {
-                let id: string = template.name + i;
-                if (this.appliedStyleSheets.indexOf(id) === -1) {
-                    styleSheetsToProcess.push(this._processStyleSheet(template, i));
-                }
+        /**
+         * Default view configuration
+         */
+        protected _defaultConfig(): IViewConfig {
+            return {
+                renderTarget: window.document.body
             };
-
-            let applyPromise: Promise<void> = new Promise<void>(
-
-                async (resolve: () => void, reject: (reason?: any) => void) => {
-                    try {
-                        let styleSheets: string[] = await Promise.all(styleSheetsToProcess);
-
-                        for (let i: number = 0; i < styleSheets.length; i++) {
-
-                            let id: string = template.name + i;
-                            this.appliedStyleSheets.push(id);
-
-                            let style: HTMLElement = document.createElement("style");
-                            style.setAttribute("type", "text/css");
-                            style.setAttribute("id", id);
-                            style.textContent = template.styleSheets[i];
-
-                            ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.view", this,
-                                "Adding processed stylesheet to the render target", template.styleSheets[i]);
-
-                            document.head.appendChild(style);
-                        }
-                    } catch (e) {
-
-                        throw new CSSRequiredResourceNotLoadedException(e);
-
-                    }
-
-                    resolve();
-                }
-
-            );
-
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.view", this);
-
-            return applyPromise;
-
         }
 
-        protected _processStyleSheet(template: ajs.templating.Template, index: number): Promise<string> {
-
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.view", this);
-
-            // resources to be checked
-            let resourcesPromises: Promise<ajs.resources.IResource>[] = [];
-
-            // find all url(...) in the stylesheet
-            let urls: RegExpMatchArray = template.styleSheets[index].match(/url\(('|")(.*)('|")\)/g);
-
-            // fix them to just the url and get all resources
-            if (urls !== null) {
-                for (let i: number = 0; i < urls.length; i++) {
-                    let url: RegExpExecArray = (/('|")(.*)('|")/g).exec(urls[i]);
-                    if (url.length < 2) {
-                        throw new CSSInvalidResourceSpecificationException();
-                    }
-                    resourcesPromises.push(
-                        this._templateManager.resourceManager.getResource(url[2], template.storageType)
-                    );
-                }
-            }
-
-            // wait for all resources with given URLS
-            let styleSheetPromise: Promise<string> = new Promise<string>(
-
-                async (resolve: (styleSheet: string) => void, reject: (e: any) => void) => {
-
-                    try {
-                        let resources: ajs.resources.IResource[] = await Promise.all(resourcesPromises);
-
-                        for (let i: number = 0; i < resources.length; i++) {
-                            template.styleSheets[index] = ajs.utils.replaceAll(
-                                template.styleSheets[index],
-                                resources[i].url,
-                                "data:image;base64," + resources[i].data);
-                        }
-
-                    } catch (e) {
-                        reject(e);
-                    }
-
-                    resolve(template.styleSheets[index]);
-
-                });
-
-            return styleSheetPromise;
-        }
-
+        /**
+         * Called from router when navigation occurs but root component remains the same
+         */
         public onNavigate(): void {
             this._navigationNotifier.notify(this);
         }
 
-        public _stateChangeBegin(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
-            if (this._changeRootComponent === null) {
-                this._changeRootComponent = viewComponent;
+        /**
+         * Called from the view component when it is requested to set the new state
+         * <p>
+         * This information must be passed in order to be possible to recognize the
+         * state change root in order to be possible to update just the correct DOM
+         * tree.
+         * </p>
+         * @param viewComponent
+         */
+        public stateChangeBegin(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.mvvm.view", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.mvvm.view", this,
+                "State change begun (" + ajs.utils.getClassName(viewComponent) + "), " +
+                "id: " + viewComponent.ajs.id + ", viewId: " + viewComponent.componentViewId,
+                viewComponent);
+
+            // if there is no root assigned to the change, the passed component is the root of the change
+            if (this._stateChangeRootComponent === null) {
+
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.mvvm.view", this,
+                    "The " + ajs.utils.getClassName(viewComponent) + ":" + viewComponent.ajs.id + " is root of the state change");
+
+                this._stateChangeRootComponent = viewComponent;
+
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.mvvm.view", this);
         }
 
-        public _stateChangeEnd(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
-            if (this._changeRootComponent === viewComponent) {
+        /**
+         * Called from the view component when it finishes the state change
+         * @param viewComponent
+         */
+        public stateChangeEnd(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.mvvm.view", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.mvvm.view", this,
+                "State change end (" + ajs.utils.getClassName(viewComponent) + "), " +
+                "id: " + viewComponent.ajs.id + ", viewId: " + viewComponent.componentViewId +
+                ", state changed: " + viewComponent.ajs.stateChanged,
+                viewComponent);
+
+            if (this._stateChangeRootComponent === viewComponent) {
+
                 // render only if the root view component was rendered already
                 // initial rendering of the root component is ensured from the _rootUpdated method
                 if (this._rootViewComponent !== null) {
+
                     // render the root change view component
-                    this.render(viewComponent);
+                    let targetNewNode: Element = this.render(viewComponent);
+
                     // notify registered subscribers the rendering is over
                     this._renderDoneNotifier.notify(this);
-                    // do the visual transition
-                    if (viewComponent.ajsHasVisualStateTransition) {
-                        viewComponent.ajsVisualStateTransitionBegin(viewComponent.ajsElement);
+
+                    // begin the visual transition
+                    if (viewComponent.ajs.hasVisualStateTransition) {
+                        viewComponent.ajsVisualStateTransitionBegin(targetNewNode);
                     }
+
                 }
-                this._changeRootComponent = null;
+
+                // finish the state change by clearing of the root component
+                this._stateChangeRootComponent = null;
+
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.mvvm.view", this);
         }
 
+        /**
+         * Called from the view component to inform all parents in the tree (up to state change root) the state of it has changed
+         * <p>
+         * This is necessary to inform the state change root component it has to render the tree of components the changed component
+         * relates to. Basically, it will render all children but those trees roots which state was not changed will be marked with the
+         * skip flag (and children not rendered at all) to inform DOM updater is is not necessary to update these nodes
+         * </p>
+         * @param viewComponent
+         */
         public notifyParentsChildrenStateChange(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
-            if (viewComponent !== null && this._changeRootComponent !== null) {
-                while (viewComponent !== this._changeRootComponent.ajsParentComponent && viewComponent !== null) {
-                    viewComponent.ajsSetStateChanged();
-                    viewComponent = viewComponent.ajsParentComponent;
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.mvvm.view", this);
+
+            if (viewComponent !== null && this._stateChangeRootComponent !== null) {
+
+                ajs.debug.log(debug.LogType.Info, 0, "ajs.mvvm.view", this,
+                    "Notifying parents about the component change: " + viewComponent.ajs.id + " " + viewComponent.componentViewId);
+
+                while (viewComponent !== this._stateChangeRootComponent.ajs.parentComponent && viewComponent !== null) {
+                    viewComponent.ajs.stateChanged = true;;
+                    viewComponent = viewComponent.ajs.parentComponent;
                 }
             }
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.mvvm.view", this);
         }
 
-        public render(viewComponent: ajs.mvvm.viewmodel.ViewComponent): void {
+        /**
+         * 
+         * @param viewComponent
+         */
+        public render(viewComponent: ajs.mvvm.viewmodel.ViewComponent): Element {
 
-            if (viewComponent.ajsElement !== null) {
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.mvvm.view", this);
 
-                // update the render of the component
-                this._shadowDom.body.innerHTML = "";
-                let componentElement: HTMLElement = viewComponent.render(this._shadowDom.body, true, false);
-                // if the component was rendered to shadow DOM, update the main DOM
-                if (componentElement !== null) {
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.mvvm.view", this,
+                "Rendering component, id: " + viewComponent.ajs.id + ", viewId: " + viewComponent.componentViewId,
+                viewComponent);
 
-                    this._updateDom(componentElement, viewComponent.ajsElement);
+            // try to locate the target root - if null is returned this is complete new render
+            let targetUpdateRoot: Node = this._documentManager.getTargetNodeByUniqueId(viewComponent.componentViewId);
 
-                // otherwise remove the component root element from the DOM
+            // try to locate the template element in the target DOM
+            // if it is there we are updating a DOM, otherwise render parent first
+            if (targetUpdateRoot === null) {
+                if (viewComponent.ajs.parentComponent === null) {
+                    targetUpdateRoot = this._renderTarget;
                 } else {
-                    viewComponent.ajsElement.parentElement.removeChild(viewComponent.ajsElement);
-                    viewComponent.ajsElement = null;
-                }
-            } else {
-                // initial render of the view component (and all of its children)
-                if (viewComponent === this._rootViewComponent) {
-                    document.body.innerHTML = "";
-                    viewComponent.render(document.body, false, false);
+                    this.render(viewComponent.ajs.parentComponent);
+                    return;
                 }
             }
 
-        }
+            // render the view component to shadow DOM
+            let componentElement: HTMLElement = viewComponent.render(this._shadowDom.body, false);
 
-        protected _isComponent(node: Node): boolean {
-            if (node !== undefined && node !== null && node instanceof Element) {
-                let componentElement: ajs.mvvm.viewmodel.IComponentElement = (node as ajs.mvvm.viewmodel.IComponentElement);
-                return componentElement.hasOwnProperty("ajsComponent") &&
-                    componentElement.ajsComponent instanceof ajs.mvvm.viewmodel.ViewComponent;
-            }
-            return false;
-        }
+            // if the component was rendered to shadow DOM, update the target DOM
+            if (componentElement !== null) {
 
-        protected _getComponentId(node: Node): number {
-            if (this._isComponent(node)) {
-                return Number((node as ajs.mvvm.viewmodel.IComponentElement).ajsComponent.ajsComponentId);
-            }
-            return -1;
-        }
 
-        protected _updateDom(source: Node, target: Node): void {
-            // if we have no source or target, return
-            /*if (source === undefined || source === null || target === undefined || target === null) {
-                return;
-            }*/
+                try {
 
-            // if the source node is view component and the target is different than the source
-            if (this._isComponent(source) &&
-                (!this._isComponent(target) || this._getComponentId(source) !== this._getComponentId(target))) {
-                // search for the component in the target parent and update it if found
-                if (target !== undefined && target !== null && target.parentNode !== undefined && target.parentNode !== null) {
+                    // update target DOM from shadow DOM
+                    this._documentManager.updateDom(componentElement, targetUpdateRoot);
 
-                    let componentFound: boolean = false;
-                    for (let i: number = 0; i < target.parentNode.childNodes.length; i++) {
+                } catch (e) {
+                    this._shadowDom.body.innerHTML = "";
 
-                        let sourceElement: HTMLElement = source as HTMLElement;
-                        let targetElement: HTMLElement = null;
+                    ajs.debug.log(debug.LogType.Error, 0, "ajs.mvvm.view", this,
+                        "Error while updating the DOM!", e);
 
-                        if (target.parentNode.childNodes.item(i) instanceof HTMLElement) {
-                            targetElement = target.parentNode.childNodes.item(i) as HTMLElement;
-                        }
+                    throw new Error(e);
 
-                        if (this._isComponent(targetElement) &&
-                            this._getComponentId(targetElement) === this._getComponentId(sourceElement)) {
-                            componentFound = true;
-                            this._updateDom(source, target.parentElement.children.item(i));
-                        }
+                } finally {
+
+                    // clean up the shadow DOM
+                    this._shadowDom.body.innerHTML = "";
+                }
+
+                // target root should be always element
+                if (targetUpdateRoot instanceof Element) {
+
+                    // we need to return root node of the component, not render target
+                    if (targetUpdateRoot === this._renderTarget) {
+                        targetUpdateRoot = this._documentManager.getTargetNodeByUniqueId(viewComponent.componentViewId);
                     }
 
-                    // if not found, insert the component before target element
-                    if (!componentFound) {
-                        let clonedNode: Node = source.cloneNode(false);
-                        let adoptedNode: Node = target.ownerDocument.adoptNode(clonedNode);
-                        this._copyComponentElementProperties(source, adoptedNode);
-                        target.parentNode.insertBefore(adoptedNode, target);
-                        // if the node is component update the component element
-                        if (this._isComponent(source)) {
-                            let id: number = this._getComponentId(source);
-                            let component: viewmodel.ViewComponent = this._viewComponentManager.getComponentInstanceByComponentId(id);
-                            component.ajsElement = adoptedNode as HTMLElement;
+                    if (targetUpdateRoot !== null) {
 
-                        }
-                        // if any register defined event listeners
-                        if ((source as viewmodel.IComponentElement).ajsEventListeners instanceof Array) {
-                            for (let i: number = 0; i < (source as viewmodel.IComponentElement).ajsEventListeners.length; i++) {
-                                adoptedNode.addEventListener(
-                                    (source as viewmodel.IComponentElement).ajsEventListeners[i].eventType,
-                                    (source as viewmodel.IComponentElement).ajsEventListeners[i].listener);
-                            }
-                        }
-                        this._updateDom(source, adoptedNode);
-                    }
-                }
+                        ajs.debug.log(debug.LogType.Exit, 0, "ajs.mvvm.view", this);
 
-            } else {
-                if (source.nodeName === target.nodeName) {
-                    // update the node attributes
-                    if (this._updateNode(source, target)) {
+                        return targetUpdateRoot as Element;
 
-                        // update children nodes
-                        for (let i: number = 0; i < source.childNodes.length; i++) {
-                            // it there is enough nodes to be compared in the target document
-                            if (i < target.childNodes.length) {
-                                // update node tree
-                                this._updateDom(source.childNodes.item(i), target.childNodes.item(i));
-                            } else {
-                                // add node and continue with its tree
-                                let clonedNode: Node = source.childNodes.item(i).cloneNode(false);
-                                let adoptedNode: Node = target.ownerDocument.adoptNode(clonedNode);
-                                this._copyComponentElementProperties(source, adoptedNode);
-                                target.appendChild(adoptedNode);
-                                // if the node is component, update the component element and register defined event listeners
-                                if (this._isComponent(source.childNodes.item(i))) {
-                                    let id: number = this._getComponentId(source.childNodes.item(i));
-                                    let component: viewmodel.ViewComponent =
-                                        ajs.Framework.viewComponentManager.getComponentInstanceByComponentId(id);
-                                    component.ajsElement = adoptedNode as HTMLElement;
-                                }
-                                // if any register defined event listeners
-                                if ((source.childNodes.item(i) as viewmodel.IComponentElement).ajsEventListeners instanceof Array) {
-                                    for (let i: number = 0;
-                                        i < (source.childNodes.item(i) as viewmodel.IComponentElement).ajsEventListeners.length;
-                                        i++) {
-                                        adoptedNode.addEventListener(
-                                            (source.childNodes.item(i) as viewmodel.IComponentElement).ajsEventListeners[i].eventType,
-                                            (source.childNodes.item(i) as viewmodel.IComponentElement).ajsEventListeners[i].listener);
-                                    }
-                                }
+                    } else {
 
-                                this._updateDom(source.childNodes.item(i), adoptedNode);
-                            }
-                        }
+                        ajs.debug.log(debug.LogType.Error, 0, "ajs.mvvm.view", this,
+                            "Something went wrong during the DOM update as the root element of the view component can't be located!");
 
-                        // remove any remaining nodes
-                        while (source.childNodes.length < target.childNodes.length) {
-                            this._domCleanup(target.childNodes.item(source.childNodes.length));
-                            target.removeChild(target.childNodes.item(source.childNodes.length));
-                        }
+                        throw new Error("Unrecoverable internal error. \
+                            Something went wrong during the DOM update as the root element of the view component can't be located!");
                     }
 
                 } else {
-                    // remove target element and replace it by a new tree
-                    let clonedNode: Node = source.cloneNode(false);
-                    let adoptedNode: Node = target.ownerDocument.adoptNode(clonedNode);
-                    target.parentNode.replaceChild(adoptedNode, target);
-                    this._updateDom(source, adoptedNode);
-                }
-            }
 
-        }
+                    ajs.debug.log(debug.LogType.Error, 0, "ajs.mvvm.view", this,
+                        "Root of the component must be always element!");
 
-        protected _domCleanup(node: Node): void {
-            if (node instanceof HTMLElement) {
-                let e: viewmodel.IComponentElement = node;
-                if (e.ajsComponent) {
-                    e.ajsComponent = null;
-                    delete (e.ajsComponent);
-                }
-                if (e.ajsEventListeners) {
-                    e.ajsEventListeners = null;
-                    delete (e.ajsEventListeners)
-                }
-                if (e.ajsOwnerComponent) {
-                    e.ajsEventListeners = null;
-                    delete (e.ajsOwnerComponent);
-                }
-                if (e.ajsSkipUpdate) {
-                    e.ajsSkipUpdate = null;
-                    delete (e.ajsSkipUpdate);
-                }
-            }
-            for (let i: number = 0; i < node.childNodes.length; i++) {
-                this._domCleanup(node.childNodes.item(i));
-            }
-        }
-
-        protected _copyComponentElementProperties(source: Node, target: Node): void {
-            if (source instanceof Element && target instanceof Element) {
-                (target as ajs.mvvm.viewmodel.IComponentElement).ajsComponent =
-                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsComponent;
-
-                (target as ajs.mvvm.viewmodel.IComponentElement).ajsOwnerComponent =
-                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsOwnerComponent;
-
-                (target as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners =
-                    (source as ajs.mvvm.viewmodel.IComponentElement).ajsEventListeners;
-            }
-        }
-
-        protected _updateNode(source: Node, target: Node): boolean {
-
-            if (source.nodeType === Node.ELEMENT_NODE) {
-
-                // check if the node is view component, is the same as the target and should be skipped
-                if (this._isComponent(source) && (source as viewmodel.IComponentElement).ajsSkipUpdate === true &&
-                    this._isComponent(target) && this._getComponentId(source) === this._getComponentId(target)) {
-                    return false;
-                }
-
-                // remove atributes
-                let i: number = 0;
-                while (i < target.attributes.length) {
-                    if (!(source as HTMLElement).hasAttribute(target.attributes.item(i).nodeName)) {
-                        target.attributes.removeNamedItem(target.attributes.item(i).nodeName);
-                    } else {
-                        i++;
-                    }
-                }
-
-                // add missing attributes and update differences
-                for (i = 0; i < source.attributes.length; i++) {
-                    let tattr: Attr = target.attributes.getNamedItem(source.attributes.item(i).nodeName);
-                    if (tattr === null) {
-                        tattr = target.ownerDocument.createAttribute(source.attributes.item(i).nodeName);
-                        tattr.value = source.attributes.item(i).nodeValue;
-                        target.attributes.setNamedItem(tattr);
-                    } else {
-                        if (tattr.nodeValue !== source.attributes.item(i).nodeValue) {
-                            tattr.nodeValue = source.attributes.item(i).nodeValue;
-                        }
-                    }
+                    throw new Error("Unrecoverable internal error. Root of the component must be always element!");
                 }
 
             } else {
-                if (source.nodeType === Node.TEXT_NODE) {
-                    if (source.nodeValue !== target.nodeValue) {
-                        target.nodeValue = source.nodeValue;
-                    }
-                }
+                // here is some bullshit, who knows what is used to be for. If null is returned no change was made at all or error occured
+                // lets test first
+
+                // if it was not rendered it should be removed from the target
+                /*if (targetUpdateRoot !== null) {
+                    this._documentManager.removeNode(targetUpdateRoot);
+                }*/
             }
 
-            return true;
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.mvvm.view", this);
+
+        }
+
+        /**
+         * Called internally when the view root component is updated (usually initiated by the router)
+         * <p>
+         * Performs the target document clean up and initiates a state change and initial rendering of the rootview component
+         * including its children
+         * </p>
+         * @param rootComponentName
+         */
+        protected _rootUpdated(rootComponentName: string): void {
+
+            ajs.debug.log(debug.LogType.Enter, 0, "ajs.mvvm.view", this);
+
+            ajs.debug.log(debug.LogType.Info, 0, "ajs.mvvm.view", this,
+                "Root component updated: " + rootComponentName);
+
+            // clean the target document including the render target
+            this._documentManager.clean(this.renderTarget);
+
+            // destroy the previous root component (including all its children)
+            if (this._rootViewComponent !== null) {
+                this.rootViewComponent.destroy();
+            }
+
+            // setup the new root view component
+            this._rootViewComponentName = rootComponentName;
+
+            // create the view component including its component tree with the default state
+            this._rootViewComponent = this._viewComponentManager.createViewComponent(rootComponentName, "rootViewComponent", this, null);
+
+            // hopefully the root component sunscribed navigated event
+            this._navigationNotifier.notify(this);
+
+            ajs.debug.log(debug.LogType.Exit, 0, "ajs.mvvm.view", this);
         }
 
     }

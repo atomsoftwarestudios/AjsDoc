@@ -53,22 +53,29 @@ namespace ajsdoc {
         protected _previousRefNode: INode;
         protected _previousArticle: IArticleData;
 
-        protected _initialize(): boolean {
+        protected _initialize(): void {
+
             this._contentModel = ajs.Framework.modelManager.getModelInstance(ContentModel) as ContentModel;
             this._programModel = ajs.Framework.modelManager.getModelInstance(ProgramModel) as ProgramModel;
+
             this._previousContext = null;
             this._previousRefNode = null;
             this._previousArticle = null;
-
-            return true;
         }
 
         public touchMove(e: Event): void {
+
             e.cancelBubble = true;
             e.stopPropagation();
-            if (this.ajsElement.scrollHeight <= this.ajsElement.clientHeight) {
-                e.preventDefault();
+
+            let el: Node = this.ajs.view.documentManager.getTargetNodeByUniqueId(this.componentViewId);
+
+            if (el instanceof HTMLElement) {
+                if ((el as HTMLElement).scrollHeight <= (el as HTMLElement).clientHeight) {
+                    e.preventDefault();
+                }
             }
+
         }
 
         public stateTransitionBegin(): ajs.mvvm.viewmodel.ITransitionType {
@@ -89,6 +96,7 @@ namespace ajsdoc {
         public stateTransitionEnd(e: Event): void {
             this._ajsVisualStateTransitionEnd();
         }
+
         protected _getTransitionType(): TransitionType {
 
             let transitionType: TransitionType = TransitionType.NONE;
@@ -128,42 +136,48 @@ namespace ajsdoc {
                 currentArticle = currentArticle.parent;
             }*/
 
-            if (this._previousArticle !== null) {
+            if (this._previousArticle !== undefined) {
 
-                if (currentArticle.parent === this._previousArticle.parent) {
-                    if (currentArticle.children && currentArticle.children.length > 0) {
-                        transitionType = TransitionType.RTL;
-                    } else {
+                if (this._previousArticle !== null) {
+
+                    if (currentArticle.parent === this._previousArticle.parent) {
+                        if (currentArticle.children && currentArticle.children.length > 0) {
+                            transitionType = TransitionType.RTL;
+                        } else {
+                            if (this._previousArticle.children && this._previousArticle.children.length > 0) {
+                                transitionType = TransitionType.LTR;
+                            }
+                        }
+                    }
+
+                    if (currentArticle.parent === this._previousArticle) {
+                        if (currentArticle.children && currentArticle.children.length > 0) {
+                            transitionType = TransitionType.RTL;
+                        }
+                    }
+
+                    if (currentArticle.parent === this._previousArticle) {
+                        if (currentArticle.children && currentArticle.children.length > 0) {
+                            transitionType = TransitionType.RTL;
+                        }
+                    }
+
+                    if (currentArticle === this._previousArticle.parent) {
                         if (this._previousArticle.children && this._previousArticle.children.length > 0) {
                             transitionType = TransitionType.LTR;
                         }
                     }
-                }
 
-                if (currentArticle.parent === this._previousArticle) {
-                    if (currentArticle.children && currentArticle.children.length > 0) {
-                        transitionType = TransitionType.RTL;
-                    }
-                }
-
-                if (currentArticle.parent === this._previousArticle) {
-                    if (currentArticle.children && currentArticle.children.length > 0) {
-                        transitionType = TransitionType.RTL;
-                    }
-                }
-
-                if (currentArticle === this._previousArticle.parent) {
-                    if (this._previousArticle.children && this._previousArticle.children.length > 0) {
+                    if (this._previousArticle.parent && currentArticle === this._previousArticle.parent.parent) {
                         transitionType = TransitionType.LTR;
                     }
-                }
 
-                if (this._previousArticle.parent && currentArticle === this._previousArticle.parent.parent) {
-                    transitionType = TransitionType.LTR;
+                } else {
+                    transitionType = TransitionType.FADE;
                 }
 
             } else {
-                transitionType = TransitionType.FADE;
+                transitionType = TransitionType.NONE;
             }
 
             this._previousArticle = currentArticle;
@@ -180,38 +194,46 @@ namespace ajsdoc {
                 currentNode = currentNode.parent;
             }
 
-            if (this._previousRefNode !== null) {
 
-                if (currentNode.parent !== this._previousRefNode && currentNode.parent !== this._previousRefNode.parent) {
+            if (this._previousArticle !== undefined) {
+
+                if (this._previousRefNode !== null) {
+
+                    if (currentNode.parent !== this._previousRefNode && currentNode.parent !== this._previousRefNode.parent) {
+                        transitionType = TransitionType.FADE;
+                    }
+
+                    if (currentNode === this._previousRefNode.parent) {
+                        transitionType = TransitionType.LTR;
+                    }
+
+                    if (currentNode.parent === this._previousRefNode && MENU_DONT_EXPAND.indexOf(currentNode.kindString) === -1) {
+                        transitionType = TransitionType.RTL;
+                    }
+
+                } else {
                     transitionType = TransitionType.FADE;
                 }
 
-                if (currentNode === this._previousRefNode.parent) {
-                    transitionType = TransitionType.LTR;
-                }
-
-                if (currentNode.parent === this._previousRefNode && MENU_DONT_EXPAND.indexOf(currentNode.kindString) === -1) {
-                    transitionType = TransitionType.RTL;
-                }
-
-            } else {
-                transitionType = TransitionType.FADE;
-            }
-
-            if (MENU_DONT_EXPAND.indexOf(currentNode.kindString) === -1) {
-                this._previousRefNode = currentNode;
-            } else {
-                if (this._previousRefNode === null) {
-                    let node: INode = currentNode.parent;
-                    while (node.parent !== null) {
-                        if (MENU_DONT_EXPAND.indexOf(node.kindString) === -1) {
-                            this._previousRefNode = node;
-                            break;
+                if (MENU_DONT_EXPAND.indexOf(currentNode.kindString) === -1) {
+                    this._previousRefNode = currentNode;
+                } else {
+                    if (this._previousRefNode === null) {
+                        let node: INode = currentNode.parent;
+                        while (node.parent !== null) {
+                            if (MENU_DONT_EXPAND.indexOf(node.kindString) === -1) {
+                                this._previousRefNode = node;
+                                break;
+                            }
+                            node = node.parent;
                         }
-                        node = node.parent;
                     }
                 }
+
+            } else {
+                transitionType = TransitionType.NONE;
             }
+
 
             return transitionType;
         }

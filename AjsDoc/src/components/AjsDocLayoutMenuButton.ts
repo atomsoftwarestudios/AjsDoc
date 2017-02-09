@@ -32,7 +32,7 @@ namespace ajsdoc {
         protected _componentTreeChanged: ajs.events.IListener;
 
         public toggleMenu(): void {
-            let layout: AjsDocLayout = this._ajsViewComponentManager.getFirstComponentInstance<AjsDocLayout>(AjsDocLayout, "ajsDocLayout");
+            let layout: AjsDocLayout = this.ajs.viewComponentManager.getFirstComponentInstance<AjsDocLayout>(AjsDocLayout, "ajsDocLayout");
             layout.toggleMenu();
         }
 

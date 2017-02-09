@@ -127,19 +127,17 @@ namespace ajsdoc {
             super.setState(state);
         }
 
-        protected _initialize(): boolean {
+        protected _initialize(): void {
             this._renderedListener = (sender: ajs.mvvm.viewmodel.ViewComponent) => {
                 this._rendered();
                 return true;
             };
 
-            this._ajsView.renderDoneNotifier.subscribe(this._renderedListener);
-
-            return true;
+            this.ajs.view.renderDoneNotifier.subscribe(this._renderedListener);
         }
 
         protected _finalize() {
-            this._ajsView.renderDoneNotifier.unsubscribe(this._renderedListener);
+            this.ajs.view.renderDoneNotifier.unsubscribe(this._renderedListener);
         }
 
         protected _rendered(): void {

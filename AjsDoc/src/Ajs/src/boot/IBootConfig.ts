@@ -31,7 +31,7 @@ namespace ajs.boot {
      * and loaded by html page. It is expcected to be defined in the ajs.boot namespace.
      */
     export interface IBootConfig {
-        bootResourcesCachePreference: resources.LOADING_PREFERENCE;
+        bootResourcesLoadingPreference: resources.LOADING_PREFERENCE;
     }
 
 }

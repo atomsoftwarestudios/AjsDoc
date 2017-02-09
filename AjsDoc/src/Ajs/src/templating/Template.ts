@@ -86,7 +86,14 @@ namespace ajs.templating {
             this._storageType = storageType;
             this._cachePolicy = cachePolicy;
             this._template = document.implementation.createHTMLDocument("ajstemplate");
-            this._template.body.innerHTML = templateResource.data;
+
+            // safari hack
+            let data: string = templateResource.data;
+            data = data.replace(/touchstart/g, "touchstart_ajs");
+            data = data.replace(/touchmove/g, "touchmove_ajs");
+            data = data.replace(/touchend/g, "touchend_ajs");
+
+            this._template.body.innerHTML = data;
             this._styleSheetsLoaded = false;
             this._styleSheetsUrls = [];
             this._styleSheets = [];

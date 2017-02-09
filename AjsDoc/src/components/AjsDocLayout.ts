@@ -30,6 +30,13 @@ namespace ajsdoc {
         public dialogVisible: boolean;
         public menuVisible: boolean;
 
+        protected _defaultState(): ajs.mvvm.viewmodel.IViewStateSet {
+            return {
+                dialogVisible: window.innerWidth < 980,
+                menuVisible: true
+            };
+        }
+
         public showDialogFrame(): void {
             document.body.style.overflow = "hidden";
             this.setState({ dialogVisible: true });
@@ -72,15 +79,9 @@ namespace ajsdoc {
         }
 
         public touchMove(event: Event): void {
-            if (this.menuVisible) {
+                if (this.menuVisible) {
                 event.preventDefault();
             }
-        }
-
-        protected _initialize(): boolean {
-            this.showMenu();
-
-            return true;
         }
 
         protected _finalize(): void {
@@ -88,7 +89,7 @@ namespace ajsdoc {
         }
 
         protected _updateButton(visible: boolean): void {
-            let button: AjsDocLayoutMenuButton = this._ajsViewComponentManager.getFirstComponentInstance<AjsDocLayoutMenuButton>(AjsDocLayoutMenuButton, "ajsDocLayoutMenuButton");
+            let button: AjsDocLayoutMenuButton = this.ajs.viewComponentManager.getFirstComponentInstance<AjsDocLayoutMenuButton>(AjsDocLayoutMenuButton, "ajsDocLayoutMenuButton");
             button.setState({ menuVisible: visible });
         }
 

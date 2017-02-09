@@ -21,24 +21,20 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.ui {
+namespace ajs.doc {
 
     "use strict";
 
-    export declare class ProgressBar {
-
-        protected _total: number;
-        public total: number;
-
-        protected _current: number;
-        public current: number;
-
-        protected _update(): void;
-
-        public resourceLoading(label: string): void;
-        public resourceLoaded(e: string): void;
-        public show();
-        public hide();
+    /**
+     * Represents the DOM component object (in case of Ajs it is a ViewComponent object) the DOM node belongs to
+     */
+    export interface IComponent {
+        /**
+         * Uniquely identifies the component
+         * In Ajs MVVM, the view has a unique component ID generator which ViewComponent is using when it is
+         * created to assign unique value for each view component instance created
+         */
+        componentViewId: number
     }
 
 }

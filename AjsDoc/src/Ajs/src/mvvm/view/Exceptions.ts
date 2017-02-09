@@ -25,10 +25,10 @@ namespace ajs.mvvm.view {
 
     "use strict";
 
+    export class UpdateRootViewComponentFailedException extends Error { }
+
     export class VisualComponentNotRegisteredException extends Error { }
 
-    export class CSSInvalidResourceSpecificationException extends Error { }
-
-    export class CSSRequiredResourceNotLoadedException extends Error { }
+    export class ViewComponentInitializationTimeoutException extends Error { }
 
 }

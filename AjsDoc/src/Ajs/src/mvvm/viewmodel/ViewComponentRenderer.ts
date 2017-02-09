@@ -21,24 +21,11 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.ui {
+namespace ajs.mvvm.viewmodel {
 
     "use strict";
 
-    export declare class ProgressBar {
-
-        protected _total: number;
-        public total: number;
-
-        protected _current: number;
-        public current: number;
-
-        protected _update(): void;
-
-        public resourceLoading(label: string): void;
-        public resourceLoaded(e: string): void;
-        public show();
-        public hide();
+    export class ViewComponentRender {
     }
 
 }

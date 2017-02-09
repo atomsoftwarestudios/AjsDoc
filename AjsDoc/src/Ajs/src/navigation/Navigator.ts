@@ -188,8 +188,12 @@ namespace ajs.navigation {
                         ajs.debug.log(debug.LogType.Info, 0, "ajs.navigation", this,
                             "Link clicked: " + (element as HTMLAnchorElement).href, element);
 
-                        this.navigate((element as HTMLAnchorElement).href);
+                        this.navigate((element as HTMLAnchorElement).pathname);
+
                     }
+
+                } catch (e) {
+                    throw new Error(e);
                 } finally {
                     ajs.debug.log(debug.LogType.Exit, 0, "ajs.navigation", this);
                     return false;

@@ -32,10 +32,11 @@ namespace ajs.mvvm.model {
 
         /** Holds information if all initial async operations, such as data loading are done */
         protected _initialized: boolean;
+        /** Returm information if all initial async operations, such as data loading are done */
+        public get initialized(): boolean { return this._initialized; }
 
         /** Holds the data ready notifier which notifies ViewModels the requested data is ready */
         protected _dataReadyNotifier: ajs.events.Notifier;
-
         /** Returns the data ready notifier which notifies ViewModels the requested data is ready */
         public get dataReadyNotifier(): ajs.events.Notifier { return this._dataReadyNotifier; }
 
