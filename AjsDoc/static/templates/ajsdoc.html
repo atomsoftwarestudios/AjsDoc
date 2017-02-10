@@ -6,7 +6,7 @@
         <ajsDocLayout id="ajsDocLayout"></ajsDocLayout>
     </component>
 
-    <component name="AjsDocHeader">
+    <component name="AjsDocHeader" role="heading">
         <div class="ajsDocHeaderLabelContainer">
             <h3 class="ajsDocHeaderLabel">Ajs Framework</h3>
             <br />
@@ -22,18 +22,19 @@
         </div>
     </component>
 
-    
+
     <!-- VIEW COMPONENTS -->
-
     <!-- ------------------------------------------------------------------------------------------------------------------------ -->
-
     <!-- LAYOUT COMPONENT -->
 
     <component name="AjsDocLayout">
 
-        <div class="ajsDocLayoutDialog" dialogvisible="{dialogVisible}" onmousedown="dialogClick" ontouchmove="touchMove"></div>
+        <div role="dialog" class="ajsDocLayoutDialog" dialogvisible="{dialogVisible}" onmousedown="dialogClick" ontouchmove="touchMove"></div>
 
-        <div component="AjsDocLayoutMenuButton" id="ajsDocLayoutMenuButton" class="ajsDocLayoutMenuButton" menuvisible="{menuVisible}" onmousedown="toggleMenu"></div>
+        <div component="AjsDocLayoutMenuButton" id="ajsDocLayoutMenuButton" class="ajsDocLayoutMenuButton" menuvisible="{menuVisible}" onmousedown="toggleMenu">
+            <div class="ajsDocLayoutMenuButtonLogo"></div>
+            <div class="ajsDocLayoutMenuButtonHamburger"></div>
+        </div>
 
         <div class="ajsDocLayoutMenuContainer" menuvisible="{menuVisible}" ontouchmove="touchMove">
 
@@ -42,8 +43,10 @@
             </div>
 
             <div component="AjsDocContextSwitcher" id="ajsDocContextSwitcher" class="ajsDocContextSwitcher">
-                <button class="ajsDocContextSwitcherButton" selected="{guides}" onmousedown="onGuidesClick">Guide &amp; Examples</button><!--
-                --><button class="ajsDocContextSwitcherButton" selected="{references}" onmousedown="onReferenceGuideClick">Reference Guide</button>
+                <button class="ajsDocContextSwitcherButton" selected="{guides}" onmousedown="onGuidesClick">Guide &amp; Examples</button>
+                <!--
+                -->
+                <button class="ajsDocContextSwitcherButton" selected="{references}" onmousedown="onReferenceGuideClick">Reference Guide</button>
             </div>
 
             <ajsDocMenu id="ajsDocMenu"></ajsDocMenu>
@@ -67,9 +70,7 @@
     </component>
 
     <!-- LAYOUT COMPONENT -->
-
     <!-- ------------------------------------------------------------------------------------------------------------------------ -->
-
     <!-- NAV BAR COMPONENTS -->
 
     <component name="AjsDocNavBar">
@@ -82,16 +83,14 @@
     </component>
 
     <!-- NAV BAR COMPONENTS -->
-
     <!-- ------------------------------------------------------------------------------------------------------------------------ -->
-
     <!-- MENU COMPONENTS -->
 
     <div component="AjsDocMenu" class="ajsDocMenu" visible="{visible}" ontouchmove="touchMove" onstatetransitionbegin="stateTransitionBegin" onanimationend="stateTransitionEnd">
 
         <div class="ajsDocMenuLabel" if="this.label && this.label !=='' && this.parentPath && this.parentPath != ''">
             <a class="ajsDocLink ajsDocMenuItemLinkParent" href="{parentPath}">
-                <span style="float: left" if="this.parentPath !== undefined && this.parentPath !== ''" ><strong>&lt;&nbsp;</strong></span>
+                <span style="float: left" if="this.parentPath !== undefined && this.parentPath !== ''"><strong>&lt;&nbsp;</strong></span>
                 {label}
                 <span if="!this.label">{defaultLabel}</span>
             </a>
@@ -117,21 +116,33 @@
     </div>
 
     <!-- MENU COMPONENTS -->
-
     <!-- ------------------------------------------------------------------------------------------------------------------------ -->
-
     <!-- CODE TEMPLATES -->
 
     <span component="AjsDocMemberDataType">: <span class="hljs-built_in" if="this.name !==''">{name}</span><span class="hljs-built_in" if="this.name ===''">any</span></span>
 
-    <component name="AjsDocMemberFunctionParams"><!--
-        -->{name}<!--
-        --><span if="this.flags.isOptional">?</span><!--
-        --><span><!--
-            --><ajsDocMemberDataType id="type"></ajsDocMemberDataType><!--
-        --></span><!--
-        --><span if="!this.isLast">, </span><!--
-    --></component>
+    <component name="AjsDocMemberFunctionParams">
+        <!--
+        -->
+        {name}
+        <!--
+        -->
+        <span if="this.flags.isOptional">?</span>
+        <!--
+        -->
+        <span>
+            <!--
+            -->
+            <ajsDocMemberDataType id="type"></ajsDocMemberDataType>
+            <!--
+            -->
+        </span>
+        <!--
+        -->
+        <span if="!this.isLast">, </span>
+        <!--
+        -->
+    </component>
 
     <component class="hljs-built_in" name="AjsDocMemberExtends">{name}<span if="!this.isLast">, </span></component>
 
@@ -149,15 +160,31 @@
                     <span class="hljs-keyword" if="this.flags && this.flags.isAbstract">abstract</span>
                     <span class="hljs-keyword" if="this.flags && this.flags.isStatic">static</span>
                     <span class="hljs-keyword" if="this.kindString !== 'property' && this.kindString !== 'method' && this.kindString !== 'variable'">{kindString}</span>
-                    {name}<!--
-                    --><span class="hljs-keyword" if="this.extendedTypes"> extends <ajsDocMemberExtends id="extendedTypes"></ajsDocMemberExtends></span><!--
-                    --><span class="hljs-keyword" if="this.implementedTypes"> implements <ajsDocMemberImplements id="implementedTypes"></ajsDocMemberImplements></span><!--
-                    --><span if="this.parameters"><!--
-                        -->(<!--
-                        --><span if="this.parameters !== null && this.parameters.length > 0"><ajsDocMemberFunctionParams id="parameters"></ajsDocMemberFunctionParams></span><!--
-                        -->)<!--
-                    --></span><!--
-                    --><ajsDocMemberDataType class="hljs-built_in" id="type"></ajsDocMemberDataType>
+                    {name}
+                    <!--
+                    -->
+                    <span class="hljs-keyword" if="this.extendedTypes"> extends <ajsDocMemberExtends id="extendedTypes"></ajsDocMemberExtends></span>
+                    <!--
+                    -->
+                    <span class="hljs-keyword" if="this.implementedTypes"> implements <ajsDocMemberImplements id="implementedTypes"></ajsDocMemberImplements></span>
+                    <!--
+                    -->
+                    <span if="this.parameters">
+                        <!--
+                        -->
+                        (
+                        <!--
+                        -->
+                        <span if="this.parameters !== null && this.parameters.length > 0"><ajsDocMemberFunctionParams id="parameters"></ajsDocMemberFunctionParams></span>
+                        <!--
+                        -->
+                        )
+                        <!--
+                        -->
+                    </span>
+                    <!--
+                    -->
+                    <ajsDocMemberDataType class="hljs-built_in" id="type"></ajsDocMemberDataType>
                     <!--{body}-->
                 </code>
             </div>
@@ -173,7 +200,7 @@
 
     </div>
 
-    <component name="AjsDocArticle" aria-live="assertive" tabindex="-1">
+    <component name="AjsDocArticle" role="main" aria-live="assertive">
 
         <div style="padding-left: 0.5em; padding-right: 0.5em">
 
