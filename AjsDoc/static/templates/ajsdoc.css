@@ -37,7 +37,6 @@
 
 .ajsDocLayoutHeaderContainer {
     background-color: white;
-    background-color: white;
     background: linear-gradient(-3deg, #EAF4F8, white);
     text-align: center;
     padding: 3px;
@@ -92,17 +91,48 @@
     top: 3px;
     width: 48px;
     height: 48px;
-    background-image: url('/res/img/ajs-logo.png');
-    background-repeat: no-repeat;
-    background-size: cover;
     z-index: 9999;
     animation: ajsDocMenuButtonVisible 350ms forwards;
     -webkit-animation: ajsDocMenuButtonVisible 350ms forwards;
+    -moz-animation: ajsDocMenuButtonVisible 350ms forwards;
+}
+
+@keyframes ajsDocMenuButtonLogo {
+    0% { opacity: 1; } 60% { opacity: 1; } 100% { opacity: 0; }
+}
+
+@keyframes ajsDocMenuButtonHamburger {
+    0% { opacity: 0; } 60% { opacity: 0; } 100% { opacity: 0.8; }
+}
+
+.ajsDocLayoutMenuButtonLogo {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 48px;
+    height: 48px;
+    background-image: url('/res/img/ajs-logo.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: ajsDocMenuButtonLogo alternate infinite 3s;
+}
+
+.ajsDocLayoutMenuButtonHamburger {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 48px;
+    height: 48px;
+    background-image: url('/res/img/hamburger.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: ajsDocMenuButtonHamburger alternate infinite 3s;
 }
 
 .ajsDocLayoutMenuButton[menuvisible="false"] {
     animation: ajsDocMenuButtonInvisible 350ms forwards;
     -webkit-animation: ajsDocMenuButtonInvisible 350ms forwards;
+    -moz-animation: ajsDocMenuButtonInvisible 350ms forwards;
 }
 
 @keyframes ajsDocMenuMakeVisible350px {
@@ -170,22 +200,26 @@
     .ajsDocLayoutContentContainer[menuvisible="true"] {
         animation: ajsDocMenuVisibleContent 350ms forwards;
         -webkit-animation: ajsDocMenuVisibleContent 350ms forwards;
+        -moz-animation: ajsDocMenuVisibleContent 350ms forwards;
     }
 
     .ajsDocLayoutContentContainer[menuvisible="false"] {
         animation: ajsDocMenuInvisibleContent 350ms forwards;
         -webkit-animation: ajsDocMenuInvisibleContent 350ms forwards;
+        -moz-animation: ajsDocMenuInvisibleContent 350ms forwards;
     }
 
 
     .ajsDocLayoutMenuContainer[menuvisible="true"] {
         animation: ajsDocMenuMakeVisible350px 350ms forwards;
         -webkit-animation: ajsDocMenuMakeVisible350px 350ms forwards;
+        -moz-animation: ajsDocMenuMakeVisible350px 350ms forwards;
     }
 
     .ajsDocLayoutMenuContainer[menuvisible="false"] {
         animation: ajsDocMenuMakeInvisible350px 350ms forwards;
         -webkit-animation: ajsDocMenuMakeInvisible350px 350ms forwards;
+        -moz-animation: ajsDocMenuMakeInvisible350px 350ms forwards;
     }
 
 }
@@ -193,17 +227,24 @@
 @media only screen and (max-width: 980px) {
 
     .ajsDocLayoutContentContainer {
-        left: 0
+        left: 0;
+    }
+    
+    .ajsDocLayoutContentContainer[menuvisible="true"] {
+        filter: blur(2px);
+        -webkit-filter: blur(2px);
     }
 
     .ajsDocLayoutMenuContainer[menuvisible="true"] {
         animation: ajsDocMenuMakeVisible350px 350ms forwards;
         -webkit-animation: ajsDocMenuMakeVisible350px 350ms forwards;
+        -moz-animation: ajsDocMenuMakeVisible350px 350ms forwards;
     }
 
     .ajsDocLayoutMenuContainer[menuvisible="false"] {
         animation: ajsDocMenuMakeInvisible350px 350ms forwards;
         -webkit-animation: ajsDocMenuMakeInvisible350px 350ms forwards;
+        -moz-animation: ajsDocMenuMakeInvisible350px 350ms forwards;
     }
 }
 
@@ -212,11 +253,13 @@
     .ajsDocLayoutMenuContainer[menuvisible="true"] {
         animation: ajsDocMenuMakeVisible100 350ms forwards;
         -webkit-animation: ajsDocMenuMakeVisible100 350ms forwards;
+        -moz-animation: ajsDocMenuMakeVisible100 350ms forwards;
     }
 
     .ajsDocLayoutMenuContainer[menuvisible="false"] {
         animation: ajsDocMenuMakeInvisible100 350ms forwards;
         -webkit-animation: ajsDocMenuMakeInvisible100 350ms forwards;
+        -moz-animation: ajsDocMenuMakeInvisible100 350ms forwards;
     }
 
 }
@@ -328,6 +371,7 @@
     background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black;
     animation: ajsDocContextSwitcherButton 350ms forwards;
     -webkit-animation: ajsDocContextSwitcherButton 350ms forwards;
+    -moz-animation: ajsDocContextSwitcherButton 350ms forwards;
 }
 
 .ajsDocContextSwitcherButton[selected="true"] {
@@ -335,6 +379,7 @@
     background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white;
     animation: ajsDocContextSwitcherButtonSelected 350ms forwards;
     -webkit-animation: ajsDocContextSwitcherButtonSelected 350ms forwards;
+    -moz-animation: ajsDocContextSwitcherButtonSelected 350ms forwards;
 }
 
 
@@ -387,11 +432,11 @@
 
 @-webkit-keyframes ajsDocMenuNewFadeIn {
     from { opacity: 0; }
-    to { opacity: 1;}
+    to { opacity: 0.9;}
 }
 
 @keyframes ajsDocMenuOldFadeOut {
-    from { opacity: 1; }
+    from { opacity: 0.9; }
     to { opacity: 0;}
 }
 
@@ -401,6 +446,7 @@
 }
 
 .ajsDocMenu {
+    opacity: 0.9;
     background-color: #FAFCFD;
     background: linear-gradient(-90deg, white, #FAFCFD);
     white-space: nowrap;
@@ -417,31 +463,37 @@
 .ajsDocMenu[statetransitiontypeold="RTL"] {
     animation: ajsDocMenuOldAnimationRtl 350ms forwards;
     -webkit-animation: ajsDocMenuOldAnimationRtl 350ms forwards;
+    -moz-animation: ajsDocMenuOldAnimationRtl 350ms forwards;
 }
 
 .ajsDocMenu[statetransitiontypenew="RTL"] {
     animation: ajsDocMenuNewAnimationRtl 350ms forwards;
     -webkit-animation: ajsDocMenuNewAnimationRtl 350ms forwards;
+    -moz-animation: ajsDocMenuNewAnimationRtl 350ms forwards;
 }
 
 .ajsDocMenu[statetransitiontypeold="LTR"] {
     animation: ajsDocMenuOldAnimationLtr 350ms forwards;
     -webkit-animation: ajsDocMenuOldAnimationLtr 350ms forwards;
+    -moz-animation: ajsDocMenuOldAnimationLtr 350ms forwards;
 }
 
 .ajsDocMenu[statetransitiontypenew="LTR"] {
     animation: ajsDocMenuNewAnimationLtr 350ms forwards;
     -webkit-animation: ajsDocMenuNewAnimationLtr 350ms forwards;
+    -moz-animation: ajsDocMenuNewAnimationLtr 350ms forwards;
 }
 
 .ajsDocMenu[statetransitiontypeold="FADE"] {
     animation: ajsDocMenuOldFadeOut 350ms forwards;
     -webkit-animation: ajsDocMenuOldFadeOut 350ms forwards;
+    -moz-animation: ajsDocMenuOldFadeOut 350ms forwards;
 }
 
 .ajsDocMenu[statetransitiontypenew="FADE"] {
     animation: ajsDocMenuNewFadeIn 350ms forwards;
     -webkit-animation: ajsDocMenuNewFadeIn 350ms forwards;
+    -moz-animation: ajsDocMenuNewFadeIn 350ms forwards;
 }
 
 
