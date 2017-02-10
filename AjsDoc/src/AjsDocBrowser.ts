@@ -121,18 +121,11 @@ namespace ajsdoc {
             resourceUrls.push(config.dataSources.program);
             resourceUrls.push(config.dataSources.toc);
 
-            let resources: Promise<ajs.resources.IResource>[] = resourceUrls.map(
-
-                (resourceUrl: string): Promise<ajs.resources.IResource> => {
-                    return ajs.Framework.resourceManager.getResource(
-                        resourceUrl,
-                        (this._config as IAjsDocBrowserConfig).storageType,
-                        ajs.resources.CACHE_POLICY.PERMANENT,
-                        this._config.resourceLoadingPreference
-                    );
-                }
-
-            );
+            let resourcesPromise: Promise<ajs.resources.IResource[]> = ajs.Framework.resourceManager.getMultipleResources(
+                resourceUrls,
+                (this._config as IAjsDocBrowserConfig).storageType,
+                ajs.resources.CACHE_POLICY.PERMANENT,
+                this._config.resourceLoadingPreference);
 
             // void promise, don't store/return, just resolve
             /* tslint:disable */
@@ -140,12 +133,14 @@ namespace ajsdoc {
                 async (resolve: () => void, reject: (reason?: any) => void) => {
 
                     try {
-                        await Promise.all(resources);
+
+                        await resourcesPromise;
+                        this._initDone();
+
                     } catch (e) {
                         throw new Error("Failed to load templates");
                     }
 
-                    this._initDone();
                 }
             );
             /* tslint:enable */

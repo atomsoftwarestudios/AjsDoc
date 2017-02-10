@@ -43,7 +43,7 @@ namespace ajs.resources {
     const SESSION_CACHE_SIZE: number = 4 * 1024 * 1024;
     const LOCAL_CACHE_SIZE: number = 4 * 1024 * 1024;
 
-    const WAIT: number = 0;
+    const WAIT: number = 1;
 
     /** Indicates if loaded scripts should executed using the eval function or by adding the &lt;script&gt; tag */
     const USE_EVAL: boolean = true;
@@ -492,125 +492,148 @@ namespace ajs.resources {
             }
 
             // prepare resource promise
-            let resourcePromise: Promise<IResource> = null;
+            let resourcePromise: Promise<IResource> = new Promise<IResource>(
 
-            // update initial progress bar
-            if (ajs.ui.progressBar) {
-                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
-                    "Updating initial progress bar with resource to be loaded: '" + url + "'");
-                ajs.ui.progressBar.resourceLoading(url);
-            }
+                (resolve: (resource: IResource) => void) => {
 
-            // get cached resource if the resource is local or the preference is cache
-            // (and resource was previously added to managed resources). If it will not be found in the cache, try to
-            // load it from the server
-            if (managedResource !== null && (loadingPreference === LOADING_PREFERENCE.CACHE || localResource)) {
-
-                // get storage instance from the storage type
-                let storage: AjsStorage = this._getStorageFromType(managedResource.storageType);
-
-                // this should never fail as it is managed resource, but just to be sure
-                if (storage !== null) {
-                    // get cached resource
-                    let cachedResource: ICachedResource = storage.getResource(url);
-
-                    // and if it was found, return it to caller
-                    if (cachedResource !== null) {
-
-                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Cached resource found: " + cachedResource.url);
-
-                        let resource: IResource = {
-                            url: url,
-                            type: this._getResourceTypeFromURL(url),
-                            data: cachedResource.data,
-                            cached: true,
-                            storage: storage,
-                            cachePolicy: cachedResource.cachePolicy,
-                            lastModified: cachedResource.lastModified
-                        };
-
-                        // update initial progress bar
+                    // update initial progress bar
+                    if (ajs.ui.progressBar) {
                         ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
-                            "Updating initial progress bar with resource finished loading '" + resource.url + "'");
+                            "Updating initial progress bar with resource to be loaded: '" + url + "'");
+                        ajs.ui.progressBar.resourceLoading(url);
+                    }
 
-                        if (ajs.ui.progressBar) {
-                            ajs.ui.progressBar.resourceLoaded(resource.url);
-                        }
-                        // setup promise to be returned (resolved immediately)
-                        resourcePromise = new Promise<IResource>((resolve: (resource: IResource) => void) => {
+                    // let browser do its stuff like a UI updates
+                    setTimeout(
+                        async () => {
 
-                            setTimeout(() => {
-                                resolve(resource);
-                            }, WAIT);
+                        // get cached resource if the resource is local or the preference is cache
+                        // (and resource was previously added to managed resources). If it will not be found in the cache, try to
+                        // load it from the server
+                        if (managedResource !== null && (loadingPreference === LOADING_PREFERENCE.CACHE || localResource)) {
 
-                        });
+                            // get storage instance from the storage type
+                            let storage: AjsStorage = this._getStorageFromType(managedResource.storageType);
 
-                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
-                            "Updating cached resource '" + resource.url + "'");
+                            // this should never fail as it is managed resource, but just to be sure
+                            if (storage !== null) {
+                                // get cached resource
+                                let cachedResource: ICachedResource = storage.getResource(url);
 
-                        // try to update the resource from the server -> promise can be thrown out
-                        this._load(url, managedResource.storageType, managedResource.cachePolicy, runScript, false);
+                                // and if it was found, return it to caller
+                                if (cachedResource !== null) {
 
-                        ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
-                    } else {
-                        // if its a local resource, ready with null as it was not found in cache
-                        if (localResource) {
+                                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                                        "Cached resource found: " + cachedResource.url);
 
-                            ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this,
-                                "Local resource requested but not exists in cache");
+                                    // update initial progress bar
+                                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                                        "Updating initial progress bar with resource finished loading '" + url + "'");
 
-                            resourcePromise = new Promise<IResource>(
-                                (resolve: (resource: IResource) => void, reject: (reason?: any) => void) => {
-                                    reject(new LocalResourceRequestedDoesNotExistException(url));
+                                    if (ajs.ui.progressBar) {
+                                        ajs.ui.progressBar.resourceLoaded(url);
+                                    }
+
+                                    let resource: IResource = {
+                                        url: url,
+                                        type: this._getResourceTypeFromURL(url),
+                                        data: cachedResource.data,
+                                        cached: true,
+                                        storage: storage,
+                                        cachePolicy: cachedResource.cachePolicy,
+                                        lastModified: cachedResource.lastModified
+                                    };
+
+                                    // again, let browser do its stuff (like ui update)
+                                    setTimeout(() => {
+
+                                        resolve(resource);
+
+                                    }, WAIT);
+
+                                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                                        "Updating cached resource '" + url + "'");
+
+                                    // try to update the resource from the server -> promise can be thrown out
+                                    this._load(url, managedResource.storageType, managedResource.cachePolicy, runScript, false);
+
+                                    ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+                                } else {
+                                    // if its a local resource, ready with null as it was not found in cache
+                                    if (localResource) {
+
+                                        ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this,
+                                            "Local resource requested but not exists in cache");
+
+                                        resourcePromise = new Promise<IResource>(
+                                            (resolve: (resource: IResource) => void, reject: (reason?: any) => void) => {
+                                                reject(new LocalResourceRequestedDoesNotExistException(url));
+                                            }
+                                        );
+
+                                    } else {
+
+                                        // otherwise try to load it from the server
+                                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                                            "Resource not cached, trying to load it from server");
+
+                                        resourcePromise = this._load(url, storageType, cachePolicy, runScript, true);
+                                    }
                                 }
-                            );
+
+                                // this should never occur on managed resources
+                            } else {
+                                ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this,
+                                    "Invalid storage type");
+
+                                resourcePromise = new Promise<IResource>(
+                                    (resolve: (resource: IResource) => void, reject: (reason?: any) => void) => {
+                                        reject(new InvalidStorageTypeException(url));
+                                    }
+                                );
+                            }
 
                         } else {
+                            if (localResource) {
+
+                                ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this,
+                                    "Local resource requested but not exists in cache");
+
+                                resourcePromise = new Promise<IResource>(
+                                    (resolve: (resource: IResource) => void, reject: (reason?: any) => void) => {
+                                        reject(new LocalResourceRequestedDoesNotExistException(url));
+                                    }
+                                );
+
+                            }
 
                             // otherwise try to load it from the server
                             ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
-                                "Resource not cached, trying to load it from server");
+                                "Resource not managed, trying to load it from server");
 
-                            resourcePromise = this._load(url, storageType, cachePolicy, runScript, true);
+                            // if storage type or caching policy was not added don't create managed resource
+                            // just load it from server if possible
+                            if (storageType === undefined || cachePolicy === undefined) {
+                                storageType = STORAGE_TYPE.NONE;
+                                cachePolicy = CACHE_POLICY.NONE;
+                            }
+
+                            let rp: Promise<IResource> = this._load(url, storageType, cachePolicy, runScript, true);
+
+                            // previously, the load promise was returned immediately but now we wait for browser to do its stuff
+                            try {
+                                let resource: IResource = await rp;
+                                resolve(resource);
+                            } catch (e) {
+                                throw new Error(e);
+                            }
+
                         }
-                    }
 
-                    // this should never occur on managed resources
-                } else {
-                    ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this, "Invalid storage type");
+                    }, WAIT);
 
-                    resourcePromise = new Promise<IResource>(
-                        (resolve: (resource: IResource) => void, reject: (reason?: any) => void) => {
-                            reject(new InvalidStorageTypeException(url));
-                        }
-                    );
-                }
+            });
 
-            } else {
-                if (localResource) {
-
-                    ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this, "Local resource requested but not exists in cache");
-
-                    resourcePromise = new Promise<IResource>(
-                        (resolve: (resource: IResource) => void, reject: (reason?: any) => void) => {
-                            reject(new LocalResourceRequestedDoesNotExistException(url));
-                        }
-                    );
-
-                }
-
-                // otherwise try to load it from the server
-                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Resource not managed, trying to load it from server");
-
-                // if storage type or caching policy was not added don't create managed resource, just load it from server if possible
-                if (storageType === undefined || cachePolicy === undefined) {
-                    storageType = STORAGE_TYPE.NONE;
-                    cachePolicy = CACHE_POLICY.NONE;
-                }
-
-                resourcePromise = this._load(url, storageType, cachePolicy, runScript, true);
-
-            }
 
             ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
 
@@ -702,7 +725,9 @@ namespace ajs.resources {
                         reject(e);
                     }
 
-                    resolve(gettedResources);
+                    setTimeout(() => {
+                        resolve(gettedResources);
+                    }, WAIT);
 
                 }
             );
@@ -1013,7 +1038,8 @@ namespace ajs.resources {
                     ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Not modified, using cached resource" + resource.url);
                     loaded = true;
                 } else {
-                    ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this, "Resource failed to load and is not cached " + resource.url);
+                    ajs.debug.log(debug.LogType.Warning, 0, "ajs.resources", this,
+                        "Resource failed to load and is not cached " + resource.url);
                     loaded = false;
                 }
             }
