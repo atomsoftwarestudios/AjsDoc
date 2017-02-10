@@ -64,9 +64,9 @@ namespace ajs.boot {
                 showOnBootDelay: 0,
                 loggerConfig: {
                     // logging enabled
-                    enabled: false,
+                    enabled: true,
                     // logging of the log records to the browser console
-                    logDataToConsole: false,
+                    logDataToConsole: true,
                     // type of records to be logged
                     logTypes: [
                          /*ajs.debug.LogType.Enter,
