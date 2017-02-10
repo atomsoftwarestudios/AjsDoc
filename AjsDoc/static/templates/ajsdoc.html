@@ -6,7 +6,7 @@
         <ajsDocLayout id="ajsDocLayout"></ajsDocLayout>
     </component>
 
-    <component name="AjsDocHeader" role="heading">
+    <component name="AjsDocHeader">
         <div class="ajsDocHeaderLabelContainer">
             <h3 class="ajsDocHeaderLabel">Ajs Framework</h3>
             <br />
@@ -31,12 +31,9 @@
 
     <component name="AjsDocLayout">
 
-        <div role="dialog" class="ajsDocLayoutDialog" dialogvisible="{dialogVisible}" onmousedown="dialogClick" ontouchmove="touchMove"></div>
+        <div class="ajsDocLayoutDialog" dialogvisible="{dialogVisible}" onmousedown="dialogClick" ontouchmove="touchMove"></div>
 
-        <div component="AjsDocLayoutMenuButton" id="ajsDocLayoutMenuButton" class="ajsDocLayoutMenuButton" menuvisible="{menuVisible}" onmousedown="toggleMenu">
-            <div class="ajsDocLayoutMenuButtonLogo"></div>
-            <div class="ajsDocLayoutMenuButtonHamburger"></div>
-        </div>
+        <div component="AjsDocLayoutMenuButton" id="ajsDocLayoutMenuButton" class="ajsDocLayoutMenuButton" menuvisible="{menuVisible}" onmousedown="toggleMenu"></div>
 
         <div class="ajsDocLayoutMenuContainer" menuvisible="{menuVisible}" ontouchmove="touchMove">
 
@@ -176,7 +173,7 @@
 
     </div>
 
-    <component name="AjsDocArticle" role="main" aria-live="assertive">
+    <component name="AjsDocArticle" aria-live="assertive" tabindex="-1">
 
         <div style="padding-left: 0.5em; padding-right: 0.5em">
 

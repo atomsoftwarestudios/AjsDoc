@@ -65,7 +65,6 @@ Implemented features:
     - Progress bar, welcome page, error page
     - Responsive UI support (meta tags)
     - Favicon for various browsers / operating system support
-    - Home screen application support
 
 - Boot process control
     - Offline support (application cache)
@@ -108,9 +107,7 @@ Implemented features:
     - DOM Updater based on React.js idea with the full Ajs component support
         - Only changed elements / attributes / text nodes are updated for the maximum performance
     - Support for document style management
-    - Currently, support for loading of stylesheets from the template (will be moved to Template class,
-      this will be more logical and will make DocMan more independent on the rest of the framework)
-        - includes replacing of url's with cached resources Base64
+    - Currently, support for loading of stylesheets from the template (will be moved to Template class, this will be more logical and makes DocMan more independent on the rest of the framework)
 
 - MVVM
 	- View
@@ -130,14 +127,10 @@ Implemented features:
 - Simple application / session state manager
 	- Using the Resource Manager features
 	- Key / Value storage for the application data to persist between F5 refreshes, manual addressbar
-      updates or browser restarting
+		updates or browser restarting
 
 - Templating
-    	- Minimum of additional tags or attributes to be learned
-	- DOM Event mapping to View Component DOM listeners
-	- Reusable view components
-	- Automated mapping of the data based on the data structure and View Component structure
-	- new terminology is used to support the innovative approach to HTML5 templating:
+	- new terminology is used to support the innovative approach to templating:
 	    Visual Style (CSS), Visual Component (HTML), View Component (Model View / Code behind), View (TS Class manangin the view)
 	- support for Visual Style related resources managed by the resource manager
 	- Dynamic Visual Style state representation of the Visual Component is determined by the CSS rules and TAG attributes only
@@ -147,6 +140,10 @@ Implemented features:
 		- style tag directly in the template
 		- stylesheets attribute within the template tag
 	- Logic-less templates (almost) - only the one logic performing statement is IF
+	- Minimum of additional tags or attributes to be learned
+	- DOM Event mapping to View Component DOM listeners
+	- Reusable view components
+	- Automated mapping of the data based on the data structure and View Component structure
 
 - Debugging tools
     - Modular debugging console based on TSX templates
