@@ -15,7 +15,6 @@ Last recent version of both projects the changelog can be always found here
 --------------------------------------------------------------------------------------------------------------------------------
 Os, Devices & Browsers used for testing
 --------------------------------------------------------------------------------------------------------------------------------
-
 - Desktop, Windows 10 64bit
     - IE 11 + IE 10 under IE11 emulated mode
     - Microsoft Edge 38.14393.0.0 (Microsoft EdgeHTML 14.14393)
@@ -42,11 +41,9 @@ Os, Devices & Browsers used for testing
     - Safari 10 (both, web and desktop modes)
 - XCode Simulators
     - All available (except Apple Watches and AppleTV)
-
 --------------------------------------------------------------------------------------------------------------------------------
 Implemented features:
 --------------------------------------------------------------------------------------------------------------------------------
-
 - Basic features    
     - Developed in Visual Studio 2015
     - Currently using TypeScript 2.5.1 transpiller
@@ -59,13 +56,12 @@ Implemented features:
             - Planned support for require / system / common / ams to automatically resolve dependencies
         - External libraries used:
             - es6-promise
-
 - Index.html
     - Offline support
     - Progress bar, welcome page, error page
     - Responsive UI support (meta tags)
     - Favicon for various browsers / operating system support
-
+    - Home screen application support
 - Boot process control
     - Offline support (application cache)
     - Caches disposal on appcache.manifest change
@@ -73,7 +69,6 @@ Implemented features:
     - Resource loading (various caches and caching policies)
     - Framework and Application configuration
 	- Framework setup, initialization and startup
-
 - Resource management
     - Rewritten according to "modern" requirements and is using Promise for almost all async functions now
 	- Key/Value storage (based on local/session storages)
@@ -85,30 +80,26 @@ Implemented features:
         - Loading preference support - Cache or server	
 	- Support for "loading" progress progress bar
 	- Automatic script evaluation uppon load
-
 - Navigation
 	- Browser navigation event management (popstate / hashchange)
 	- Navigation to the same origin or remote origin resources
 	- Redirection Support (currently simple without RegExps, will be updated soon)
-
 - Routing
 	- Configurable routing based on RegExps to route request to appropriate model view
-
 - Application management
 	- Automatic application loading, configuration and instantiation
 	- User configuration is loaded during the boot process
 	- BeforeUnload event passed to the application to perform appropriate actions
-
 - Event Notifier
 	- Notifier based on Subscribe / Unsubcribe functionality
-
 - Document manager
     - Support for render target (output can be rendered to any HTML DOM Document and any Element tag)
     - DOM Updater based on React.js idea with the full Ajs component support
         - Only changed elements / attributes / text nodes are updated for the maximum performance
     - Support for document style management
-    - Currently, support for loading of stylesheets from the template (will be moved to Template class, this will be more logical and makes DocMan more independent on the rest of the framework)
-
+    - Currently, support for loading of stylesheets from the template (will be moved to Template class,
+      this will be more logical and will make DocMan more independent on the rest of the framework)
+        - includes replacing of url's with cached resources Base64
 - MVVM
 	- View
 		- Full support of templating features
@@ -121,16 +112,17 @@ Implemented features:
 		- Automated tree rendering based on the state changes
 		- Support for dynmic View Component creation from the Application code
 		- Visual state transition support
-
 	- Model
-
 - Simple application / session state manager
 	- Using the Resource Manager features
 	- Key / Value storage for the application data to persist between F5 refreshes, manual addressbar
-		updates or browser restarting
-
+      updates or browser restarting
 - Templating
-	- new terminology is used to support the innovative approach to templating:
+    	- Minimum of additional tags or attributes to be learned
+	- DOM Event mapping to View Component DOM listeners
+	- Reusable view components
+	- Automated mapping of the data based on the data structure and View Component structure
+	- new terminology is used to support the innovative approach to HTML5 templating:
 	    Visual Style (CSS), Visual Component (HTML), View Component (Model View / Code behind), View (TS Class manangin the view)
 	- support for Visual Style related resources managed by the resource manager
 	- Dynamic Visual Style state representation of the Visual Component is determined by the CSS rules and TAG attributes only
@@ -140,11 +132,6 @@ Implemented features:
 		- style tag directly in the template
 		- stylesheets attribute within the template tag
 	- Logic-less templates (almost) - only the one logic performing statement is IF
-	- Minimum of additional tags or attributes to be learned
-	- DOM Event mapping to View Component DOM listeners
-	- Reusable view components
-	- Automated mapping of the data based on the data structure and View Component structure
-
 - Debugging tools
     - Modular debugging console based on TSX templates
         - Limited reactive TSX renderer just to support debugging modules UI without DOM update support
@@ -154,22 +141,16 @@ Implemented features:
             - Configurable logger
             - Breakpoint support (breaks on n-th occurence of given log record type)
             - Log records time difference measuring
-
 - Development Tools and Utilities
 	- utf8.bom to utf file converter (PowerShell)
 	- cache.manifest post-build generator (PowerShell)
-
 --------------------------------------------------------------------------------------------------------------------------------
 Change log
 --------------------------------------------------------------------------------------------------------------------------------
-
 - Patch #00/2017-01-18 FN (All pushes before Jan, 19 2017)
-
 	- initial development release, a lot of dev cycles, a lot of feature implementations, changes, and bug fixes
 	- Somehow, but wrongly, documented at GitHub
-
 - Patch #01/2017-01-19 FN
-
 	Untagged changes:
 	-----------------
 		- Changelog: structure changed to the current version
@@ -187,21 +168,16 @@ Change log
 				- onstatetransitionbegin (Ajs related, HTML5 Non-standard)
 		- Added some console logging to ViewComponent for debugging purposes (will be replaced with the logger)
 		- AJS renamed to Ajs everywhere
-
 - Patch #02/2017-01-19 FN
 	- License updated at all files
-
 - Patch #03/2017-01-24 FN
     
     Implemented Change Requests
-
         #03/201701 MEDIUM
             - Rework debugging tools to support components
-
         #05/201701 PARTIAL
     		- Configurable logging level (what events will be logged)
 			- Will be supported by the post processor to be removed from the release version of the project
-
 	- License updated at all files again
 	- UTF-8.bom to UTF8 conversion on all files where it was neccessary
 	- Debug interface
@@ -220,36 +196,26 @@ Change log
 		- getChildrenComponentInstances method added
 	- Code documentation slight changes
 		- Added / updated
-
 - Patch #04/2017-02-02 FN
-
     Implemented Change Requests
-
     #01/201701 HIGH
         - Remove the resource option within the CSS template and rather check if url('...') is a cached resource and use it
 	    - This will require redesign of the resource manager to keep urls of released resources
-
     #04/201701 HIGH
         - Rework resource manager
             - Add create/remove managed resource function (remove is not supported now)
             - Access to managed/unmanaged resources only using getResource function (Sync/Async according the resource access preference)
             - Implement resource access preference (CACHE get resource from cahce then update from server, SERVER get resource from server then update cache and call callback with the resource)
-
     Implemented Feature Requests
-
     #01/201701 HIGH
         - Boot process control
 	        - AppCached files updates detection and autoreload to force the browser use them
-
     Fixed issues
-
     #01/201701 HIGH
         - Strange behaviour during visual state transition
 	        - Components are removed and can't be rendered uppon unexpected user actions
 	        - (AjsDoc menu hide during the menu state transition)
-
     Untagged changes and bug fixes
-
         - TypeScript configuration moved to tsconfig
             - Uses the "extends" option and supports Debug/Release configurations now
             - Prebuild task to use correct tsconfig
@@ -278,29 +244,21 @@ Change log
         - index.html
             - now contains error info but is not used by ajs now
             - support for 3rd party libs
-
 - Patch #05/2017-02-09 FN
-
     Implemented Change Requests
-
     #02/201701 HIGH
     -  Refactoring
     	- Refactor View DOM Update functions to look nicer
             - New namespace / class created: ajs.doc.DocumentManager
             - Currently it contain css from template management - will be moved to Template to make the DOM Updater less dependant on whole system
-
-
     Implemented Feature Requests
-
     #03/201701 HIGH
     - MVVM
 	    - View
 		    - Automatic DOM updating based on View Component state changes
 			    - Support for render target
 				    - Rendering can be performed to the window document, shadow document or any existing configurable tag
-
     Untagged changes and bug fixes
-
     - Fixed bug: Navigator incorrectly handles the link clicked path
     - Fixed bug: Style URL was not updated with the base64 value
     - Fixed bug: Safari crashing with new rendering system (touch events in the template now has the postfix _ajs to prevent their registration in the shadow dom)
@@ -326,42 +284,33 @@ Change log
         - tsconfig can be currently in Debug/Release versions
         - support for Azure publishing (more related to AjsDoc project)
     - Additional light changes and fine tunning for going online
-
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests
 --------------------------------------------------------------------------------------------------------------------------------
-
     #02/201701 HIGH
     -  Refactoring
 	    - Refactor ViewComponent state change management to look nicer
 	    - Refactor ViewComponent rendering functions to look nicer
-
     #01/201702 HIGH
         - Resource manager
             - Finish the chache size checking and cleanup for the new feature of limiting max cache size
-
     #02/201702 HIGH
     - State manager
         - Implement size limitation of the space used for the Application and the Session states
-
     #03/201702 HIGH
     - Document Manager
         - Implement lookup table for elements with the ViewId
-
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted feature requests
 --------------------------------------------------------------------------------------------------------------------------------
-
 #02/201701 HIGH
 - Application management
 	- Global Error (exception) handling
-
 #04/201701 HIGH
 - MVVM
 	- View Component (view model)
 		- Automated tree rendering based on the state changes
 			- Support for the render target (related to 03/201701)
-
 #05/201701 HIGH
 - Debugging tools
     - Configuration
@@ -382,7 +331,6 @@ Accepted feature requests
 	- Tools available:
 		- Logger with log browser
 			- Suppoort all Ajs components
-
 #06/201701 HIGH
 - Development Tools
 	- TypeScript post-processor (not developed yet)
@@ -391,79 +339,57 @@ Accepted feature requests
 		- Code size optimizer (release version before minification)
 			- Namespace optimizer (joins namespaces together)
 			- Accessor optimizer (replaces all occurences of the defineProperty with single defineProperties)
-
 #07/201701 HIGH
 - Resource management
 	- remove resources older than
-
 #08/20170101 HIGH
 - Add support for "Working" state icon when the application / framework is bussy
-
 #09/20170101 HIGH
 - Implement Language & Translation functionality and integrate it with templating / view components
-
 #10/20170101 HIGH
 - Implement Ajs components for the data management
 	- JSON API
 	- Data caching
-
 #11/201701 HIGH
 - ViewComponent - Implement all DOM event attributes and necessary processors
-
 #12/201701 HIGH
 - View - Implement & test updating of the DOM of "form" elements based on the onchange event and state updates
-
 #13/201701 HIGH
 - Template / ViewComponent - to the result component merge attributes from both, component definition and component instance
-
 #14/201702 HIGH
 - During the boot and framework / application start better captrue exceptions and reload / display error page based on the configuration
-
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted issues
 --------------------------------------------------------------------------------------------------------------------------------
-
 #01/201702 LOW
 - Review visual state transition / animationend on Android Browser 4 (JellyBean)
     - AjsDoc menu sometimes disappearing when it is hiden/shown -> chech if it is CSS or Jas MVVM problem
-
 #01/201702 LOW
 - IE11/Emulated IE10 sometimes freezes / restarts in offline mode
     - This will require deeper debugging of the IE process as it was not possible to discover where the problem is till now
-
 #02/201702 HIGH
 - According to https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/5579311/ the DOM updater currently
   crashes with Edge 14 during the SVG DOM update as attribute names are incorrectly returned in UPPER CASE although
   referencing them in lower case works. Workaround mentioned on the web page will not be used now. Please use another
   browser until better workaround / fix will be available.
-
   Current workaround just catches the exception and stops attribute processing what is not definitely good, but at least the
   SVG is displayed.
-
 --------------------------------------------------------------------------------------------------------------------------------
 Untagged ToDo's & Ideas
 --------------------------------------------------------------------------------------------------------------------------------
-
 - Get rid of all warnings reported by the TSLint
-
 - Documentation
 	- Code documentation
 		- Finish the code documentation for the existing code
-
 	- How it works
-
 	- Visual Studio project and compilation
 		- Tools & toolchain
-
 	- Coding guidelines
-
 	- Browser application caching
-
 - Resource management
 	- performance optiomizations
 		- creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
 		- review cycles
-
 - View, View Components, Visual Components
 	- Don't render the component tag to the output
 		- will be hard to achieve as root node is needed at this time
@@ -472,7 +398,6 @@ Untagged ToDo's & Ideas
 	- View state modifications queuing to prevent async operation fighting
 	- ViewComponent._getState -> implement function to collect the state information from the view component tree
 	- Dynamic View Component -> implement a component allowing to set the view component programatically, not just from template
-
 - Helper libraries -> Implement or reuse?
 	- UI
 	- Data
@@ -481,28 +406,21 @@ Untagged ToDo's & Ideas
 	- WebSockets
 	- Geo location
 	- Push notifications
-
 ----
-
 - Javascript minification
 - Template compiler / minifier
 - Style compiler
 - Language & translation transpiller
 - Code optimalizations
-
 FAR FUTURE:
 - Caching of processed objects - especially visualComponents and view components, dom??
-
 ----
-
 Optimizations:
 	
 A lot of optimizations can be done, at least:
-
 a) ViewComponent - while creating a new array of components it calls functions to
 get viewcomponent constructor and visual constructor in the loop, this can be done just
 once
-
 b) if undefined && not null can be optimized at many places
 </pre>
 
@@ -512,13 +430,10 @@ b) if undefined && not null can be optimized at many places
 --------------------------------------------------------------------------------------------------------------------------------
 Implemented features
 --------------------------------------------------------------------------------------------------------------------------------
-
 - Guide & Examples
 	- HTML based reference guide
-
 - Reference guide
 	- HTML Code documentation supported
-
 - HTML Code (both, static & code documentation)
 	- Supported tags:
 		# example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
@@ -526,7 +441,6 @@ Implemented features
 						- Must be on the separate line
 		# chart url      - Includes svg chart to the HTML code
 						- Must be on the separate line
-
 - Ajs Feature Examples (directly in the code)
     - Complete offline application support
     - Boot process and configuration
@@ -540,94 +454,70 @@ Implemented features
     - Session state management
 	- Models for the static JSON data
     - Debugging tools
-
 - Tools
     - same tools as ajs
     - tocgen.ps1 (powershell) -> generator of the toc.json file from the folder structure of the static html documents
-
 --------------------------------------------------------------------------------------------------------------------------------
 Change log
 --------------------------------------------------------------------------------------------------------------------------------
-
 - Patch #00/2017 - All pushes before Jan, 19 2017
 	- initial development release, a lot of dev cycles, a lot of feature implementations, changes, and bug fixes
-
 - Patch #01/2017-01-19 FN
     - changelog updated
     - added syntax to be shown
     - added documentation
     - Articles
         Offline application support updated
-
 - Patch #02/2017-01-19 FN
 	- License updated at all files
-
 - Patch #03/2017-01-24 FN
     - Members of extended lib.d.ts classes are not included anymore
     - Fixed problem with menu item unique keys
     - Fixed menu button disappearing when dialog frame was not shown
-
 - Patch #04/2017-02-02 FN
     - slight documentation changes
     - css's updated to support older browsers (problem with linear gradient on older chromiums)
     - 3rd party libinit created / hoghlight movet to 3rd party libs project
-
 - Patch #05/2017-02-09 FN
     - Project tunning for online
     - Azure publishing is better supported now
     - Slight changes following the Ajs changes (see ajs patch #05)
     - The new documentation added can't be currently tested. At least until TypeDoc will be fixed or it will be decided to rewrite it by own
-
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted change requests
 --------------------------------------------------------------------------------------------------------------------------------
-
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted feature requirements
 --------------------------------------------------------------------------------------------------------------------------------
-
 #01/201701
 - Implement search feature
-
 #02/201701
 - Implement #see {link description} tag
-
 #03/201701
 - Display function / method parameters when function is expanded
-
 --------------------------------------------------------------------------------------------------------------------------------
 Accepted issues
 --------------------------------------------------------------------------------------------------------------------------------
-
 #01/201701
 - Interface Index signitures are not rendered under syntax
-
 #02/201701
 - Description is doubled when multiple signatures exists within the node
-
 #03/201701
 - Function / method parameters at overloads are not handled properly (missing the main function params if defined in code)
-
 #04/201701
 - Review highlighting and "nohighlight" class as the changelog is also highlighted
-
 #05/201701
 - It seems highlighter is not started sometimes
-
 #01/201702
 - Typedoc does not work with --lib and Promises
 - Typedoc has a problem with tsconfig "extends" option
-
 #02/201702
 - IE10 has some problem with including charts
-
 #03/201703
 - tocgen tool has a problem when there is just single file in the folder
-
 --------------------------------------------------------------------------------------------------------------------------------
 Untagged ToDo's & Ideas
 --------------------------------------------------------------------------------------------------------------------------------
-
 - Implement decorators?
 - Check what TypeScript features are still missing
 </pre>
