@@ -105,17 +105,6 @@ namespace ajs.boot {
 
     }
 
-    /**
-     * Performs update of cached files (cleans all caches and forces window to reload)
-     * It is called when the application cache recognizes there are updated files on the server.
-     * It is simplest possible solution to load updated application resources.
-     */
-    function _update(): void {
-        let resMan: ajs.resources.ResourceManager = new ajs.resources.ResourceManager();
-        resMan.cleanCaches();
-        window.location.reload();
-    }
-
     /** 
      * Loads resources and continues to the _config function
      */
@@ -209,12 +198,43 @@ namespace ajs.boot {
     }
 
     /**
+     * Performs update of cached files (cleans all caches and forces window to reload)
+     * <p>
+     * It is called when the application cache recognizes there are updated files on the server.
+     * It is simplest possible solution to load updated application resources.
+     * </p>
+     * <p>
+     * the update of cached files is ready. at this time it is not possile to configure what will happen next
+     * its hardcoded the complete resource cache managed by the resource manager will be cleaned up and reload is perofrmed
+     * to ensure the latest boot/ajs versions are in use and also latest versions of the application code and application
+     * resources will be used
+     * </p>
+     */
+    function _update(): void {
+
+        // does not make sense to log, reload performed
+
+        let resMan: ajs.resources.ResourceManager = new ajs.resources.ResourceManager();
+        resMan.cleanCaches();
+        window.location.reload();
+    }
+
+    /**
      * Setup listeners related to Application cache feature used to start the booting process
+     * <p>
+     * During tests it was confirmed the application cache feature, especially notifications
+     * processed bellow is not stable (this statement is valid for all tested browsers) and it
+     * is necessary to perform, at least, fallback by timer, otherwise it can happen the framework
+     * neither the application will get started.
+     * </p>
      */
     function _setupEventListeners(): void {
 
+        // cant use logger as it is possible it is not loaded at this time
+
         if (window.applicationCache) {
 
+            // process cached event (no change in cached files, boot directly)
             window.applicationCache.addEventListener("cached", () => {
                 if (!bootStarted) {
                     bootStarted = true;
@@ -222,6 +242,7 @@ namespace ajs.boot {
                 }
             });
 
+            // process noupdate - means that cached files (mainly the cache.manifest) were not updated
             window.applicationCache.addEventListener("noupdate", () => {
                 if (!bootStarted) {
                     bootStarted = true;
@@ -229,6 +250,7 @@ namespace ajs.boot {
                 }
             });
 
+            // the error occured during the accesing files on the server or another problem during its loading (i.e. offline)
             window.applicationCache.addEventListener("error", (e: Event) => {
                 if (!bootStarted) {
                     bootStarted = true;
@@ -236,6 +258,10 @@ namespace ajs.boot {
                 }
             });
 
+            // the update of cached files is ready. at this time it is not possile to configure what will happen next
+            // its hardcoded the complete resource cache managed by the resource manager will be cleaned up and reload is perofrmed
+            // to ensure the latest boot/ajs versions are in use and also latest versions of the application code and application
+            // resources will be used
             window.applicationCache.addEventListener("updateready", () => {
                 applicationCache.swapCache();
                 if (!bootStarted) {
