@@ -1,4 +1,4 @@
-/* *************************************************************************
+/*! ************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -21,38 +21,45 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.resources {
+///<reference path="Console.ts" />
+///<reference path="modules/logger/Logger.ts" />
+
+/**
+ * The debugging namespace
+ */
+namespace ajs.dbg {
 
     "use strict";
 
-    /**
-     * Represents the browser local storage (persistent until explicitly cleared)
-     */
-    export class StorageLocal extends AjsStorage {
-
-        /** Returns type of the storage */
-        public get type(): STORAGE_TYPE { return STORAGE_TYPE.LOCAL; }
-
-        /** Constructs the StorageLocal object */
-        protected _initialize(): void {
-
-            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
-
-            this._supported = window.localStorage !== undefined;
-
-            if (this._supported) {
-
-                ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this, "Local storage is supported.");
-
-                this._storageProvider = window.localStorage;
-                this._usedSpace = 0;
-                this._resources = this._getResourcesInfo();
-            } else {
-                ajs.dbg.log(dbg.LogType.Warning, 0, "ajs.resources", this, "Local storage is not supported!");
-            }
-
-            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
-        }
-
+    export enum LogType {
+        Enter,
+        Exit,
+        Constructor,
+        Info,
+        Warning,
+        Error,
+        DomAddListener,
+        DomRemoveListener,
+        DomAppendChild,
+        DomRemoveChild,
+        DomReplaceChild
     }
+
+    export function log(type: LogType, level: number, module: string, object: any, message?: string, ...data: any[]): void {
+        if (ajs.dbg.console !== null) {
+            if (message) {
+                if (data instanceof Array) {
+                    (ajs.dbg.console.getModule("logger") as ajs.dbg.modules.logger.Logger).
+                        log(type, level, module, object, message, data);
+                } else {
+                    (ajs.dbg.console.getModule("logger") as ajs.dbg.modules.logger.Logger).
+                        log(type, level, module, object, message);
+                }
+            } else {
+                (ajs.dbg.console.getModule("logger") as ajs.dbg.modules.logger.Logger).
+                    log(type, level, module, object);
+            }
+        }
+    }
+
 }

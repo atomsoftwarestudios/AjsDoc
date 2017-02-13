@@ -103,12 +103,12 @@ namespace ajs.resources {
          */
         public constructor(cacheSize: number) {
 
-            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Constructor, 0, "ajs.resources", this);
 
             this._cacheSize = cacheSize;
             this._initialize();
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
         }
 
@@ -124,9 +124,9 @@ namespace ajs.resources {
          */
         public clear(): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Clearing the storage");
+            ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this, "Clearing the storage");
 
             // remove all data items
             for (let i: number = 0; i < this._resources.length; i++) {
@@ -138,7 +138,7 @@ namespace ajs.resources {
             this._resources = [];
             this._storageProvider.setItem(STORAGE_INFO_KEY, JSON.stringify(this._resources));
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -148,9 +148,9 @@ namespace ajs.resources {
          */
         public addResource(resource: ICachedResource): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+            ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                 "Adding cached resource to the storage " + resource.url, resource);
 
             // if the resource exists, update it
@@ -187,7 +187,7 @@ namespace ajs.resources {
                 try {
                     this._storageProvider.setItem(STORAGE_RESOURCE_KEY_PREFIX + resource.url, data);
                 } catch (e) {
-                    ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this,
+                    ajs.dbg.log(dbg.LogType.Error, 0, "ajs.resources", this,
                         "Not enough space in the storage", e);
                     throw new NotEnoughSpaceInStorageException();
                 }
@@ -215,7 +215,7 @@ namespace ajs.resources {
             } catch (e) {
                 this._storageProvider.removeItem(STORAGE_RESOURCE_KEY_PREFIX + resource.url);
 
-                ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this,
+                ajs.dbg.log(dbg.LogType.Error, 0, "ajs.resources", this,
                     "Not enough space in the storage for the metadata", e);
 
                 throw new NotEnoughSpaceInStorageException();
@@ -224,7 +224,7 @@ namespace ajs.resources {
             // compute new size of the occupied space
             this._usedSpace += (newInfoSize - oldInfoSize) + dataSize;
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -233,9 +233,9 @@ namespace ajs.resources {
          */
         public getResource(url: string): ICachedResource {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+            ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                 "Getting cached resource from the storage: " + url);
 
             for (let i: number = 0; i < this._resources.length; i++) {
@@ -259,19 +259,19 @@ namespace ajs.resources {
                         size: dataStr.length
                     };
 
-                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                    ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                         "Cached resource found in the storage: " + url);
 
-                    ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+                    ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
                     return resource;
                 }
             }
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+            ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                 "Cached resource not found in the storage: " + url);
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
             return null;
         }
@@ -282,9 +282,9 @@ namespace ajs.resources {
          */
         public updateResource(resource: ICachedResource): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+            ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                 "Updating cached resource: " + resource.url, resource);
 
             // if the resource not exist, create it
@@ -312,7 +312,7 @@ namespace ajs.resources {
                     this._storageProvider.setItem(STORAGE_RESOURCE_KEY_PREFIX + resource.url, data);
                 } catch (e) {
 
-                    ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this,
+                    ajs.dbg.log(dbg.LogType.Error, 0, "ajs.resources", this,
                         "Not enough space in the storage", e);
 
                     throw new NotEnoughSpaceInStorageException();
@@ -340,7 +340,7 @@ namespace ajs.resources {
                 this._storageProvider.setItem(STORAGE_INFO_KEY, resourcesInfoStr);
             } catch (e) {
 
-                ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this,
+                ajs.dbg.log(dbg.LogType.Error, 0, "ajs.resources", this,
                     "Not enough space in the storage for the metadata", e);
 
                 throw new NotEnoughSpaceInStorageException();
@@ -349,7 +349,7 @@ namespace ajs.resources {
             // compute new size of the occupied space
             this._usedSpace += (newInfoSize - oldInfoSize) + (dataSize - oldDataSize);
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -358,9 +358,9 @@ namespace ajs.resources {
          */
         public removeResource(url: string): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+            ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                 "Removing cached resource: " + url);
 
             // get reource from store and return if not exists
@@ -383,7 +383,7 @@ namespace ajs.resources {
             // update used space
             this._usedSpace -= oldInfoSize - newInfoSize;
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -391,7 +391,7 @@ namespace ajs.resources {
          */
         protected _getResourcesInfo(): ICachedResource[] {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.resources", this);
 
             let resources: ICachedResource[] = [];
             let cachedResourcesInfoStr: string = this._storageProvider.getItem(STORAGE_INFO_KEY);
@@ -415,7 +415,7 @@ namespace ajs.resources {
                 this._storageProvider.setItem(STORAGE_INFO_KEY, JSON.stringify([]));
             }
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
 
             return resources;
         }
@@ -427,9 +427,9 @@ namespace ajs.resources {
          */
         protected _cleanCache(requiredSpace?: number): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+            ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                 "Cleaning resource cache. Required space: " + (requiredSpace === undefined ? "Complete clean" : requiredSpace) );
 
             // delete lru resource until there is enough space required
@@ -475,7 +475,7 @@ namespace ajs.resources {
 
                 // trow exception if there is not enough space for resource in the storage
                 if (!enoughSpace) {
-                    ajs.debug.log(debug.LogType.Error, 0, "ajs.resources", this,
+                    ajs.dbg.log(dbg.LogType.Error, 0, "ajs.resources", this,
                         "Not enough space in the storage");
                     throw new NotEnoughSpaceInStorageException();
                 }
@@ -493,7 +493,7 @@ namespace ajs.resources {
                 }
             }
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
         }
 
@@ -518,18 +518,18 @@ namespace ajs.resources {
          */
         protected _getResourceIndex(url: string): number {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
             for (let i: number = 0; i < this._resources.length; i++) {
                 if (this._resources[i].url === url) {
 
-                    ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+                    ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
                     return i;
                 }
             }
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
             return -1;
         }

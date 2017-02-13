@@ -58,7 +58,7 @@ namespace ajs {
          * Configuration of the debugging console and its modules
          * If ommited, no debugging will be performed
          */
-        debugging?: ajs.debug.IConsoleConfig;
+        debugging?: ajs.dbg.IConsoleConfig;
 
         boot?: ajs.boot.IBootConfig;
 

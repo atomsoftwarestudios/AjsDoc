@@ -36,7 +36,7 @@ namespace ajs.resources {
         /** Constructs the StorageLocal object */
         protected _initialize(): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
             this._supported = true;
 
@@ -46,7 +46,7 @@ namespace ajs.resources {
                 this._resources = this._getResourcesInfo();
             }
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
         }
     }
 }

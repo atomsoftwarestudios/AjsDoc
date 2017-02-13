@@ -59,8 +59,8 @@ namespace ajs.boot {
                 bodyRenderTarget: document.body,
                 // show the debug console on boot after x miliseconds (0 = don't show)
                 // to manually control the console use the browser console 
-                // ajs.debug.console.show()
-                // ajs.debug.console.hide()
+                // ajs.dbg.console.show()
+                // ajs.dbg.console.hide()
                 showOnBootDelay: 0,
                 loggerConfig: {
                     // logging enabled
@@ -69,17 +69,17 @@ namespace ajs.boot {
                     logDataToConsole: false,
                     // type of records to be logged
                     logTypes: [
-                         /*ajs.debug.LogType.Enter,
-                         ajs.debug.LogType.Exit,*/
-                         ajs.debug.LogType.Constructor,
-                         ajs.debug.LogType.Info,
-                         ajs.debug.LogType.Warning,
-                         ajs.debug.LogType.Error,
-                         ajs.debug.LogType.DomAddListener,
-                         ajs.debug.LogType.DomRemoveListener,
-                         ajs.debug.LogType.DomAppendChild,
-                         ajs.debug.LogType.DomRemoveChild,
-                         ajs.debug.LogType.DomReplaceChild
+                         /*ajs.dbg.LogType.Enter,
+                         ajs.dbg.LogType.Exit,*/
+                         ajs.dbg.LogType.Constructor,
+                         ajs.dbg.LogType.Info,
+                         ajs.dbg.LogType.Warning,
+                         ajs.dbg.LogType.Error,
+                         ajs.dbg.LogType.DomAddListener,
+                         ajs.dbg.LogType.DomRemoveListener,
+                         ajs.dbg.LogType.DomAppendChild,
+                         ajs.dbg.LogType.DomRemoveChild,
+                         ajs.dbg.LogType.DomReplaceChild
                     ],
                     sourceModules: [
                          "ajs.app",

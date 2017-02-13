@@ -1,4 +1,4 @@
-/* *************************************************************************
+/*! ************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -21,38 +21,23 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-namespace ajs.resources {
+namespace ajs.dbg.modules.logger {
 
     "use strict";
 
-    /**
-     * Represents the browser local storage (persistent until explicitly cleared)
-     */
-    export class StorageLocal extends AjsStorage {
-
-        /** Returns type of the storage */
-        public get type(): STORAGE_TYPE { return STORAGE_TYPE.LOCAL; }
-
-        /** Constructs the StorageLocal object */
-        protected _initialize(): void {
-
-            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
-
-            this._supported = window.localStorage !== undefined;
-
-            if (this._supported) {
-
-                ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this, "Local storage is supported.");
-
-                this._storageProvider = window.localStorage;
-                this._usedSpace = 0;
-                this._resources = this._getResourcesInfo();
-            } else {
-                ajs.dbg.log(dbg.LogType.Warning, 0, "ajs.resources", this, "Local storage is not supported!");
-            }
-
-            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
-        }
-
+    /** Logger configuration */
+    export interface ILoggerConfig {
+        /** Enable or disable logging */
+        enabled: boolean;
+        /** Log only types of records mentioned in this array */
+        logTypes: LogType[];
+        /** Modules from which the log records are accepted by the logger */
+        sourceModules: string[];
+        /** Maximum level of log records to be included in the log */
+        maxLevel: number;
+        /** Enable or disable logging of data passed to log function to the console */
+        logDataToConsole: boolean;
     }
+
+
 }

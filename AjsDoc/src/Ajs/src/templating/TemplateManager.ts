@@ -49,9 +49,9 @@ namespace ajs.templating {
             loadingPreference?: resources.LOADING_PREFERENCE
         ): Promise<Template[]> {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.templating", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.templating", this);
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.templating", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.templating", this);
 
             return new Promise<Template[]>(
 

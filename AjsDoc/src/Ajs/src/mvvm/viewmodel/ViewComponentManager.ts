@@ -78,7 +78,7 @@ namespace ajs.mvvm.viewmodel {
             parentComponent: ViewComponent,
             state?: IViewStateSet): ViewComponent {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
 
             // get the visual component for the view component
             let visualComponent: templating.IVisualComponent;
@@ -86,7 +86,7 @@ namespace ajs.mvvm.viewmodel {
 
             // throw error if it does not exist
             if (visualComponent === null) {
-                ajs.debug.log(debug.LogType.Error, 0, "ajs.mvvm.view", this,
+                ajs.dbg.log(dbg.LogType.Error, 0, "ajs.mvvm.view", this,
                     "Visual component is not defined (probably the appropriate template is not loaded): " + name);
                 throw new VisualComponentNotRegisteredException(name);
 
@@ -103,7 +103,7 @@ namespace ajs.mvvm.viewmodel {
             // get new unique id for the new component
             let componentViewId: number = view.getNewComponentId();
 
-            ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
+            ajs.dbg.log(ajs.dbg.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
                 "Creating the view component instance: " + ajs.utils.getFunctionName(viewComponentConstructor) + "[" + componentViewId + "]:" + id, view, parentComponent, state);
 
             // create view component and store its instance to the collection identified by id
@@ -111,7 +111,7 @@ namespace ajs.mvvm.viewmodel {
             viewComponent = new viewComponentConstructor(view, this, id, componentViewId, parentComponent, visualComponent, state);
             this._componentInstances[componentViewId] = viewComponent;
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
 
             return viewComponent;
         }

@@ -36,8 +36,8 @@ namespace ajs.resources {
     export class ResourceLoader {
 
         public constructor() {
-            ajs.debug.log(debug.LogType.Constructor, 0, "ajs.resources", this);
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Constructor, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -50,12 +50,12 @@ namespace ajs.resources {
          */
         public loadResource(url: string, isBinary: boolean, lastModified?: Date): Promise<IResourceResponseData> {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
             let response: Promise<IResourceResponseData> = new Promise<IResourceResponseData>(
                 (resolve: (data: IResourceResponseData) => void, reject: (reason?: any) => void) => {
 
-                    ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                    ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                         "Requesting [GET] resource '" + url + "'", isBinary, lastModified);
 
                     // prepare data for the loader
@@ -76,7 +76,7 @@ namespace ajs.resources {
                 }
             );
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
             return response;
         }
@@ -87,9 +87,9 @@ namespace ajs.resources {
          */
         protected _loadResource(requestData: IResourceRequestData): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+            ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                 "Initializing the XHR");
 
             // setup the xhr
@@ -114,7 +114,7 @@ namespace ajs.resources {
             // send request to the server
             xhr.send();
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
         }
 
@@ -124,12 +124,12 @@ namespace ajs.resources {
          */
         protected _xhrStatusChanged(e: Event): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
             let xhr: IResourceRequest = e.target as IResourceRequest;
             let requestData: IResourceRequestData = xhr.resourceRequestData;
 
-            ajs.debug.log(debug.LogType.Info, 3, "ajs.resources", this,
+            ajs.dbg.log(dbg.LogType.Info, 3, "ajs.resources", this,
                 "Url: " + xhr.resourceRequestData.url + ", XHR readyState: " + xhr.readyState);
 
             // if completed
@@ -143,7 +143,7 @@ namespace ajs.resources {
                     endTime: new Date()
                 };
 
-                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this,
+                ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this,
                     "XHR for '" + requestData.url + "' ready in " + (responseData.endTime.getTime() - responseData.startTime.getTime()) +
                     "ms with " + xhr.status + " " + xhr.statusText);
 
@@ -154,7 +154,7 @@ namespace ajs.resources {
                     let tmp: string = responseData.data.substr(0, 50);
                     if (tmp.indexOf("<!--offline-->") !== -1) {
                         responseData.httpStatus = 304;
-                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Offline mode detected, index.html served");
+                        ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this, "Offline mode detected, index.html served");
                     }
                 }
 
@@ -171,7 +171,7 @@ namespace ajs.resources {
                     }
                     if (str.indexOf("<!--offline-->") !== -1) {
                         responseData.httpStatus = 304;
-                        ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Offline mode detected, index.html served");
+                        ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this, "Offline mode detected, index.html served");
                     }
                 }
 
@@ -182,13 +182,13 @@ namespace ajs.resources {
 
                 } else {
 
-                    ajs.debug.log(debug.LogType.Error, 0, "Load end handler is not function", this);
+                    ajs.dbg.log(dbg.LogType.Error, 0, "Load end handler is not function", this);
                     throw new LoadEndHandlerIsNotFunctionException();
 
                 }
             }
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
 
         }
 

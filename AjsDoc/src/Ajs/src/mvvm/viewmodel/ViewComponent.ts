@@ -95,7 +95,7 @@ namespace ajs.mvvm.viewmodel {
                 throw new ajs.mvvm.view.VisualComponentNotRegisteredException(null);
             }
 
-            ajs.debug.log(ajs.debug.LogType.Constructor, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Constructor, 0, "ajs.mvvm.viewmodel", this);
 
             // initialize properties
             this.componentViewId = componentViewId;
@@ -171,13 +171,13 @@ namespace ajs.mvvm.viewmodel {
             // this.ajsProperties.view.notifyParentsChildrenStateChange(this._ajsParentComponent);
             // ???????????????????????????????????????????????????????????????
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
 
         }
 
         protected _applyTemplateStylesheets(): void {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
 
             // asynchronously apply style sheets from the view component template to the target document
             this.ajs.view.documentManager.applyStyleSheetsFromTemplate(this.ajs.visualComponent.template).then(
@@ -189,7 +189,7 @@ namespace ajs.mvvm.viewmodel {
                 // if adding of stylesheets failed, log it and re-throw the exception
                 (reason: Error) => {
 
-                    ajs.debug.log(ajs.debug.LogType.Error, 0, "ajs.mvvm.view", this,
+                    ajs.dbg.log(ajs.dbg.LogType.Error, 0, "ajs.mvvm.view", this,
                         "Adding of template stylesheets failed: " +
                         ", Template: " + this.ajs.visualComponent.template.name,
                         reason, this);
@@ -199,7 +199,7 @@ namespace ajs.mvvm.viewmodel {
 
             );
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
         }
 
         protected _initialize(): void {
@@ -224,33 +224,33 @@ namespace ajs.mvvm.viewmodel {
 
         protected _finalize(): void {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
 
-            ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
+            ajs.dbg.log(ajs.dbg.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
                 "_finalize not overriden. Nothing to do.");
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
 
             return;
         }
 
         protected _defaultState(): IViewStateSet {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
 
-            ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
+            ajs.dbg.log(ajs.dbg.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
                 "_defaultState not overriden. Setting {}");
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
 
             return {};
         }
 
         public setState(state: IViewStateSet): void {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
 
-            ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
+            ajs.dbg.log(ajs.dbg.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
                 "Setting component state: " + ajs.utils.getClassName(this) + ", id: " + this.ajs.id, ", viewId: " + this.componentViewId,
                 state
             );
@@ -262,14 +262,14 @@ namespace ajs.mvvm.viewmodel {
             this.ajs.stateQueue.push(state);
             this._processStateQueue();
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
         }
 
         protected _setPreventStateChange(value: boolean): void {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
 
-            ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
+            ajs.dbg.log(ajs.dbg.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
                 "Setting prevent state change to " + value + " (" + ajs.utils.getClassName(this) + ", id: " + this.ajs.id, ", viewId: " + this.componentViewId + ")"
             );
 
@@ -283,35 +283,35 @@ namespace ajs.mvvm.viewmodel {
                 this._processStateQueue();
             }
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
         }
 
         protected _processStateQueue(): void {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.mvvm.viewmodel", this);
 
             if (this.ajs.stateQueue.length === 0) {
-                ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+                ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
                 return;
             }
 
             if (this.ajs.processingStateQueue) {
-                ajs.debug.log(ajs.debug.LogType.Warning, 0, "ajs.mvvm.viewmodel", this,
+                ajs.dbg.log(ajs.dbg.LogType.Warning, 0, "ajs.mvvm.viewmodel", this,
                     "Processing state already running!");
-                ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+                ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
                 return;
             }
 
             if (this.ajs.stateChangePrevented) {
-                ajs.debug.log(ajs.debug.LogType.Warning, 0, "ajs.mvvm.viewmodel", this,
+                ajs.dbg.log(ajs.dbg.LogType.Warning, 0, "ajs.mvvm.viewmodel", this,
                     "State change is prevented: " + ajs.utils.getClassName(this) + ", id: " + this.ajs.id, ", viewId: " + this.componentViewId);
-                ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+                ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
                 return;
             }
 
             this.ajs.processingStateQueue = true;
 
-            ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
+            ajs.dbg.log(ajs.dbg.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
                 "Processing state queue: " + ajs.utils.getClassName(this) + ", id: " + this.ajs.id, ", viewId: " + this.componentViewId + ", " + 
                 this.ajs.stateQueue.length + " state changes queued",
                 state
@@ -320,15 +320,15 @@ namespace ajs.mvvm.viewmodel {
             while (this.ajs.stateQueue.length > 0) {
 
                 if (this.ajs.stateChangePrevented) {
-                    ajs.debug.log(ajs.debug.LogType.Warning, 0, "ajs.mvvm.viewmodel", this,
+                    ajs.dbg.log(ajs.dbg.LogType.Warning, 0, "ajs.mvvm.viewmodel", this,
                         "State change is prevented: " + ajs.utils.getClassName(this) + ", id: " + this.ajs.id, ", viewId: " + this.componentViewId);
-                    ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+                    ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
                     return;
                 }
 
                 let state: IViewStateSet = this.ajs.stateQueue.shift();
 
-                ajs.debug.log(ajs.debug.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
+                ajs.dbg.log(ajs.dbg.LogType.Info, 0, "ajs.mvvm.viewmodel", this,
                     "Setting component state: " + ajs.utils.getClassName(this) + ", id: " + this.ajs.id, ", viewId: " + this.componentViewId + ", " +
                     this.ajs.stateQueue.length + " state changes queued",
                     state
@@ -348,7 +348,7 @@ namespace ajs.mvvm.viewmodel {
 
             this.ajs.processingStateQueue = false;
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.mvvm.viewmodel", this);
         }
 
         /**

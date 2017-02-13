@@ -36,22 +36,22 @@ namespace ajs.resources {
         /** Constructs the StorageSession object */
         protected _initialize(): void {
 
-            ajs.debug.log(debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.resources", this);
 
             this._supported = window.sessionStorage !== undefined;
 
             if (this._supported) {
 
-                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Session storage is supported.");
+                ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this, "Session storage is supported.");
 
                 this._storageProvider = window.sessionStorage;
                 this._usedSpace = 0;
                 this._resources = this._getResourcesInfo();
             } else {
-                ajs.debug.log(debug.LogType.Info, 0, "ajs.resources", this, "Session storage is not supported!");
+                ajs.dbg.log(dbg.LogType.Info, 0, "ajs.resources", this, "Session storage is not supported!");
             }
 
-            ajs.debug.log(debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
     }

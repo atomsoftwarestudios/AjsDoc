@@ -22,8 +22,8 @@ IN THE SOFTWARE.
 **************************************************************************** */
 
 ///<reference path="../utils/Utils.ts" />
-///<reference path="../debug/Console.ts" />
-///<reference path="../debug/log.ts" />
+///<reference path="../dbg/Console.ts" />
+///<reference path="../dbg/log.ts" />
 
 namespace ajs.boot {
 
@@ -81,7 +81,7 @@ namespace ajs.boot {
 
         // if debugging is configured, start it up
         if (config.debugging) {
-            ajs.debug.init(config.debugging);
+            ajs.dbg.init(config.debugging);
         }
 
         if (config.boot === undefined) {
@@ -89,11 +89,11 @@ namespace ajs.boot {
         }
 
         // do some basic logging
-        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", null, "Ajs Framework, (c)2016-2017 Atom Software Studios, s.r.o");
+        ajs.dbg.log(dbg.LogType.Info, 0, "ajs.boot", null, "Ajs Framework, (c)2016-2017 Atom Software Studios, s.r.o");
 
-        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
+        ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.boot", this);
 
-        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", null, "Booting up Ajs Framework");
+        ajs.dbg.log(dbg.LogType.Info, 0, "ajs.boot", null, "Booting up Ajs Framework");
 
         // initialize config
         ajs.Framework.initialize(config);
@@ -101,7 +101,7 @@ namespace ajs.boot {
         // continue by loading resources and application configuration
         _loadResources();
 
-        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
+        ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.boot", this);
 
     }
 
@@ -110,7 +110,7 @@ namespace ajs.boot {
      */
     function _loadResources(): void {
 
-        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
+        ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.boot", this);
 
         if (!(getResourceLists instanceof Function)) {
             throw new GetResourceListFunctionNotDefinedException();
@@ -153,12 +153,12 @@ namespace ajs.boot {
             ).
             // catch the problem
             catch((e: Error) => {
-                ajs.debug.log(debug.LogType.Error, 0, "ajs.boot", this,
+                ajs.dbg.log(dbg.LogType.Error, 0, "ajs.boot", this,
                     "Something went wrong during resource loading " + e, e);
                 throw new ResourcesLoadingFailedException();
             });
 
-        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
+        ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.boot", this);
     }
 
     /**
@@ -166,12 +166,12 @@ namespace ajs.boot {
      */
     function _configureApplication(): void {
 
-        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
+        ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.boot", this);
 
-        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", this, "Getting the Application config");
+        ajs.dbg.log(dbg.LogType.Info, 0, "ajs.boot", this, "Getting the Application config");
 
         if (!(getApplicationConfig instanceof Function)) {
-            ajs.debug.log(debug.LogType.Error, 0, this, "GetApplicationConfigFunctionNotDefinedException");
+            ajs.dbg.log(dbg.LogType.Error, 0, this, "GetApplicationConfigFunctionNotDefinedException");
             throw new GetApplicationConfigFunctionNotDefinedException();
         }
 
@@ -180,7 +180,7 @@ namespace ajs.boot {
 
         _start();
 
-        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
+        ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.boot", this);
     }
 
     /**
@@ -188,13 +188,13 @@ namespace ajs.boot {
      */
     function _start(): void {
 
-        ajs.debug.log(debug.LogType.Enter, 0, "ajs.boot", this);
+        ajs.dbg.log(dbg.LogType.Enter, 0, "ajs.boot", this);
 
-        ajs.debug.log(debug.LogType.Info, 0, "ajs.boot", this, "Starting the framework");
+        ajs.dbg.log(dbg.LogType.Info, 0, "ajs.boot", this, "Starting the framework");
 
         ajs.Framework.start();
 
-        ajs.debug.log(debug.LogType.Exit, 0, "ajs.boot", this);
+        ajs.dbg.log(dbg.LogType.Exit, 0, "ajs.boot", this);
     }
 
     /**

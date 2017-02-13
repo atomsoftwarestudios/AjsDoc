@@ -45,24 +45,24 @@ namespace ajs.resources {
         /** Constructs the memory implementation of the key/value storage */
         constructor() {
 
-            ajs.debug.log(ajs.debug.LogType.Constructor, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Constructor, 0, "ajs.resources", this);
 
             this.clear();
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /** Clears the storage */
         public clear(): void {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.resources", this);
 
-            ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Clearing storage");
+            ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Clearing storage");
 
             this._store = {};
             this._length = 0;
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -72,15 +72,15 @@ namespace ajs.resources {
          */
         public setItem(key: string, data: string): void {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.resources", this);
-            ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Setting storage item: " + key, data);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Setting storage item: " + key, data);
 
             if (!this._store.hasOwnProperty(key)) {
                 this._length++;
             }
             this._store[key] = data;
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
         /**
@@ -89,16 +89,16 @@ namespace ajs.resources {
          */
         public getItem(key: string): string {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.resources", this);
-            ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Getting storage item: " + key);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Getting storage item: " + key);
 
             if (this._store.hasOwnProperty(key)) {
-                ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Item found", this._store[key]);
-                ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+                ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Item found", this._store[key]);
+                ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
                 return this._store[key];
             } else {
-                ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Key not found");
-                ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+                ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Key not found");
+                ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
                 return null;
             }
         }
@@ -109,23 +109,23 @@ namespace ajs.resources {
          */
         public key(index: number): string {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.resources", this);
-            ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Geting storage key by index: " + index);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Geting storage key by index: " + index);
 
             let i: number = 0;
             for (var key in this._store) {
                 if (this._store.hasOwnProperty(key)) {
                     if (i === index) {
-                        ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Key found: " + key);
-                        ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+                        ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Key found: " + key);
+                        ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
                         return key;
                     }
                     i++;
                 }
             }
 
-            ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Key not found");
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Key not found");
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
             return null;
         }
 
@@ -135,15 +135,15 @@ namespace ajs.resources {
          */
         public removeItem(key: string): void {
 
-            ajs.debug.log(ajs.debug.LogType.Enter, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Enter, 0, "ajs.resources", this);
 
             if (this._store.hasOwnProperty(key)) {
-                ajs.debug.log(ajs.debug.LogType.Info, 3, "ajs.resources", this, "Removing storage key: " + key);
+                ajs.dbg.log(ajs.dbg.LogType.Info, 3, "ajs.resources", this, "Removing storage key: " + key);
                 delete this._store[key];
                 this._length--;
             }
 
-            ajs.debug.log(ajs.debug.LogType.Exit, 0, "ajs.resources", this);
+            ajs.dbg.log(ajs.dbg.LogType.Exit, 0, "ajs.resources", this);
         }
 
 
