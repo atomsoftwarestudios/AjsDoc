@@ -52,6 +52,36 @@ Following statements already are or will available (as TypeDoc filters the origi
 #chart <root_relative_path>              Inserts the svg chart to the target document
 ```
 
+# Features
+
+- Guide & Examples
+	- HTML based reference guide
+- Reference guide
+	- HTML Code documentation supported
+- HTML Code (both, static & code documentation)
+	- Supported tags:
+		# example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
+						  are properly replaced)
+						- Must be on the separate line
+		# chart url      - Includes svg chart to the HTML code
+						- Must be on the separate line
+- Ajs Feature Examples (directly in the code)
+    - Complete offline application support
+    - Boot process and configuration
+    - Resource loading including the InitialProgressBar
+    - Application resource loading and management
+	- Templating
+	- Visual State management
+	- Visual State transition
+	- View Component state management
+	- View Component state filtering
+    - Session state management
+	- Models for the static JSON data
+    - Debugging tools
+- Tools
+    - same tools as ajs
+    - tocgen.ps1 (powershell) -> generator of the toc.json file from the folder structure of the static html documents
+    
 # Contribution
 
 Contribution is wellcome, but its probably too early.
