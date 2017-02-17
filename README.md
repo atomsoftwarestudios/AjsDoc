@@ -23,6 +23,7 @@ Documentation for the latest version of the Ajs and AjsDoc can't be generated us
       - HTML based reference guide
       
 - Reference guide
+      - Generated from TypeScript code using TypeDoc
       - HTML Code documentation supported
       
 - HTML Code (both, static & code documentation)
