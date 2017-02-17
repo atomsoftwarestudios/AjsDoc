@@ -17,6 +17,39 @@ The JSON documentation data for AjsDoc are required to be generated with the Typ
 
 Documentation for the latest version of the Ajs and AjsDoc can't be generated using the TypeDoc as it does not support some required features (see https://github.com/TypeStrong/typedoc/issues/399 for details)
 
+# Implemented Features
+
+- Guide & Examples
+      - HTML based reference guide
+      
+- Reference guide
+      - HTML Code documentation supported
+      
+- HTML Code (both, static & code documentation)
+      - Supported tags (this will highly probably change to standard JSDoc):
+         - #example url
+	    - Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others  are properly replaced)
+	    - Must be on the separate line
+	 - #chart url
+	    - Includes svg chart to the HTML code
+	    - Must be on the separate line
+	    
+- Ajs Feature Examples (directly in the code)
+   - Complete offline application support
+   - Boot process and configuration
+   - Resource loading including the InitialProgressBar
+   - Application resource loading and management
+   - Templating
+   - Visual State management
+   - Visual State transition
+   - View Component state management
+   - View Component state filtering
+   - Session state management
+   - Models for the static JSON data
+   - Debugging tools
+- Tools
+   - tocgen.ps1 (powershell) -> generator of the toc.json file from the folder structure of the static html documents
+
 # Visual Studio prerequisites & setup
 
 - The Visual Studio should be in version 2015 (Enterprise, Professional, Community) - curently tested with Enterprise version only.
@@ -52,36 +85,6 @@ Following statements already are or will available (as TypeDoc filters the origi
 #chart <root_relative_path>              Inserts the svg chart to the target document
 ```
 
-# Features
-
-- Guide & Examples
-	- HTML based reference guide
-- Reference guide
-	- HTML Code documentation supported
-- HTML Code (both, static & code documentation)
-	- Supported tags:
-		# example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
-						  are properly replaced)
-						- Must be on the separate line
-		# chart url      - Includes svg chart to the HTML code
-						- Must be on the separate line
-- Ajs Feature Examples (directly in the code)
-    - Complete offline application support
-    - Boot process and configuration
-    - Resource loading including the InitialProgressBar
-    - Application resource loading and management
-	- Templating
-	- Visual State management
-	- Visual State transition
-	- View Component state management
-	- View Component state filtering
-    - Session state management
-	- Models for the static JSON data
-    - Debugging tools
-- Tools
-    - same tools as ajs
-    - tocgen.ps1 (powershell) -> generator of the toc.json file from the folder structure of the static html documents
-    
 # Contribution
 
 Contribution is wellcome, but its probably too early.
