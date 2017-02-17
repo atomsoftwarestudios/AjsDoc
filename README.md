@@ -26,14 +26,14 @@ Documentation for the latest version of the Ajs and AjsDoc can't be generated us
       - HTML Code documentation supported
       
 - HTML Code (both, static & code documentation)
-      - Supported tags (this will highly probably change to standard JSDoc):
-         - #example url
-	    - Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others  are properly replaced)
-	    - Must be on the separate line
-	 - #chart url
-	    - Includes svg chart to the HTML code
-	    - Must be on the separate line
-	    
+   - Supported tags (this will highly probably change to standard JSDoc):
+      - #example url
+         - Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others  are properly replaced)
+         - Must be on the separate line
+      - #chart url
+         - Includes svg chart to the HTML code
+	 - Must be on the separate line
+
 - Ajs Feature Examples (directly in the code)
    - Complete offline application support
    - Boot process and configuration
@@ -47,6 +47,7 @@ Documentation for the latest version of the Ajs and AjsDoc can't be generated us
    - Session state management
    - Models for the static JSON data
    - Debugging tools
+
 - Tools
    - tocgen.ps1 (powershell) -> generator of the toc.json file from the folder structure of the static html documents
 
