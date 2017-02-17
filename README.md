@@ -26,7 +26,7 @@ Documentation for the latest version of the Ajs and AjsDoc can't be generated us
       - HTML Code documentation supported
       
 - HTML Code (both, static & code documentation)
-   - Supported tags (this will highly probably change to standard JSDoc):
+   - Supported tags (this will be highly probably changed to standard JSDoc):
       - #example url
          - Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others  are properly replaced)
          - Must be on the separate line
