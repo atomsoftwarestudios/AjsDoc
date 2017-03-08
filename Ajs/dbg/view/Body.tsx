@@ -23,6 +23,9 @@ IN THE SOFTWARE.
 
 ///<reference path="../tsx/tsx.ts" />
 
+/**
+ * Contains the debug view components
+ */
 namespace ajs.dbg.view {
 
     "use strict";
