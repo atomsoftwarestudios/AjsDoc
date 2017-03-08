@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{267086DA-AB24-4D8D-BD5F-D7D3B3D7DB67}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>2.2</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="ajs.Framework.Exceptions.ts" />
+    <TypeScriptCompile Include="ajs.Framework.ts" />
+    <TypeScriptCompile Include="ajs.IAjsConfig.ts" />
+    <TypeScriptCompile Include="app\!app.ts" />
+    <TypeScriptCompile Include="app\Application.ts" />
+    <TypeScriptCompile Include="app\Exceptions.ts" />
+    <TypeScriptCompile Include="app\IApplicationConfig.ts" />
+    <TypeScriptCompile Include="app\IApplicationUserConfig.ts" />
+    <TypeScriptCompile Include="boot\boot.ts" />
+    <TypeScriptCompile Include="boot\Exceptions.ts" />
+    <TypeScriptCompile Include="boot\IBootConfig.ts" />
+    <TypeScriptCompile Include="boot\IGetAjsApplicationConfig.ts" />
+    <TypeScriptCompile Include="boot\IGetAjsConfig.ts" />
+    <TypeScriptCompile Include="boot\IGetResourceLists.ts" />
+    <TypeScriptCompile Include="boot\IResourceLists.ts" />
+    <TypeScriptCompile Include="dbg\IConsoleConfig.ts" />
+    <TypeScriptCompile Include="dbg\IConsoleModuleCollection.ts" />
+    <TypeScriptCompile Include="dbg\IConsoleModule.ts" />
+    <TypeScriptCompile Include="dbg\modules\logger\ILogConfig.ts" />
+    <TypeScriptCompile Include="dbg\modules\logger\IFunctionInfo.ts" />
+    <TypeScriptCompile Include="dbg\modules\logger\ILogRecord.ts" />
+    <TypeScriptCompile Include="dbg\modules\logger\LogBody.tsx" />
+    <TypeScriptCompile Include="dbg\Console.ts" />
+    <TypeScriptCompile Include="dbg\view\Body.tsx" />
+    <TypeScriptCompile Include="dbg\view\StyleSheet.tsx" />
+    <TypeScriptCompile Include="dbg\log.ts" />
+    <TypeScriptCompile Include="dbg\modules\logger\LoggerStyleSheet.tsx" />
+    <TypeScriptCompile Include="dbg\modules\logger\Logger.ts" />
+    <TypeScriptCompile Include="dbg\modules\logger\LoggerToolbar.tsx" />
+    <TypeScriptCompile Include="dbg\tsx\IViewComponent.ts" />
+    <TypeScriptCompile Include="dbg\tsx\tsx.ts" />
+    <TypeScriptCompile Include="doc\Exceptions.ts" />
+    <TypeScriptCompile Include="doc\IComponent.ts" />
+    <TypeScriptCompile Include="doc\INodeEventListenerInfo.ts" />
+    <TypeScriptCompile Include="doc\INodeData.ts" />
+    <TypeScriptCompile Include="doc\INode.ts" />
+    <TypeScriptCompile Include="doc\DocumentManager.ts" />
+    <TypeScriptCompile Include="mvvm\!mvvm.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\ITransitionBeginHandler.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\ITransitionType.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\ViewComponentStateManager.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\ViewComponentRenderer.ts" />
+    <TypeScriptCompile Include="mvvm\view\IViewConfig.ts" />
+    <TypeScriptCompile Include="mvvm\view\Exceptions.ts" />
+    <TypeScriptCompile Include="mvvm\model\Exceptions.ts" />
+    <TypeScriptCompile Include="mvvm\model\IInstancedModelsCollection.ts" />
+    <TypeScriptCompile Include="mvvm\model\Model.ts" />
+    <TypeScriptCompile Include="mvvm\model\ModelManager.ts" />
+    <TypeScriptCompile Include="mvvm\view\View.ts" />
+    <TypeScriptCompile Include="events\Notifier.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\Exceptions.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\IAttributeProcessor.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\IAttributeProcessorCollection.ts" />
+    <TypeScriptCompile Include="events\IListener.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\IFilteredState.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\IInstancedViewComponentsCollection.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\IRegisteredViewComponentsCollection.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\IViewStateGet.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\IViewStateSet.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\ViewComponent.ts" />
+    <TypeScriptCompile Include="mvvm\viewmodel\ViewComponentManager.ts" />
+    <TypeScriptCompile Include="navigation\Navigator.ts" />
+    <TypeScriptCompile Include="resources\AjsStorage.ts" />
+    <TypeScriptCompile Include="resources\Exceptions.ts" />
+    <TypeScriptCompile Include="resources\ICachedResource.ts" />
+    <TypeScriptCompile Include="resources\IManagedResource.ts" />
+    <TypeScriptCompile Include="resources\IResource.ts" />
+    <TypeScriptCompile Include="resources\IResourceLoadEndHandler.ts" />
+    <TypeScriptCompile Include="resources\IResourceManagerConfig.ts" />
+    <TypeScriptCompile Include="resources\IResourceRequest.ts" />
+    <TypeScriptCompile Include="resources\IResourceRequestData.ts" />
+    <TypeScriptCompile Include="resources\IResourceResponseData.ts" />
+    <TypeScriptCompile Include="resources\IResourceTypes.ts" />
+    <TypeScriptCompile Include="resources\IStorageProvider.ts" />
+    <TypeScriptCompile Include="resources\ResourceLoader.ts" />
+    <TypeScriptCompile Include="resources\ResourceManager.ts" />
+    <TypeScriptCompile Include="resources\StorageLocal.ts" />
+    <TypeScriptCompile Include="resources\MemoryStorageProvider.ts" />
+    <TypeScriptCompile Include="resources\StorageMemory.ts" />
+    <TypeScriptCompile Include="resources\StorageSession.ts" />
+    <TypeScriptCompile Include="navigation\IRedirection.ts" />
+    <TypeScriptCompile Include="routing\IRoute.ts" />
+    <TypeScriptCompile Include="routing\IRouteInfo.ts" />
+    <TypeScriptCompile Include="routing\IRoutes.ts" />
+    <TypeScriptCompile Include="routing\Router.ts" />
+    <TypeScriptCompile Include="routing\RouterExceptions.ts" />
+    <TypeScriptCompile Include="state\StateManager.ts" />
+    <TypeScriptCompile Include="templating\Exceptions.ts" />
+    <TypeScriptCompile Include="templating\ITemplatesCollection.ts" />
+    <TypeScriptCompile Include="templating\IVisualComponent.ts" />
+    <TypeScriptCompile Include="templating\IVisualComponentChildInfo.ts" />
+    <TypeScriptCompile Include="templating\IVisualComponentChildren.ts" />
+    <TypeScriptCompile Include="templating\IVisualComponentCollection.ts" />
+    <TypeScriptCompile Include="templating\IVisualComponentPlaceholder.ts" />
+    <TypeScriptCompile Include="templating\IVisualComponentPlaceholderCollection.ts" />
+    <TypeScriptCompile Include="templating\Template.ts" />
+    <TypeScriptCompile Include="templating\TemplateManager.ts" />
+    <TypeScriptCompile Include="ui\ProgressBar.ts" />
+    <TypeScriptCompile Include="utils\Base64.ts" />
+    <TypeScriptCompile Include="utils\DeepMerge.ts" />
+    <TypeScriptCompile Include="utils\HTMLTags.ts" />
+    <TypeScriptCompile Include="utils\LZJB.ts" />
+    <TypeScriptCompile Include="utils\Obj.ts" />
+    <TypeScriptCompile Include="utils\Utils.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="changelog.txt" />
+    <Content Include="tsconfig.json" />
+    <None Include="README.MD" />
+    <None Include="tsconfig.common.json">
+      <DependentUpon>tsconfig.json</DependentUpon>
+    </None>
+    <None Include="tsconfig.Debug.json">
+      <DependentUpon>tsconfig.json</DependentUpon>
+    </None>
+    <None Include="tsconfig.Release.json">
+      <DependentUpon>tsconfig.json</DependentUpon>
+    </None>
+    <None Include="LICENSE" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ajs.Lib\Ajs.Lib.csproj">
+      <Project>{42e6f448-acfe-451c-a63a-63030fb59d56}</Project>
+      <Name>Ajs.Lib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Ajs</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>12667</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:12667/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>None</TypeScriptModuleKind>
+    <TypeScriptOutFile>../../js/ajs.js</TypeScriptOutFile>
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot>
+    </TypeScriptMapRoot>
+    <TypeScriptSourceRoot>
+    </TypeScriptSourceRoot>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>None</TypeScriptModuleKind>
+    <TypeScriptOutFile>../../js/ajs.js</TypeScriptOutFile>
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>rem *** Prepare tsconfig.json based on the solution configuration (Debug/Release)
+echo // This file is generated automatically based on the Visual Studio Solution configuration. &gt; "$(ProjectDir)tsconfig.json"
+echo // To configure TypeScript transpiller for given solution configuration use the tsconfig.common.json, tsconfig.Debug.json and tsconfig.Release.json &gt;&gt; "$(ProjectDir)tsconfig.json"
+echo { "compileOnSave": true, "extends" : "./tsconfig.$(ConfigurationName).json" } &gt;&gt; "$(ProjectDir)tsconfig.json"
+</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

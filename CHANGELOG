@@ -1,0 +1,93 @@
+--------------------------------------------------------------------------------------------------------------------------------
+Implemented features
+--------------------------------------------------------------------------------------------------------------------------------
+- Guide & Examples
+	- HTML based reference guide
+- Reference guide
+	- HTML Code documentation supported
+- HTML Code (both, static & code documentation)
+	- Supported tags:
+		# example url	- Includes the example to the HTML code (make sure the code is HTML escaped so < > & and others
+						  are properly replaced)
+						- Must be on the separate line
+		# chart url      - Includes svg chart to the HTML code
+						- Must be on the separate line
+- Ajs Feature Examples (directly in the code)
+    - Complete offline application support
+    - Boot process and configuration
+    - Resource loading including the InitialProgressBar
+    - Application resource loading and management
+	- Templating
+	- Visual State management
+	- Visual State transition
+	- View Component state management
+	- View Component state filtering
+    - Session state management
+	- Models for the static JSON data
+    - Debugging tools
+- Tools
+    - same tools as ajs
+    - tocgen.ps1 (powershell) -> generator of the toc.json file from the folder structure of the static html documents
+--------------------------------------------------------------------------------------------------------------------------------
+Change log
+--------------------------------------------------------------------------------------------------------------------------------
+- Patch #00/2017 - All pushes before Jan, 19 2017
+	- initial development release, a lot of dev cycles, a lot of feature implementations, changes, and bug fixes
+- Patch #01/2017-01-19 FN
+    - changelog updated
+    - added syntax to be shown
+    - added documentation
+    - Articles
+        Offline application support updated
+- Patch #02/2017-01-19 FN
+	- License updated at all files
+- Patch #03/2017-01-24 FN
+    - Members of extended lib.d.ts classes are not included anymore
+    - Fixed problem with menu item unique keys
+    - Fixed menu button disappearing when dialog frame was not shown
+- Patch #04/2017-02-02 FN
+    - slight documentation changes
+    - css's updated to support older browsers (problem with linear gradient on older chromiums)
+    - 3rd party libinit created / hoghlight movet to 3rd party libs project
+- Patch #05/2017-02-09 FN
+    - Project tunning for online
+    - Azure publishing is better supported now
+    - Slight changes following the Ajs changes (see ajs patch #05)
+    - The new documentation added can't be currently tested. At least until TypeDoc will be fixed or it will be decided to rewrite it by own
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted change requests
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted feature requirements
+--------------------------------------------------------------------------------------------------------------------------------
+#01/201701
+- Implement search feature
+#02/201701
+- Implement #see {link description} tag
+#03/201701
+- Display function / method parameters when function is expanded
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted issues
+--------------------------------------------------------------------------------------------------------------------------------
+#01/201701
+- Interface Index signitures are not rendered under syntax
+#02/201701
+- Description is doubled when multiple signatures exists within the node
+#03/201701
+- Function / method parameters at overloads are not handled properly (missing the main function params if defined in code)
+#04/201701
+- Review highlighting and "nohighlight" class as the changelog is also highlighted
+#05/201701
+- It seems highlighter is not started sometimes
+#01/201702
+- Typedoc does not work with --lib and Promises
+- Typedoc has a problem with tsconfig "extends" option
+#02/201702
+- IE10 has some problem with including charts
+#03/201703
+- tocgen tool has a problem when there is just single file in the folder
+--------------------------------------------------------------------------------------------------------------------------------
+Untagged ToDo's & Ideas
+--------------------------------------------------------------------------------------------------------------------------------
+- Implement decorators?
+- Check what TypeScript features are still missing

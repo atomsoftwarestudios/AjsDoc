@@ -1,0 +1,22 @@
+{
+
+  "$schema": "./buildtools/AjsWebAppSchema.json#",
+
+  "enableSourceMaps": true,
+
+  "cssMinify": true,
+  "cssMinifyOptions": {},
+
+  "htmlMinify": true,
+  "htmlMinifyOptions": {},
+
+  "jsMinify": true,
+  "jsMinifyOptions": {},
+
+  "processLESS": true,
+  "lessOptions": {},
+
+  "processSASS": true,
+  "sassOptions": {}
+
+}
