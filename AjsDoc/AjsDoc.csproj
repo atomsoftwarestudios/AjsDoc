@@ -3,14 +3,14 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ProjectGuid>{F50EB30F-7563-41D2-B64D-C1588509A691}</ProjectGuid>
+    <ProjectGuid>{C63B3A20-1C93-4096-BB84-B9568AD06D9B}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <OutputPath>bin</OutputPath>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.2</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -22,71 +22,84 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cache.manifest" />
-    <None Include="WebDeploy-AjsFw.pubxml" />
-    <None Include="changelog.txt" />
-    <Content Include="android-chrome-192x192.png" />
-    <Content Include="apple-touch-icon.png" />
-    <Content Include="browserconfig.xml" />
-    <Content Include="favicon-16x16.png" />
-    <Content Include="favicon-32x32.png" />
-    <Content Include="favicon.ico" />
-    <Content Include="index.html" />
-    <Content Include="js\ajs.boot.config.js" />
-    <Content Include="js\ajs.js" />
-    <Content Include="js\ajs.lib.js" />
-    <Content Include="js\ajsdoc.lib.js" />
-    <Content Include="js\ajsdocbrowser.js" />
-    <None Include="license.txt" />
-    <Content Include="mstile-150x150.png" />
-    <Content Include="res\img\atom-logo.gif" />
-    <Content Include="res\img\hamburger.png" />
-    <Content Include="safari-pinned-tab.svg" />
-    <Content Include="static\charts\appcache.svg" />
-    <Content Include="static\content\03 Visual Studio Solution Setup.html" />
-    <Content Include="static\content\04 Web Server Requirements and Configuration.html" />
-    <Content Include="static\content\03\02 Contributors.html" />
-    <Content Include="static\content\03\01 Application developers.html" />
-    <Content Include="static\content\06 Debugging tools.html" />
-    <Content Include="static\content\05\02 Offline Application Support.html" />
-    <Content Include="static\content\05\05 Resource Management and Caching.html" />
-    <Content Include="static\content\05\04 Navigation and Routing.html" />
-    <Content Include="static\content\05\03 Boot Process.html" />
-    <Content Include="static\content\05\01 Overview.html" />
-    <Content Include="static\content\05\06\02 Models.html" />
-    <Content Include="static\content\05\06\01 View and its components.html" />
-    <Content Include="static\content\06\02 Resource manager info.html" />
-    <Content Include="static\content\06\01 Logger.html" />
-    <Content Include="static\content\98 License.html" />
-    <Content Include="static\templates\content.css" />
-    <Content Include="res\img\ajs-logo.png" />
-    <Content Include="res\img\atom-logo.png" />
-    <Content Include="res\css\hljsvs.css" />
-    <Content Include="res\img\chrome.png" />
-    <Content Include="res\img\edge.png" />
-    <Content Include="res\img\firefox.png" />
-    <Content Include="res\img\ie.png" />
-    <Content Include="res\img\opera.png" />
-    <Content Include="res\img\safari.png" />
-    <Content Include="static\content\01 Introduction.html" />
-    <Content Include="static\content\02 Design requirements.html" />
-    <Content Include="static\content\05\06\01\01 View.html" />
-    <Content Include="static\content\05\06\01\03 View Components.html" />
-    <Content Include="static\content\05\06\01\02 Visual Components and Visual Styles.html" />
-    <Content Include="static\content\05\06 MVVM Architecture.html" />
-    <Content Include="static\content\97 Special thanks.html" />
-    <Content Include="static\content\99 Changelog.html" />
-    <Content Include="static\templates\ajsdoc.html" />
-    <Content Include="tsconfig.json" />
-    <Content Include="web.config" />
+    <Content Include="wwwroot\android-chrome-192x192.png" />
+    <Content Include="wwwroot\apple-touch-icon.png" />
+    <Content Include="wwwroot\browserconfig.xml" />
+    <Content Include="wwwroot\favicon-16x16.png" />
+    <Content Include="wwwroot\favicon-32x32.png" />
+    <Content Include="wwwroot\favicon.ico" />
+    <Content Include="wwwroot\index.html" />
+    <Content Include="wwwroot\mstile-150x150.png" />
+    <Content Include="wwwroot\resources\css\hljsvs.css" />
+    <Content Include="wwwroot\resources\img\ajs-logo.png" />
+    <Content Include="wwwroot\resources\img\atom-logo.gif" />
+    <Content Include="wwwroot\resources\img\atom-logo.png" />
+    <Content Include="wwwroot\resources\img\chrome.png" />
+    <Content Include="wwwroot\resources\img\edge.png" />
+    <Content Include="wwwroot\resources\img\firefox.png" />
+    <Content Include="wwwroot\resources\img\hamburger.png" />
+    <Content Include="wwwroot\resources\img\ie.png" />
+    <Content Include="wwwroot\resources\img\opera.png" />
+    <Content Include="wwwroot\resources\img\safari.png" />
+    <Content Include="wwwroot\safari-pinned-tab.svg" />
+    <Content Include="wwwroot\resources\charts\appcache.svg" />
+    <Content Include="wwwroot\resources\content\01 Introduction.html" />
+    <Content Include="wwwroot\resources\content\02 Design requirements.html" />
+    <Content Include="wwwroot\resources\content\03 Visual Studio Solution Setup.html" />
+    <Content Include="wwwroot\resources\content\03\01 Application developers.html" />
+    <Content Include="wwwroot\resources\content\03\02 Contributors.html" />
+    <Content Include="wwwroot\resources\content\04 Web Server Requirements and Configuration.html" />
+    <Content Include="wwwroot\resources\content\05 How it works.html" />
+    <Content Include="wwwroot\resources\content\05\01 Overview.html" />
+    <Content Include="wwwroot\resources\content\05\02 Offline Application Support.html" />
+    <Content Include="wwwroot\resources\content\05\03 Boot Process.html" />
+    <Content Include="wwwroot\resources\content\05\04 Navigation and Routing.html" />
+    <Content Include="wwwroot\resources\content\05\05 Resource Management and Caching.html" />
+    <Content Include="wwwroot\resources\content\05\06 MVVM architecture.html" />
+    <Content Include="wwwroot\resources\content\05\06\01 View and its components.html" />
+    <Content Include="wwwroot\resources\content\05\06\01\01 View.html" />
+    <Content Include="wwwroot\resources\content\05\06\01\02 Visual Components and Visual Styles.html" />
+    <Content Include="wwwroot\resources\content\05\06\01\03 View Components.html" />
+    <Content Include="wwwroot\resources\content\05\06\02 Models.html" />
+    <Content Include="wwwroot\resources\content\06 Debugging tools.html" />
+    <Content Include="wwwroot\resources\content\06\01 Logger.html" />
+    <Content Include="wwwroot\resources\content\06\02 Resource manager info.html" />
+    <Content Include="wwwroot\resources\content\97 Special thanks.html" />
+    <Content Include="wwwroot\resources\content\98 License.html" />
+    <Content Include="wwwroot\resources\content\99 Changelog.html" />
+    <Content Include="wwwroot\resources\templates\ajsdoc.css" />
+    <Content Include="wwwroot\resources\templates\ajsdoc.html" />
+    <Content Include="wwwroot\resources\templates\content.css" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="static\program.json" />
-    <Content Include="static\content\05 How it works.html" />
-    <Content Include="static\toc.json" />
-    <Content Include="static\appresources.json" />
-    <Content Include="manifest.json" />
-    <None Include="WebDeploy-AjsDoc.pubxml" />
+    <Content Include="wwwroot\resources\examples\ajs.boot.config.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\resources\examples\app_init.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\resources\examples\viewComponent_placeholder.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\resources\program.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\resources\templates.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tsconfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CHANGELOG">
+      <Link>CHANGELOG</Link>
+    </None>
+    <None Include="..\LICENSE">
+      <Link>LICENSE</Link>
+    </None>
+    <None Include="..\README.md">
+      <Link>README.md</Link>
+    </None>
+    <None Include="buildtools\tocgen.ps1" />
     <None Include="tsconfig.common.json">
       <DependentUpon>tsconfig.json</DependentUpon>
     </None>
@@ -96,66 +109,56 @@
     <None Include="tsconfig.Release.json">
       <DependentUpon>tsconfig.json</DependentUpon>
     </None>
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
+    <Content Include="wwwroot\resources\appresources.json" />
+    <Content Include="wwwroot\resources\toc.json" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="js\ajs.d.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocMenuGroup.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocNavBar.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocMenuItem.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocLayout.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocLayoutMenuButton.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocMenu.ts" />
-    <TypeScriptCompile Include="src\IAjsDocBrowserConfig.ts" />
-    <TypeScriptCompile Include="src\!ajsdoc.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocArticle.ts" />
-    <TypeScriptCompile Include="src\AjsDocBrowser.ts" />
-    <TypeScriptCompile Include="src\components\AjsDoc.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocContextSwitcher.ts" />
-    <TypeScriptCompile Include="src\components\AjsDocMember.ts" />
-    <TypeScriptCompile Include="src\models\ContentModel.ts" />
-    <TypeScriptCompile Include="src\models\ProgramModel.ts" />
-    <TypeScriptCompile Include="src\Exceptions.ts" />
-    <TypeScriptCompile Include="src\lib\hljs.ts" />
-    <Content Include="static\examples\app_init.ts" />
-    <TypeScriptCompile Include="src\states\IAjsDocLayoutState.ts" />
-    <TypeScriptCompile Include="src\states\IMenuState.ts" />
-    <TypeScriptCompile Include="src\states\IMenuItemState.ts" />
-    <TypeScriptCompile Include="src\states\IMenuItemGroupState.ts" />
-    <TypeScriptCompile Include="src\states\INavBarItemState.ts" />
-    <TypeScriptCompile Include="src\states\INavBarItemsState.ts" />
-    <TypeScriptCompile Include="src\program\IComment.ts" />
-    <TypeScriptCompile Include="src\program\IFlags.ts" />
-    <TypeScriptCompile Include="src\program\INode.ts" />
-    <TypeScriptCompile Include="src\program\IType.ts" />
-    <Content Include="static\examples\ajs.boot.config.ts" />
-    <Content Include="static\examples\viewComponent_placeholder.ts" />
-    <Content Include="static\templates\ajsdoc.css" />
-    <Content Include="static\templates.json" />
+    <TypeScriptCompile Include="!ajsdoc.ts" />
+    <TypeScriptCompile Include="AjsDocBrowser.ts" />
+    <TypeScriptCompile Include="components\AjsDoc.ts" />
+    <TypeScriptCompile Include="components\AjsDocArticle.ts" />
+    <TypeScriptCompile Include="components\AjsDocContextSwitcher.ts" />
+    <TypeScriptCompile Include="components\AjsDocLayout.ts" />
+    <TypeScriptCompile Include="components\AjsDocLayoutMenuButton.ts" />
+    <TypeScriptCompile Include="components\AjsDocMember.ts" />
+    <TypeScriptCompile Include="components\AjsDocMenu.ts" />
+    <TypeScriptCompile Include="components\AjsDocMenuGroup.ts" />
+    <TypeScriptCompile Include="components\AjsDocMenuItem.ts" />
+    <TypeScriptCompile Include="components\AjsDocNavBar.ts" />
+    <TypeScriptCompile Include="Exceptions.ts" />
+    <TypeScriptCompile Include="IAjsDocBrowserConfig.ts" />
+    <TypeScriptCompile Include="lib\hljs.ts" />
+    <TypeScriptCompile Include="models\ContentModel.ts" />
+    <TypeScriptCompile Include="models\ProgramModel.ts" />
+    <TypeScriptCompile Include="program\IComment.ts" />
+    <TypeScriptCompile Include="program\IFlags.ts" />
+    <TypeScriptCompile Include="program\INode.ts" />
+    <TypeScriptCompile Include="program\IType.ts" />
+    <TypeScriptCompile Include="states\IAjsDocLayoutState.ts" />
+    <TypeScriptCompile Include="states\IMenuItemGroupState.ts" />
+    <TypeScriptCompile Include="states\IMenuItemState.ts" />
+    <TypeScriptCompile Include="states\IMenuState.ts" />
+    <TypeScriptCompile Include="states\INavBarItemsState.ts" />
+    <TypeScriptCompile Include="states\INavBarItemState.ts" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="src\AjsDocLib\AjsDocLib.csproj">
+    <ProjectReference Include="..\AjsDoc.Lib\AjsDoc.Lib.csproj">
       <Project>{9840c9ac-d37c-42c3-8c0a-05e9f6233379}</Project>
-      <Name>AjsDocLib</Name>
+      <Name>AjsDoc.Lib</Name>
     </ProjectReference>
-    <ProjectReference Include="src\Ajs\Ajs.csproj">
+    <ProjectReference Include="..\Ajs\Ajs.csproj">
       <Project>{267086da-ab24-4d8d-bd5f-d7d3b3d7db67}</Project>
       <Name>Ajs</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
+    <Content Include="wwwroot\manifest.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>AjsDoc</RootNamespace>
+    <RootNamespace>AjsDocMain</RootNamespace>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
@@ -165,9 +168,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>8157</DevelopmentServerPort>
+          <DevelopmentServerPort>41447</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8157/</IISUrl>
+          <IISUrl>http://localhost:41447/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -178,16 +181,23 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>powershell.exe -ExecutionPolicy Bypass -File "..\..\Tools\cachemanifest.ps1" "$(ProjectDir)"
-powershell.exe -ExecutionPolicy Bypass -File "..\..\Tools\tocgen.ps1" "$(ProjectDir)static\content" "/static/content/" "$(ProjectDir)static\toc.json"
-</PostBuildEvent>
+    <PreBuildEvent>rem *** Prepare tsconfig.json based on the solution configuration (Debug/Release)
+echo // This file is generated automatically based on the Visual Studio Solution configuration. &gt; "$(ProjectDir)tsconfig.json"
+echo // To configure TypeScript transpiller for given solution configuration use the tsconfig.common.json, tsconfig.Debug.json and tsconfig.Release.json &gt;&gt; "$(ProjectDir)tsconfig.json"
+echo { "compileOnSave": true, "extends" : "./tsconfig.$(ConfigurationName).json" } &gt;&gt; "$(ProjectDir)tsconfig.json"
+</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>echo { "extends" : "./tsconfig.$(ConfigurationName).json" } &gt; "$(ProjectDir)tsconfig.json"</PreBuildEvent>
+    <PostBuildEvent>powershell.exe -ExecutionPolicy Bypass -File "$(ProjectDir)buildtools\tocgen.ps1" "$(ProjectDir)wwwroot\resources\content" "/resources/content/" "$(ProjectDir)wwwroot\resources\toc.json"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

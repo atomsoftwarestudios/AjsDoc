@@ -3,9 +3,11 @@
   // COMMON CONFIGURATION (DEBUG/RELEASE)
 
   "compilerOptions": {
-    "declaration": true,
+    "allowJs": true,
+    // generate .d.ts declaration file
+    "declaration": false,
     // output file (single js file will be generated)
-    "outFile": "./bin/ajsdocbrowser.js",
+    "outFile": "./bin/ajs.lib.js",
     // target ECMA version
     "target": "es5",
     // libs to be used during compilation
@@ -22,12 +24,11 @@
     "noImplicitAny": false
   },
   "include": [
-    "./**/*",
-    "../Ajs/bin/*.d.ts"
+    "./**/*"
   ],
   "exclude": [
-    "./bin/**/*",
-    "./wwwroot/**/*"
+    "./bin/**/*"
   ]
+
 
 }

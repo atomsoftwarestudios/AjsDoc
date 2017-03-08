@@ -3,9 +3,8 @@
   // COMMON CONFIGURATION (DEBUG/RELEASE)
 
   "compilerOptions": {
-    "declaration": true,
     // output file (single js file will be generated)
-    "outFile": "./bin/ajsdocbrowser.js",
+    "outFile": "./bin/ajs.boot.config.js",
     // target ECMA version
     "target": "es5",
     // libs to be used during compilation
@@ -23,11 +22,10 @@
   },
   "include": [
     "./**/*",
-    "../Ajs/bin/*.d.ts"
+    "../Ajs/bin/*.d.ts",
+    "../AjsDoc/bin/*.d.ts"
   ],
   "exclude": [
-    "./bin/**/*",
-    "./wwwroot/**/*"
+    "./bin/**/*"
   ]
-
 }

@@ -1,14 +1,16 @@
 {
   // TypeScript 2.1 compiler configuration
-  // RELEASE CONFIGURATION
+  // DEBUG CONFIGURATION
 
   "extends": "./tsconfig.common.json",
 
   "compilerOptions": {
     // generate source maps
-    "sourceMap": false,
+    "sourceMap": true,
+    // map root
+    "sourceRoot": "/src/Ajs",
     // remove comments
-    "removeComments": true
+    "removeComments": false
   }
 
 }
