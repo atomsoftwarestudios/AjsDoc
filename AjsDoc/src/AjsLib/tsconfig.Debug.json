@@ -8,7 +8,7 @@
     // generate source maps
     "sourceMap": false,
     // remove comments
-    "removeComments": true
+    "removeComments": false
   }
 
 }

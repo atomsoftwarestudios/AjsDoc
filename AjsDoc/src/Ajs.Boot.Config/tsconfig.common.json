@@ -4,9 +4,8 @@
 
   "compileOnSave": true,
   "compilerOptions": {
-    "declaration": true,
     // output file (single js file will be generated)
-    "outFile": "./js/ajsdocbrowser.js",
+    "outFile": "../../js/ajs.boot.config.js",
     // target ECMA version
     "target": "es5",
     // libs to be used during compilation
@@ -24,12 +23,8 @@
   },
   "include": [
     "./src/**/*",
-    "./js/*.d.ts"
-  ],
-  "exclude": [
-    "./src/Ajs/*",
-    "./src/Ajs.Boot.Config/*",
-    "./js/ajsdocbrowser.d.ts"
+    "../../js/ajs.d.ts",
+    "../../js/ajsdocbrowser.d.ts"
   ]
 }
 //# sourceMappingURL=tsconfig.js.map

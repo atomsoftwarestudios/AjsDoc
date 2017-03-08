@@ -4,9 +4,11 @@
 
   "compileOnSave": true,
   "compilerOptions": {
-    "declaration": true,
+    "allowJs": true,
+    // generate .d.ts declaration file
+    "declaration": false,
     // output file (single js file will be generated)
-    "outFile": "./js/ajsdocbrowser.js",
+    "outFile": "../../js/ajs.lib.js",
     // target ECMA version
     "target": "es5",
     // libs to be used during compilation
@@ -20,16 +22,17 @@
     // preserve const enums (don't delete from generated code)
     "preserveConstEnums": true,
     // implicit any
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    // TSX/JSX compilation support
+    "jsx": "react",
+    // ajs.debug.tsx is the React.js replacement but for Ajs debugging purposes only
+    "reactNamespace": "AjsDebugTsxFactory"
   },
   "include": [
     "./src/**/*",
-    "./js/*.d.ts"
-  ],
-  "exclude": [
-    "./src/Ajs/*",
-    "./src/Ajs.Boot.Config/*",
-    "./js/ajsdocbrowser.d.ts"
+    "./lib/**/*"
   ]
+
+
 }
 //# sourceMappingURL=tsconfig.js.map

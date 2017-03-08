@@ -1,3 +1,0 @@
-// This file is generated automatically based on the Visual Studio Solution configuration. 
-// To configure TypeScript transpiller for given solution configuration use the tsconfig.common.json, tsconfig.Debug.json and tsconfig.Release.json 
-{ "compileOnSave": true, "extends" : "./tsconfig.Debug.json" } 
