@@ -24,6 +24,9 @@ IN THE SOFTWARE.
 ///<reference path="view/Body.tsx" />
 ///<reference path="view/StyleSheet.tsx" />
 
+/**
+ * The debugging namespace contain the debugging console and debugging tools for Ajs and Application developers
+ */
 namespace ajs.dbg {
     "use strict";
 
