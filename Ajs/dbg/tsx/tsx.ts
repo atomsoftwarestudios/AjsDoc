@@ -21,6 +21,31 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
+/**
+ * ajs.tsx "replaces" the React.js
+ * <p>
+ * TSX is very very very limited reactive renderer without updating support (so elements must be
+ * removed and re-rendered completely. It does not support custom components as it is not neccessary
+ * for debugging interface. Its purpose is just to make development of the debug module views easier
+ * and better maintanable.
+ * </p>
+ * <p>
+ * <strong>
+ * The tsx is not supposed to be used in Applications. It is for internal puproses of the ajs.debug
+ * namespace only!
+ * </strong>
+ * </p>
+ * <p>
+ * It makes possible usingof the TSX compiler within the Ajs. tsx is needed just for the debug namespace
+ * to render components and because storing of the HTML in string is not nice and not well mainanable the
+ * decision to use the TSX was made. It is not possible to use the Ajs internally as it would interferre
+ * together.
+ * </p>
+ * <p>
+ * If the build solution configuration is "Release" the tsx as well as all debugging functions will be
+ * removed from the resulting Ajs and Application JavaScript code using the post-processor.
+ * </p>
+ */
 namespace ajs.dbg.tsx {
 
     "use strict";
