@@ -21,8 +21,12 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
+///<reference path="../../doc/DocumentManager.ts" />
 ///<reference path="../viewmodel/ViewComponentManager.ts" />
 
+/**
+ * View namespace is dedicated to view and its exceptions only
+ */
 namespace ajs.mvvm.view {
 
     "use strict";
