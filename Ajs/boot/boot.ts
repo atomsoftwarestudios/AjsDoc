@@ -25,6 +25,23 @@ IN THE SOFTWARE.
 ///<reference path="../dbg/Console.ts" />
 ///<reference path="../dbg/log.ts" />
 
+/**
+ * Boot namespace contains the boot loader and associated interfaces
+ * <p>
+ * _boot function is called automatically when window.onload event occur. It
+ * loads resources configured in the ajs.boot.config and intializes and
+ * starts the framework.
+ * </p>
+ * Boot expect the ajs.boot namespace contain following functions implementation:
+ * <ul>
+ *    <li>getResourceLists = function(): IResourceLists {
+ *        let resourceLists: IResourceLists = { ... }; return resourceLists; }</li>
+ *    <li>getAjsConfig(): IAajsConfig {
+ *        let ajsConfig: IAjsConfig = { ... }; return ajsConfig; }</li>
+ *    <li>getApplicationConfig = function(): ajs.app.IApplicationConfig {
+ *        let applicationConfig = { ... }; return applicationConfig }</li>
+ * </ul>
+ */
 namespace ajs.boot {
 
     "use strict";
