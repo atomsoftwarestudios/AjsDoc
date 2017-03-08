@@ -1,0 +1,119 @@
+<h1>Web Server Requirements and Configuration</h1>
+
+<p>
+    In order to be possible to run single page application with offline support properly it is necessary to setup the web server / reverse application proxies correctly.
+</p>
+
+<h4>Cache control</h4>
+
+<p>
+    The Cache-Control HTTP header must be set to no-cache, must-revalidate at least on App Cached files (index.html, ajs.js, ajs.lib.js, ajs.boot.config.js and all favicons and manifests)
+    otherwise the AppCache does not work with the FireFox properly. It is recommended to have the same setup for all application files and resources as resource manager relies on the last modified
+    date header instead of cache control headers.
+
+    <pre>Cache-Control: no-cache, must-revalidate</pre>
+</p>
+
+<h4>Mime types</h4>
+
+<p>
+    The MIME type of the cache.manifest file must be text/cache-manifest
+    <pre>Content-Type: text/cache-manifest</pre>
+    Note: the file can't be renamed to anything else otherwise Safari will not work properly
+</p>
+
+<p>
+    MIME types for other resources must be configured properly. This is valid mainly for IIS where it is necessary to remap some MIME types. Otherwise it can happen the debugging or something else
+    will not work - this is not because of Ajs, but because of browsers and web servers themselves.
+    <table border="1">
+        <tr><td>.js</td><td>text/javascript</td></tr>
+        <tr><td>.manifest</td><td>text/cache-manifest</td></tr>
+        <tr><td>.ts</td><td>text/typescript</td></tr>
+        <tr><td>.json</td><td>application/json</td></tr>
+    </table>
+</p>
+
+<h4>URL Rewrite</h4>
+
+<p>
+    Web server must support URL rewrite feature (not redirect or something else). All requests must be rewritten to /index.html, except request to existing resources. Currently, example IIS config
+    is not rewriting requests ending with following file extensions:
+
+    <pre>.manifest .js .ts .tsx .map .ico .png .jpg .jpeg .gif .htm .html .json .css .svg</pre>
+
+    It will probably require bit of tunning to convince the web server don't return 404 or index.html instead of regullar resource requested.
+</p>
+
+<h4>gzip compression</h4>
+
+<p>
+    It is highly recommended to enable GZIP compression, at least on production servers
+</p>
+
+<h4>Security settings</h4>
+
+<p>
+    For Web Server / Reverse Proxy hardening follow some hardening guide or CIS configuration standard for particullar product.
+</p>
+
+<h4>Example IIS webconfig (without additional hardening)</h4>
+
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;!--.
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  --&gt;
+&lt;configuration&gt;
+  &lt;system.webServer&gt;
+    &lt;staticContent&gt;
+      &lt;clientCache cacheControlCustom=&quot;no-cache, must-revalidate&quot;/&gt;
+      &lt;remove fileExtension=&quot;.js&quot; /&gt;
+      &lt;mimeMap fileExtension=&quot;.js&quot; mimeType=&quot;text/javascript&quot; /&gt;
+      &lt;remove fileExtension=&quot;.manifest&quot; /&gt;
+      &lt;mimeMap fileExtension=&quot;.manifest&quot; mimeType=&quot;text/cache-manifest&quot; /&gt;
+      &lt;remove fileExtension=&quot;.ts&quot; /&gt;
+      &lt;mimeMap fileExtension=&quot;.ts&quot; mimeType=&quot;text/typescript&quot; /&gt;
+      &lt;remove fileExtension=&quot;.tsx&quot; /&gt;
+      &lt;mimeMap fileExtension=&quot;.tsx&quot; mimeType=&quot;text/typescript&quot; /&gt;
+      &lt;remove fileExtension=&quot;.json&quot; /&gt;
+      &lt;mimeMap fileExtension=&quot;.json&quot; mimeType=&quot;application/json&quot; /&gt;
+    &lt;/staticContent&gt;
+    &lt;rewrite&gt;
+      &lt;rules&gt;
+        &lt;rule name=&quot;DynamicRewrite&quot; enabled=&quot;true&quot; stopProcessing=&quot;true&quot;&gt;
+          &lt;match url=&quot;.*&quot; ignoreCase=&quot;true&quot; /&gt;
+          &lt;conditions&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.manifest$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.js$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.ts$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.tsx$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.map$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.ico$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.png$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.jpg$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.jpeg$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.gif$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.htm$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.html$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.json$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.css$&quot; negate=&quot;true&quot; /&gt;
+            &lt;add input=&quot;{REQUEST_FILENAME}&quot; pattern=&quot;/*\.svg$&quot; negate=&quot;true&quot; /&gt;
+          &lt;/conditions&gt;
+          &lt;action type=&quot;Rewrite&quot; url=&quot;/index.html&quot; /&gt;
+        &lt;/rule&gt;
+      &lt;/rules&gt;
+    &lt;/rewrite&gt;
+    
+    &lt;httpCompression&gt;
+        &lt;dynamicTypes&gt;
+            &lt;add mimeType=&quot;text/javascript&quot; enabled=&quot;true&quot; /&gt;
+            &lt;add mimeType=&quot;application/json&quot; enabled=&quot;true&quot; /&gt;
+        &lt;/dynamicTypes&gt;
+    &lt;/httpCompression&gt;
+  &lt;/system.webServer&gt;
+  &lt;system.web&gt;
+    &lt;compilation debug=&quot;true&quot; targetFramework=&quot;4.5&quot; /&gt;
+    &lt;httpRuntime targetFramework=&quot;4.5&quot; /&gt;
+  &lt;/system.web&gt;
+&lt;/configuration&gt;
+</code></pre>

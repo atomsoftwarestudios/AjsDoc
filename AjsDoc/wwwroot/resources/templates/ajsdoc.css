@@ -1,0 +1,596 @@
+﻿html, body {
+    margin: 0; 
+    padding: 0;
+    font-size: 1.0em;
+}
+
+.ajsDoc {
+    font-family: Calibri, Arial, sans-serif;
+}
+
+.ajsDocLink {
+    text-decoration: none;
+    color: black;
+}
+
+.ajsDocLink:hover {
+    color: #16355D;
+}
+
+/* PAGE LAYOUT */
+
+.ajsDocLayoutDialog {
+    position: fixed; 
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #EAF4F8;
+    opacity: 0.35;
+    z-index: 5000;
+    display: none;
+}
+
+.ajsDocLayoutDialog[dialogvisible="true"] {
+    display: block;
+}
+
+.ajsDocLayoutHeaderContainer {
+    background-color: white;
+    background: linear-gradient(-3deg, #EAF4F8, white);
+    text-align: center;
+    padding: 3px;
+    height: 54px;
+    box-sizing: border-box;
+}
+
+.ajsDocLayoutMenuContainer {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    border-right: 1px solid #EAF4F8;
+    vertical-align: top;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 9500;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ajsDocLayoutContentContainer {
+    vertical-align: top;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+@keyframes ajsDocMenuButtonVisible {
+    from { opacity: 0.25; }
+    to { opacity: 1; }
+}
+
+@-webkit-keyframes ajsDocMenuButtonVisible {
+    from { opacity: 0.25; }
+    to { opacity: 1; }
+}
+
+@keyframes ajsDocMenuButtonInvisible {
+    from { opacity: 1; }
+    to { opacity: 0.25; }
+}
+
+@-webkit-keyframes ajsDocMenuButtonInvisible {
+    from { opacity: 1; }
+    to { opacity: 0.25; }
+}
+
+.ajsDocLayoutMenuButton {
+    position: fixed;
+    left: 3px;
+    top: 3px;
+    width: 48px;
+    height: 48px;
+    z-index: 9999;
+    animation: ajsDocMenuButtonVisible 350ms forwards;
+    -webkit-animation: ajsDocMenuButtonVisible 350ms forwards;
+    -moz-animation: ajsDocMenuButtonVisible 350ms forwards;
+}
+
+@keyframes ajsDocMenuButtonLogo {
+    0% { opacity: 1; } 60% { opacity: 1; } 100% { opacity: 0; }
+}
+
+@keyframes ajsDocMenuButtonHamburger {
+    0% { opacity: 0; } 60% { opacity: 0; } 100% { opacity: 0.6; }
+}
+
+.ajsDocLayoutMenuButtonLogo {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 48px;
+    height: 48px;
+    background-image: url('/resources/img/ajs-logo.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: ajsDocMenuButtonLogo alternate infinite 3s;
+}
+
+.ajsDocLayoutMenuButtonHamburger {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 48px;
+    height: 48px;
+    background-image: url('/resources/img/hamburger.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: ajsDocMenuButtonHamburger alternate infinite 3s;
+}
+
+.ajsDocLayoutMenuButton[menuvisible="false"] {
+    animation: ajsDocMenuButtonInvisible 350ms forwards;
+    -webkit-animation: ajsDocMenuButtonInvisible 350ms forwards;
+    -moz-animation: ajsDocMenuButtonInvisible 350ms forwards;
+}
+
+@keyframes ajsDocMenuMakeVisible350px {
+    from { width: 0; opacity: 0 }
+    to { width: 350px; opacity: 1 }
+}
+
+@-webkit-keyframes ajsDocMenuMakeVisible350px {
+    from { width: 0; opacity: 0 }
+    to { width: 350px; opacity: 1 }
+}
+
+@keyframes ajsDocMenuMakeInvisible350px {
+    from { width: 350px; opacity: 1 }
+    to { width: 0; opacity: 0 }
+}
+
+@-webkit-keyframes ajsDocMenuMakeInvisible350px {
+    from { width: 350px; opacity: 1 }
+    to { width: 0; opacity: 0 }
+}
+
+@keyframes ajsDocMenuMakeVisible100 {
+    from { width: 0; opacity: 0 }
+    to { width: 100%; opacity: 0.95  }
+}
+
+@-webkit-keyframes ajsDocMenuMakeVisible100 {
+    from { width: 0; opacity: 0 }
+    to { width: 100%; opacity: 0.95  }
+}
+
+@keyframes ajsDocMenuMakeInvisible100 {
+    from { width: 100%; opacity: 0.95 }
+    to { width: 0; opacity: 0 }
+}
+
+@-webkit-keyframes ajsDocMenuMakeInvisible100 {
+    from { width: 100%; opacity: 0.95 }
+    to { width: 0; opacity: 0 }
+}
+
+@keyframes ajsDocMenuVisibleContent {
+    from { margin-left: 0}
+    to { margin-left: 350px}
+}
+
+@-webkit-keyframes ajsDocMenuVisibleContent {
+    from { margin-left: 0}
+    to { margin-left: 350px}
+}
+
+@keyframes ajsDocMenuInvisibleContent {
+    from { margin-left: 350px}
+    to { margin-left: 0}
+}
+
+@-webkit-keyframes ajsDocMenuInvisibleContent {
+    from { margin-left: 350px}
+    to { margin-left: 0}
+}
+
+@media only screen and (min-width: 980px) {
+
+    .ajsDocLayoutContentContainer[menuvisible="true"] {
+        animation: ajsDocMenuVisibleContent 350ms forwards;
+        -webkit-animation: ajsDocMenuVisibleContent 350ms forwards;
+        -moz-animation: ajsDocMenuVisibleContent 350ms forwards;
+    }
+
+    .ajsDocLayoutContentContainer[menuvisible="false"] {
+        animation: ajsDocMenuInvisibleContent 350ms forwards;
+        -webkit-animation: ajsDocMenuInvisibleContent 350ms forwards;
+        -moz-animation: ajsDocMenuInvisibleContent 350ms forwards;
+    }
+
+
+    .ajsDocLayoutMenuContainer[menuvisible="true"] {
+        animation: ajsDocMenuMakeVisible350px 350ms forwards;
+        -webkit-animation: ajsDocMenuMakeVisible350px 350ms forwards;
+        -moz-animation: ajsDocMenuMakeVisible350px 350ms forwards;
+    }
+
+    .ajsDocLayoutMenuContainer[menuvisible="false"] {
+        animation: ajsDocMenuMakeInvisible350px 350ms forwards;
+        -webkit-animation: ajsDocMenuMakeInvisible350px 350ms forwards;
+        -moz-animation: ajsDocMenuMakeInvisible350px 350ms forwards;
+    }
+
+}
+
+@media only screen and (max-width: 980px) {
+
+    .ajsDocLayoutContentContainer {
+        left: 0;
+    }
+    
+    .ajsDocLayoutContentContainer[menuvisible="true"] {
+        filter: blur(2px);
+        -webkit-filter: blur(2px);
+    }
+
+    .ajsDocLayoutMenuContainer[menuvisible="true"] {
+        animation: ajsDocMenuMakeVisible350px 350ms forwards;
+        -webkit-animation: ajsDocMenuMakeVisible350px 350ms forwards;
+        -moz-animation: ajsDocMenuMakeVisible350px 350ms forwards;
+    }
+
+    .ajsDocLayoutMenuContainer[menuvisible="false"] {
+        animation: ajsDocMenuMakeInvisible350px 350ms forwards;
+        -webkit-animation: ajsDocMenuMakeInvisible350px 350ms forwards;
+        -moz-animation: ajsDocMenuMakeInvisible350px 350ms forwards;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+
+    .ajsDocLayoutMenuContainer[menuvisible="true"] {
+        animation: ajsDocMenuMakeVisible100 350ms forwards;
+        -webkit-animation: ajsDocMenuMakeVisible100 350ms forwards;
+        -moz-animation: ajsDocMenuMakeVisible100 350ms forwards;
+    }
+
+    .ajsDocLayoutMenuContainer[menuvisible="false"] {
+        animation: ajsDocMenuMakeInvisible100 350ms forwards;
+        -webkit-animation: ajsDocMenuMakeInvisible100 350ms forwards;
+        -moz-animation: ajsDocMenuMakeInvisible100 350ms forwards;
+    }
+
+}
+
+
+.ajsDocLayoutPageNavContainer {
+    display: table-cell;
+    vertical-align: top;
+    padding: 3px;
+    border-left: 1px solid #EAF4F8;
+}
+
+/* NAVBAR */
+
+.ajsDocNavBar {
+    border-bottom: solid 1px #EAF4F8;
+    padding: 3px;
+    background-color: white;
+    background: linear-gradient(-3deg, #EAF4F8, white)
+}
+
+/* HEADER */
+
+.ajsDocHeaderLabelContainer {
+    display: table-cell;
+    height: 48px;
+    vertical-align: middle;
+    padding-left: 0.5em;
+    white-space: nowrap;
+}
+
+.ajsDocHeaderLabel {
+    display: inline;
+    padding: 0;
+}
+
+.ajsDocAjsLogo {
+    display: table-cell;
+    width: 48px;
+    height: 48px;
+}
+
+/* FOOTER */
+
+.ajsDocLayoutFooterContainer {
+    text-align: center;
+    font-size: 0.75em;
+
+    border-top: solid 1px #EAF4F8;
+}
+
+/* CONTENT */
+
+.ajsDocContentPlaceholder {
+    margin: 0;
+    padding: 3px;
+    vertical-align:top;
+}
+
+.ajsDocContentPlaceholder pre {
+    border: solid 1px #EAF4F8;
+    margin: 0;
+}
+
+.ajsDocContentPlaceholder h5 {
+    margin: 0; padding: 0;
+}
+
+/* CONTEXT SWITCHER */
+
+.ajsDocContextSwitcher {
+    background-color: white;
+    white-space: nowrap;
+    height: 40px;
+    box-sizing: border-box;
+}
+    
+@keyframes ajsDocContextSwitcherButton {    
+    from { background-color: #16355D; background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
+    to { background-color: #FAFCFD; background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black; }
+}
+
+@-webkit-keyframes ajsDocContextSwitcherButton {
+    from { background-color: #16355D; background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
+    to { background-color: #FAFCFD; background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black; }
+}
+
+@keyframes ajsDocContextSwitcherButtonSelected {
+    from { background-color: #FAFCFD; background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8); color: black; }
+    to { background-color: #16355D; background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
+}
+    
+@-webkit-keyframes ajsDocContextSwitcherButtonSelected {
+    from { background-color: #FAFCFD; background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8); color: black; }
+    to { background-color: #16355D; background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white; }
+}
+
+.ajsDocContextSwitcherButton {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    box-sizing: border-box;
+    height: 100%;
+    border: none;
+    outline: 0;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #FAFCFD;
+    background: linear-gradient(-3deg, #EAF4F8, #FAFCFD, #EAF4F8);  color: black;
+    animation: ajsDocContextSwitcherButton 350ms forwards;
+    -webkit-animation: ajsDocContextSwitcherButton 350ms forwards;
+    -moz-animation: ajsDocContextSwitcherButton 350ms forwards;
+}
+
+.ajsDocContextSwitcherButton[selected="true"] {
+    background-color: #16355D;
+    background: linear-gradient(-3deg, #EAF4F8, #16355D, #EAF4F8); color: white;
+    animation: ajsDocContextSwitcherButtonSelected 350ms forwards;
+    -webkit-animation: ajsDocContextSwitcherButtonSelected 350ms forwards;
+    -moz-animation: ajsDocContextSwitcherButtonSelected 350ms forwards;
+}
+
+
+/* MENU */
+
+@keyframes ajsDocMenuOldAnimationRtl {
+    from { width: 350px; }
+    to { width: 0; }
+}
+
+@-webkit-keyframes ajsDocMenuOldAnimationRtl {
+    from { width: 350px; }
+    to { width: 0; }
+}
+
+@keyframes ajsDocMenuNewAnimationRtl {
+    from { left: 350px; width: 0; }
+    to { left: 0; width: 350px; }
+}
+
+@-webkit-keyframes ajsDocMenuNewAnimationRtl {
+    from { left: 350px; width: 0; }
+    to { left: 0; width: 350px; }
+}
+
+@keyframes ajsDocMenuOldAnimationLtr {
+    from { left: 0; width: 350px; }
+    to { left: 350px; width: 0; }
+}
+
+@-webkit-keyframes ajsDocMenuOldAnimationLtr {
+    from { left: 0; width: 350px; }
+    to { left: 350px; width: 0; }
+}
+
+@keyframes ajsDocMenuNewAnimationLtr {
+    from { width: 0; }
+    to { width: 350px; }
+}
+
+@-webkit-keyframes ajsDocMenuNewAnimationLtr {
+    from { width: 0; }
+    to { width: 350px; }
+}
+
+@keyframes ajsDocMenuNewFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1;}
+}
+
+@-webkit-keyframes ajsDocMenuNewFadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.9;}
+}
+
+@keyframes ajsDocMenuOldFadeOut {
+    from { opacity: 0.9; }
+    to { opacity: 0;}
+}
+
+@-webkit-keyframes ajsDocMenuOldFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0;}
+}
+
+.ajsDocMenu {
+    opacity: 0.9;
+    background-color: #FAFCFD;
+    background: linear-gradient(-90deg, white, #FAFCFD);
+    white-space: nowrap;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    top: 94px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.ajsDocMenu[statetransitiontypeold="RTL"] {
+    animation: ajsDocMenuOldAnimationRtl 350ms forwards;
+    -webkit-animation: ajsDocMenuOldAnimationRtl 350ms forwards;
+    -moz-animation: ajsDocMenuOldAnimationRtl 350ms forwards;
+}
+
+.ajsDocMenu[statetransitiontypenew="RTL"] {
+    animation: ajsDocMenuNewAnimationRtl 350ms forwards;
+    -webkit-animation: ajsDocMenuNewAnimationRtl 350ms forwards;
+    -moz-animation: ajsDocMenuNewAnimationRtl 350ms forwards;
+}
+
+.ajsDocMenu[statetransitiontypeold="LTR"] {
+    animation: ajsDocMenuOldAnimationLtr 350ms forwards;
+    -webkit-animation: ajsDocMenuOldAnimationLtr 350ms forwards;
+    -moz-animation: ajsDocMenuOldAnimationLtr 350ms forwards;
+}
+
+.ajsDocMenu[statetransitiontypenew="LTR"] {
+    animation: ajsDocMenuNewAnimationLtr 350ms forwards;
+    -webkit-animation: ajsDocMenuNewAnimationLtr 350ms forwards;
+    -moz-animation: ajsDocMenuNewAnimationLtr 350ms forwards;
+}
+
+.ajsDocMenu[statetransitiontypeold="FADE"] {
+    animation: ajsDocMenuOldFadeOut 350ms forwards;
+    -webkit-animation: ajsDocMenuOldFadeOut 350ms forwards;
+    -moz-animation: ajsDocMenuOldFadeOut 350ms forwards;
+}
+
+.ajsDocMenu[statetransitiontypenew="FADE"] {
+    animation: ajsDocMenuNewFadeIn 350ms forwards;
+    -webkit-animation: ajsDocMenuNewFadeIn 350ms forwards;
+    -moz-animation: ajsDocMenuNewFadeIn 350ms forwards;
+}
+
+
+.ajsDocMenuLabel {
+    display: table-cell;
+    width: 350px;
+    background-color: #EAF4F8;
+    background: linear-gradient(-3deg, #FAFCFD, #EAF4F8);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.ajsDocMenuParent {
+    font-weight: bold;
+    font-size: 1.25em;
+    text-decoration: none;
+    color: black;
+}
+
+.ajsDocMenuItemGroup {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ajsDocMenuItemGroupLabel {
+    font-style: italic;
+    font-weight: bold;
+    padding: 0.75em;
+    padding-left: 0.25em;
+}
+
+.ajsDocMenuItem {
+    list-style: none;
+}
+
+.ajsDocMenuItemLink {
+    display: block;
+    padding: 0.75em;
+    padding-left: 1em;
+}
+
+.ajsDocMenuItemLinkNonGrouped .ajsDocLink {
+    padding-left: 0.25em;
+}
+
+.ajsDocMenuItemLink:hover {
+    background-color: #EAF4F8;
+}
+
+.ajsDocMenuItemLinkParent {
+    display: block;
+    padding: 0.75em;
+}
+
+.ajsDocMenuItem[ajsselected="true"] a {
+    color: #16355D;
+    font-weight: bold;
+}
+
+/* ARTICLES */
+
+.ajsDocArticleCaption {
+    margin: 0;
+    padding: 0;
+}
+
+.ajsDocExample {
+    border: solid 1px #EAF4F8;
+    background-color: #FAFCFD;
+}
+
+.ajsDocChart {
+    border: solid 1px #EAF4F8;
+    text-align: center;
+    padding: 0.25em;
+    overflow: auto;
+}
+
+/* CODE TEMPLATES */
+
+.ajsDocMember {
+    margin-bottom: 0.5em;
+    padding: 0.25em;
+}
+
+.ajsDocMemberStatement {
+    border: solid 1px #EAF4F8;
+    background-color: #FAFCFD;
+    padding: 0.25em;
+}
+
+.ajsDocMember:hover, .ajsDocMember:hover .ajsDocMemberStatement {
+    background-color: #EAF4F8;
+}
+
+
+.ajsDocStatement {
+    background-color: #FAFAFA;
+}

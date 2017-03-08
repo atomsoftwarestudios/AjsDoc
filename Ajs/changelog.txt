@@ -1,0 +1,520 @@
+The Ajs Framework
+
+----------------------------------------------------------------------------
+The MIT License (MIT)
+Copyright (c)2016-2017-2017 Atom Software Studios. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+----------------------------------------------------------------------------
+
+Since January, 19 2017, all changes are documented here as patch numbers and comments
+at GitHub just reffers to the patch numbers defined bellow.
+
+--------------------------------------------------------------------------------------------------------------------------------
+Os, Devices & Browsers used for testing
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Desktop, Windows 10 64bit
+    - IE 11 + IE 10 under IE11 emulated mode
+    - Microsoft Edge 38.14393.0.0 (Microsoft EdgeHTML 14.14393)
+    - Google Chrome (55.0.2883.87) 64-bit
+    - Firefox 51.0.1 (32-bit)
+    - Opera 42.0.2393.517 (64-bit)
+- Desktop, macOS Sierra, 10.12.13
+    - Safari 10.0.3 12602.4.8
+- Samsung S3 Mini (GT-I8190N) - Android (JellyBean)
+    - Android Browser 4 (Web view)
+    - Chrome 55 (both, web and desktop modes)
+- Samsung S4 Mini (GT-I9195) - Android (KitKat)
+    - Chrome 28 (Web view)
+    - Chrome 55 (both, web and desktop modes)
+- NVidia Shield K1 1.5(24.3.70.8) (Android 6.0.1)
+    - Desktop Web Application
+    - Opera 42.1.2246.1127.88
+    - Opera Mini 21.0.2254.111920
+    - Firefox 50.1.0
+    - Chrome 55.0 (both, web and desktop modes)
+- IPad 2, iOS 9.3.5
+    - Safari 9 (both, desktop and web modes)
+- iPhone 5S, iOS 10.1.1
+    - Safari 10 (both, web and desktop modes)
+- XCode Simulators
+    - All available (except Apple Watches and AppleTV)
+
+--------------------------------------------------------------------------------------------------------------------------------
+Implemented features:
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Basic features    
+    - Developed in Visual Studio 2015
+    - Currently using TypeScript 2.5.1 transpiller
+    - Extenal (3rd party) JavaScript library support
+        - Packed to two lib files - ajs.lib.js and [appname].lib.ajs        
+        - Currently only "manual" dependency resolving and library initialization
+            - libinit function started automatically when library pack loads
+                - initialize libraries
+                - apply polyfills
+            - Planned support for require / system / common / ams to automatically resolve dependencies
+        - External libraries used:
+            - es6-promise
+
+- Index.html
+    - Offline support
+    - Progress bar, welcome page, error page
+    - Responsive UI support (meta tags)
+    - Favicon for various browsers / operating system support
+
+- Boot process control
+    - Offline support (application cache)
+    - Caches disposal on appcache.manifest change
+	- Support for wellcome / progress loading progress bar
+    - Resource loading (various caches and caching policies)
+    - Framework and Application configuration
+	- Framework setup, initialization and startup
+
+- Resource management
+    - Rewritten according to "modern" requirements and is using Promise for almost all async functions now
+	- Key/Value storage (based on local/session storages)
+    - Support for both textual and binary data
+    - Automatic resource cache management
+	    - Three caching storages supported - Local / Session / Memory
+        - Configurable size of the memory cache
+	    - Caching policies supported - None, Permanent or Last Recently Used
+        - Loading preference support - Cache or server	
+	- Support for "loading" progress progress bar
+	- Automatic script evaluation uppon load
+
+- Navigation
+	- Browser navigation event management (popstate / hashchange)
+	- Navigation to the same origin or remote origin resources
+	- Redirection Support (currently simple without RegExps, will be updated soon)
+
+- Routing
+	- Configurable routing based on RegExps to route request to appropriate model view
+
+- Application management
+	- Automatic application loading, configuration and instantiation
+	- User configuration is loaded during the boot process
+	- BeforeUnload event passed to the application to perform appropriate actions
+
+- Event Notifier
+	- Notifier based on Subscribe / Unsubcribe functionality
+
+- Document manager
+    - Support for render target (output can be rendered to any HTML DOM Document and any Element tag)
+    - DOM Updater based on React.js idea with the full Ajs component support
+        - Only changed elements / attributes / text nodes are updated for the maximum performance
+    - Support for document style management
+    - Currently, support for loading of stylesheets from the template (will be moved to Template class, this will be more logical and makes DocMan more independent on the rest of the framework)
+
+- MVVM
+	- View
+		- Full support of templating features
+		- Automatic DOM updating based on View Component state changes usind the DOM Manager
+			
+	- View Component (view model)
+		- Full support of templting features
+		- Automated & queued state management
+			- State filtering prior the state is applied to the View Component
+		- Automated tree rendering based on the state changes
+		- Support for dynmic View Component creation from the Application code
+		- Visual state transition support
+
+	- Model
+
+- Simple application / session state manager
+	- Using the Resource Manager features
+	- Key / Value storage for the application data to persist between F5 refreshes, manual addressbar
+		updates or browser restarting
+
+- Templating
+	- new terminology is used to support the innovative approach to templating:
+	    Visual Style (CSS), Visual Component (HTML), View Component (Model View / Code behind), View (TS Class manangin the view)
+	- support for Visual Style related resources managed by the resource manager
+	- Dynamic Visual Style state representation of the Visual Component is determined by the CSS rules and TAG attributes only
+		- its not necessary to manipulate tag classes from the code anymore, just to set the visual state properties correctly
+          and map them to the tag visual style state attributes
+	- Support for separate Visual Styles for various templates as
+		- style tag directly in the template
+		- stylesheets attribute within the template tag
+	- Logic-less templates (almost) - only the one logic performing statement is IF
+	- Minimum of additional tags or attributes to be learned
+	- DOM Event mapping to View Component DOM listeners
+	- Reusable view components
+	- Automated mapping of the data based on the data structure and View Component structure
+
+- Debugging tools
+    - Modular debugging console based on TSX templates
+        - Limited reactive TSX renderer just to support debugging modules UI without DOM update support
+	- Together with the browser javascript console gives developed great overview about whole system
+	- Tools available:
+		- Logger with log browser
+            - Configurable logger
+            - Breakpoint support (breaks on n-th occurence of given log record type)
+            - Log records time difference measuring
+
+- Development Tools and Utilities
+	- utf8.bom to utf file converter (PowerShell)
+	- cache.manifest post-build generator (PowerShell)
+
+--------------------------------------------------------------------------------------------------------------------------------
+Change log
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Patch #00/2017-01-18 FN (All pushes before Jan, 19 2017)
+
+	- initial development release, a lot of dev cycles, a lot of feature implementations, changes, and bug fixes
+	- Somehow, but wrongly, documented at GitHub
+
+- Patch #01/2017-01-19 FN
+
+	Untagged changes:
+	-----------------
+		- Changelog: structure changed to the current version
+		- Testing signitures for the AjsDoc in !ajs.ts updated
+		- Documentation updated
+			- ajs, Framework, boot, events, navigation
+		- Support for Logger added
+			- ajs, Framework boot, events, navigation
+		- State change queuing
+		- State filtering updated to support returned array states
+		- Visual transition state reworked
+			- Its possible to 
+			- added DOM events related to CSS animations
+				- onanimationend
+				- onstatetransitionbegin (Ajs related, HTML5 Non-standard)
+		- Added some console logging to ViewComponent for debugging purposes (will be replaced with the logger)
+		- AJS renamed to Ajs everywhere
+
+- Patch #02/2017-01-19 FN
+	- License updated at all files
+
+- Patch #03/2017-01-24 FN
+    
+    Implemented Change Requests
+
+        #03/201701 MEDIUM
+            - Rework debugging tools to support components
+
+        #05/201701 PARTIAL
+    		- Configurable logging level (what events will be logged)
+			- Will be supported by the post processor to be removed from the release version of the project
+
+	- License updated at all files again
+	- UTF-8.bom to UTF8 conversion on all files where it was neccessary
+	- Debug interface
+		- reworked configuration
+		- reworked to support TSX templating and multiple components
+		- Log module reworked, supports measuring of the time between records and set breakpoints on the particular record
+	- Logging added / updated to following modules:
+		boot, Framework, events, navigation, routing, resource management
+	- View component
+		- Fixed stylesheet management
+		- Reworked state change qeuing and preventing of the state change
+		- Interfaces splitted to separate files
+		- Links rewrite now adds onclick attribute rather using of the javascript:... construct
+		- Visual transitions does not prevent state change anymore, rather fully supports canceling of the previous visual transition
+	- View
+		- getChildrenComponentInstances method added
+	- Code documentation slight changes
+		- Added / updated
+
+- Patch #04/2017-02-02 FN
+
+    Implemented Change Requests
+
+    #01/201701 HIGH
+        - Remove the resource option within the CSS template and rather check if url('...') is a cached resource and use it
+	    - This will require redesign of the resource manager to keep urls of released resources
+
+    #04/201701 HIGH
+        - Rework resource manager
+            - Add create/remove managed resource function (remove is not supported now)
+            - Access to managed/unmanaged resources only using getResource function (Sync/Async according the resource access preference)
+            - Implement resource access preference (CACHE get resource from cahce then update from server, SERVER get resource from server then update cache and call callback with the resource)
+
+    Implemented Feature Requests
+
+    #01/201701 HIGH
+        - Boot process control
+	        - AppCached files updates detection and autoreload to force the browser use them
+
+    Fixed issues
+
+    #01/201701 HIGH
+        - Strange behaviour during visual state transition
+	        - Components are removed and can't be rendered uppon unexpected user actions
+	        - (AjsDoc menu hide during the menu state transition)
+
+    Untagged changes and bug fixes
+
+        - TypeScript configuration moved to tsconfig
+            - Uses the "extends" option and supports Debug/Release configurations now
+            - Prebuild task to use correct tsconfig
+        - Added support for "manual" 3rd party JavaScript libraries loading and initialization
+        - Async rewritten to use Promises and async/await
+            - mainly boot, resource management and MVVM updated
+        - Added configuration options for Boot module
+        - Additional code documentation through all modules
+        - Additional logging support in various modules
+        - As everything is more async, view now waits for the root component to be initialized and for stylesheets to be loaded / updated with resources and added to the view
+            - ViewComponent async Initialized support added
+            - rootComponentChanged rewritten
+            - createViewComponent rewritten
+            - applyStyleSheetsFromTemplate rewritten
+        - Navigator is using target instead of srcElement now when processing the link click
+        - Resource manager rewritten
+            - async rewritten to use async/await/promises
+            - only getResource / getMultipleResources can be used to load / get cached resources instead of load/loadMultiple
+            - Fixed IE10 bug with UTC/GMT datetime (need to be tested properly)
+        - Template management updated
+            - optimalized loading of templates (templates are not browsed multiple times anymore)
+            - Stylesheets loaded with the template now
+            - Updated async parts to follow internal changes
+        - ProgressBar changed to be an object instead of static object (need to be instanced now)
+        - Tool cachemanifest bug with backslah fixed
+        - index.html
+            - now contains error info but is not used by ajs now
+            - support for 3rd party libs
+
+- Patch #05/2017-02-09
+
+    Implemented Change Requests
+
+    #02/201701 HIGH
+    -  Refactoring
+    	- Refactor View DOM Update functions to look nicer
+            - New namespace / class created: ajs.doc.DocumentManager
+            - Currently it contain css from template management - will be moved to Template to make the DOM Updater less dependant on whole system
+
+
+    Implemented Feature Requests
+
+    #03/201701 HIGH
+    - MVVM
+	    - View
+		    - Automatic DOM updating based on View Component state changes
+			    - Support for render target
+				    - Rendering can be performed to the window document, shadow document or any existing configurable tag
+
+    Untagged changes and bug fixes
+
+    - Fixed bug: Navigator incorrectly handles the link clicked path
+    - Fixed bug: Style URL was not updated with the base64 value
+    - Fixed bug: Safari crashing with new rendering system (touch events in the template now has the postfix _ajs to prevent their registration in the shadow dom)
+    - Fixed bug: DOM memory leaks (detached DOM nodes) seems to be finally fully fixed with DocumentManager
+    - View
+        - Refactored to use the document manager and cleaned up a lot
+        - Better notification of view copmonents the navigation event occurs (it is not necessary to call render or onNavigate internally inside the component)
+    - ViewComponent
+        - support for the changes related to implemented document manager, code cleanup
+        - ajs properties moved to the avoid Intellisense to mix the App developer defined properties and ajs properties
+        - _initialize reverted back to be synchrnous but it can initiate asynchronous tasks (such as model instantiation and data loading or whatever else)
+    - Added ajs.doc namespace including the DocumentManager (see features for descritption)
+    - Show/Hide functions added to the ProgressBar (possible because of implemented render target)
+        - Boot fine tunning for offline
+        - Execution of the fallback when no App Cache events are received was decreased to 500ms
+        - bootResourcesCachePreference config option renamed to more logical bootResourcesLoadingPreference
+    - Link click does not use onclick attribute anymore, the mousedown using the assEventListener is in use now
+    - Resource manager is using the constant for the timer waiting before the resource promise is resolved instead of the value used directly in the setTimeout
+    - Framework initialization updated to follow mentioned changes (some dependencies are not injected anymore, some additional are)
+    - Logging added to various Ajs modules but still not fully complete
+    - Code documentation updated in various Ajs modules but still not fully complete
+    - Fine tunning of projects and git
+        - tsconfig can be currently in Debug/Release versions
+        - support for Azure publishing (more related to AjsDoc project)
+    - Additional light changes and fine tunning for going online
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted change requests
+--------------------------------------------------------------------------------------------------------------------------------
+
+    #02/201701 HIGH
+    -  Refactoring
+	    - Refactor ViewComponent state change management to look nicer
+	    - Refactor ViewComponent rendering functions to look nicer
+
+    #01/201702 HIGH
+        - Resource manager
+            - Finish the chache size checking and cleanup for the new feature of limiting max cache size
+
+    #02/201702 HIGH
+    - State manager
+        - Implement size limitation of the space used for the Application and the Session states
+
+    #03/201702 HIGH
+    - Document Manager
+        - Implement lookup table for elements with the ViewId
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted feature requests
+--------------------------------------------------------------------------------------------------------------------------------
+
+#02/201701 HIGH
+- Application management
+	- Global Error (exception) handling
+
+#04/201701 HIGH
+- MVVM
+	- View Component (view model)
+		- Automated tree rendering based on the state changes
+			- Support for the render target (related to 03/201701)
+
+#05/201701 HIGH
+- Debugging tools
+    - Configuration
+        - Show on reload
+    - Resource manager info
+        - Managed resources
+        - Loaded resources
+        - Resource loading times
+        - Cached info
+    - State manager info
+        - Managed states
+    - Template manager
+        - All possible information about templates
+    - ViewComponent manager
+        - Registered components 
+        - Instanced components
+        - Component states
+	- Tools available:
+		- Logger with log browser
+			- Suppoort all Ajs components
+
+#06/201701 HIGH
+- Development Tools
+	- TypeScript post-processor (not developed yet)
+		- support for // #IFDEF , // # NIFDEF and // #ENDIF
+		- Configurable debugging tools / code removal from the whole code with keeping refs to map file valid
+		- Code size optimizer (release version before minification)
+			- Namespace optimizer (joins namespaces together)
+			- Accessor optimizer (replaces all occurences of the defineProperty with single defineProperties)
+
+#07/201701 HIGH
+- Resource management
+	- remove resources older than
+
+#08/20170101 HIGH
+- Add support for "Working" state icon when the application / framework is bussy
+
+#09/20170101 HIGH
+- Implement Language & Translation functionality and integrate it with templating / view components
+
+#10/20170101 HIGH
+- Implement Ajs components for the data management
+	- JSON API
+	- Data caching
+
+#11/201701 HIGH
+- ViewComponent - Implement all DOM event attributes and necessary processors
+
+#12/201701 HIGH
+- View - Implement & test updating of the DOM of "form" elements based on the onchange event and state updates
+
+#13/201701 HIGH
+- Template / ViewComponent - to the result component merge attributes from both, component definition and component instance
+
+#14/201702 HIGH
+- During the boot and framework / application start better captrue exceptions and reload / display error page based on the configuration
+
+--------------------------------------------------------------------------------------------------------------------------------
+Accepted issues
+--------------------------------------------------------------------------------------------------------------------------------
+
+#01/201702 LOW
+- Review visual state transition / animationend on Android Browser 4 (JellyBean)
+    - AjsDoc menu sometimes disappearing when it is hiden/shown -> chech if it is CSS or Jas MVVM problem
+
+#01/201702 LOW
+- IE11/Emulated IE10 sometimes freezes / restarts in offline mode
+    - This will require deeper debugging of the IE process as it was not possible to discover where the problem is till now
+
+#02/201702 HIGH
+- According to https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/5579311/ the DOM updater currently
+  crashes with Edge 14 during the SVG DOM update as attribute names are incorrectly returned in UPPER CASE although
+  referencing them in lower case works. Workaround mentioned on the web page will not be used now. Please use another
+  browser until better workaround / fix will be available.
+
+  Current workaround just catches the exception and stops attribute processing what is not definitely good, but at least the
+  SVG is displayed.
+
+--------------------------------------------------------------------------------------------------------------------------------
+Untagged ToDo's & Ideas
+--------------------------------------------------------------------------------------------------------------------------------
+
+- Get rid of all warnings reported by the TSLint
+
+- Documentation
+	- Code documentation
+		- Finish the code documentation for the existing code
+
+	- How it works
+
+	- Visual Studio project and compilation
+		- Tools & toolchain
+
+	- Coding guidelines
+
+	- Browser application caching
+
+- Resource management
+	- performance optiomizations
+		- creating the string of specified length in the StorageBrowser.cleanCache can be optimized for ES6
+		- review cycles
+
+- View, View Components, Visual Components
+	- Don't render the component tag to the output
+		- will be hard to achieve as root node is needed at this time
+	- Move IFs from Template to the View Component
+		- This is idea now, not designed, how it should work
+	- View state modifications queuing to prevent async operation fighting
+	- ViewComponent._getState -> implement function to collect the state information from the view component tree
+	- Dynamic View Component -> implement a component allowing to set the view component programatically, not just from template
+
+- Helper libraries -> Implement or reuse?
+	- UI
+	- Data
+		- Data binding???
+		- Data validation helpers
+	- WebSockets
+	- Geo location
+	- Push notifications
+
+----
+
+- Javascript minification
+- Template compiler / minifier
+- Style compiler
+- Language & translation transpiller
+- Code optimalizations
+
+FAR FUTURE:
+- Caching of processed objects - especially visualComponents and view components, dom??
+
+----
+
+Optimizations:
+	
+A lot of optimizations can be done, at least:
+
+a) ViewComponent - while creating a new array of components it calls functions to
+get viewcomponent constructor and visual constructor in the loop, this can be done just
+once
+
+b) if undefined && not null can be optimized at many places

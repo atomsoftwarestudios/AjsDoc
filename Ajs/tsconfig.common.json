@@ -1,0 +1,38 @@
+{
+  // TypeScript 2.1 compiler configuration
+  // COMMON CONFIGURATION (DEBUG/RELEASE)
+
+  "compilerOptions": {
+    // watch ts files for changes
+    "allowJs": false,
+    // generate .d.ts declaration file
+    "declaration": true,
+    // output file (single js file will be generated)
+    "outFile": "./bin/ajs.js",
+    // target ECMA version
+    "target": "es5",
+    // libs to be used during compilation
+    "lib": [ "dom", "es2015.promise", "es5" ],
+    // moule system to be used (none, AMD, CommonJS, UMD, System, ES2015)
+    "module": "none",
+    // don't emit any output when compilation fails
+    "noEmitOnError": true,
+    // don't emit BOM
+    "emitBOM": false,
+    // preserve const enums (don't delete from generated code)
+    "preserveConstEnums": true,
+    // implicit any
+    "noImplicitAny": false,
+    // TSX/JSX compilation support
+    "jsx": "react",
+    // ajs.debug.tsx is the React.js replacement but for Ajs debugging purposes only
+    "reactNamespace": "AjsDebugTsxFactory"
+  },
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    "./bin/**/*"
+  ]
+
+}
