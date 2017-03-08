@@ -1,0 +1,14 @@
+{
+  // TypeScript 2.1 compiler configuration
+  // RELEASE CONFIGURATION
+
+  "extends": "./tsconfig.common.json",
+
+  "compilerOptions": {
+    // generate source maps
+    "sourceMap": false,
+    // remove comments
+    "removeComments": true
+  }
+
+}
