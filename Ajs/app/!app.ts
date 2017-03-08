@@ -21,20 +21,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 **************************************************************************** */
 
-/**
- * Contains base classes for the Ajs Application, application configuration and exceptions.
- * <p>The Application class has to be derived by the user code to initialize the
- * application, load necessary resources and setup routes.</p>
- * <p>The derived application class is construced and initialized during the
- * framework boot process. The boot manager calls the framework to instantiate,
- * configure and initialize the application.</p>
- * <p>As the application initialization can be an asynchronous process (resources
- * could be loading and additional user tasks can be done during the initialization)
- * so it is necessary to call the _initDone method once the initialization is completed.</p>
- * <h5>Application Initialization Example</h5>
- * #example app_init
- *
- */
+// TypeDoc testing
 
 namespace ajs.app {
 
