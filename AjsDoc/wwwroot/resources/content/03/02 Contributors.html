@@ -1,0 +1,206 @@
+<h1>Visual Studio Solution Setup for Contributors</h1>
+
+<p>Both projects, (Ajs Framework and Ajs doc) are currently maintained together on GitHub as a single VS solution including 4 projects and some additional tools.</p>
+
+<h3>Prerequisites</h3>
+<p>
+    The Visual Studio should be in version 2015 (Enterprise, Professional, Community) - curently tested with Enterprise version.
+</p>
+    
+<p>
+    The TypeScript 2.1.5 extension must be installed (https://www.typescriptlang.org/#download-links).
+</p>
+
+<p>
+    GitHub extension for Visual Studio is highly recommended (https://visualstudio.github.com/)
+</p>
+
+<p>
+    Currently, there is no need to use any additional tools, task runners or whatever else so with the correct
+    version of the Visual Studio and extensions installed it should be possible to download or clone the project
+    from the GitHub, open the solution in Visual Studio and directly compile it and run.
+</p>
+
+<h3>Project structure</h3>
+
+<p>
+    The solution itself is splitted to 4 separate projects:
+
+    <ul>
+        <li>Ajs - The Ajs Framework itself</li>
+        <li>Ajs Lib - 3rd party libraries (currently only es6-promise) and the libinit for correct library initialization (there is currently no support for some dependency loaders)</li>
+        <li>AjsDoc - The TypeScript documentation project</li>
+        <li>AjsDoc Lib - 3rd party libraries used within AjsDoc (currently only highlightpack.js) and the libinit for correct library initialization (there is currently no support for some dependency loaders)</li>
+    </ul>
+
+</p>
+
+<p>
+    All projects are stored in the following "strange" folder structure but it is necessary for correct source mapping and easy debugging (just important files and folders noted.)
+
+    <style type="text/css">
+        .ajsNoListStyle {
+            list-style: none;
+            padding-left: 1em;
+        }
+
+            .ajsNoListStyle ul {
+                list-style: none;
+                padding-left: 1em;
+            }
+
+            .ajsNoListStyle li {
+                margin: 0.2em;
+            }
+    </style>
+
+    <ul class="ajsNoListStyle">
+        <li>
+            |- <strong>AjsDoc</strong>
+            <ul>
+                <li>
+                    |- AjsDoc Solution, Readme, License, Git directions
+                </li>
+                <li>
+                    |- <strong>AjsDoc</strong>
+                    <ul>
+                        <li>|- Web root with index.html, favicons, manifests, web.config</li>
+                        <li>|- AjsDoc VS project files |- TSConfig</li>
+                        <li>|- AjsDoc Readme, license</li>
+                        <li>
+                            |- <strong>js</strong>
+                            <ul>
+                                <li>|- All projects TypeScript transpillation target</li>
+                            </ul>
+                        </li>
+                        <li>
+                            |- <strong>res</strong>
+                            <ul>
+                                <li>|- Resources, like images and styles</li>
+                            </ul>
+                        </li>
+                        <li>
+                            |- <strong>src</strong>
+                            <ul>
+                                <li>
+                                    |- AjsDoc sources
+                                </li>
+                                <li>
+                                    |- <strong>Ajs</strong>
+                                    <ul>
+                                        <li>|- Ajs VS project files and tsonfigs</li>
+                                        <li>|- Ajs Readme, license</li>
+                                        <li>
+                                            |- <strong>src</strong>
+                                            <ul>
+                                                <li>|- Ajs sources</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    |- <strong>Ajs.Boot.Config</strong>
+                                    <ul>
+                                        <li>|- Ajs boot config project files and tsconfigs</li>
+                                        <li>
+                                            |- <strong>src</strong>
+                                            <ul>
+                                                <li>|- Ajs.Boot.Config sources</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    |- <strong>AjsDocLib</strong>
+                                    <ul>
+                                        <li>|- AjsDoc 3rd party libraries project files and tsconfigs</li>
+                                        <li>
+                                            |- <strong>lib</strong>
+                                            <ul>
+                                                <li>|- 3rd party libraries folders</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            |- <strong>src</strong>
+                                            <ul>
+                                                <li>|- libinit.ts</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    |- <strong>AjsLib</strong>
+                                    <ul>
+                                        <li>|- Ajs 3rd party libraries project files and tsconfigs</li>
+                                        <li>
+                                            |- <strong>lib</strong>
+                                            <ul>
+                                                <li>|- 3rd party libraries folders</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            |- <strong>src</strong>
+                                            <ul>
+                                                <li>|- libinit.ts</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li>
+                            |- <strong>static</strong>
+                            <ul>
+                                <li>|- Static resources for AjsDoc</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    |- <strong>Tools</strong>
+                    <ul>
+                        <li>|- PowerShell Build tools</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+</p>
+
+<h3>Compilation and build tool chain</h3>
+<p>
+    TypeScript compilation is fully driven using TSConfigs now, previously it was using the VS project properties. Both, Debug and Release configurations are supported (there is pre-build command creating
+    the right tsconfig before compilation).
+</p>
+
+<p>
+    Resource pre-compilation tools (like stylesheet processors) are not used at this time
+</p>
+
+<p>
+    Post-build tool for the resulting code optimalization is currently missing, but planned to be developed. It will be a post processor of the generated JS code and it is planned to do following tasks:
+    <ul>
+        <li>Debug support and logging removal</li>
+        <li>JS optimalizations for shorter code (joining same namespaces together, defineProperty -> defineProperties)</li>
+    </ul>
+</p>
+
+<p>
+    There is also a tool for the manifest.cache file generation in the pos-built chain - the file is regenerated after each build.    
+</p>
+
+<p>
+    For AjsDoc, there is TocGen for generation of the table of contents from the existing folder structure.
+</p>
+
+<p>
+    No task runners are currently used (except MSBuild pre-build and post-build).
+    The rest of the tool chain depends on developer needs. If minification of js / resources will be required it would be probably best way to use node.js and tools like uglify.
+</p>
+
+<h3>Tools</h3>
+
+<p>The tool for conversion from UTF-8 with BOM to UTF is added but is supposed to be run manually. Visual Studio stores all files in UTF-8 with BOM by default and this can cause unexpected problems, especially during debugging with map files.</p>

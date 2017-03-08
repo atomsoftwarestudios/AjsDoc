@@ -7,9 +7,10 @@
   "compilerOptions": {
     // generate source maps
     "sourceMap": true,
+    // source maps root
+    "sourceRoot": "/src/AjsDoc",
     // remove comments
     "removeComments": false
   }
 
 }
-//# sourceMappingURL=tsconfig.js.map

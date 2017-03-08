@@ -1,0 +1,164 @@
+<h1>Design requirements</h1>
+
+<p>
+    Before the decision was made and development of the framework begun some requirements were defined and other frameworks
+    were searched to support them. Many of them partially supports them, but there is no framework fully
+    fits requirements of the targetted project. The following list contains a few of them:
+</p>
+
+<ul>
+    <li>
+        As short as possible learning curve
+    </li>
+</ul>
+
+<ul>
+    <li>
+        Single Page “Heavy” Client JS application framework
+        <ul>
+            <li>The application must be fully running on the remote device in browser, possibly offline.</li>
+        </ul>        
+    </li>
+</ul>
+
+<ul>
+    <li>As small as possible, ideally up to 150kB ungzipped</li>
+</ul>
+
+<ul>
+    <li>
+        Browser support
+        <ul>
+            <li>IE10+ / Edge, Chrome, Firefox, Opera, Safari (including mobile versions)</li>
+        </ul>
+    </li>
+
+</ul>
+
+<ul>
+    <li>
+        Offline support
+        <ul>
+            <li>Full web applications or at least parts of them should be possible to run offline with a minimal efort during implementation</li>
+        </ul>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        No requiremnt on server side rendering at all.
+        <ul>
+            Only code, resources and the data should be transferred over network.
+            The application must be fully running on the remote device in the browser and should be able to render from templates itself
+        </ul>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        Complete code base
+        <ul>
+            <li>Not a collection of tons of independent libraries from various developers built together using some dependency loader</li>
+            <li>Support for 3rd party libraries</li>
+            <li>It should be possible to maintain it in-house</li>
+        </ul>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        Well designed and developed, ideally with a good support
+
+        <ul>
+            <li>
+                Separation of concerns and possibly of team roles
+                <ul>
+                    <li>HTML should be HTML, ideally completely separated from the code and the view logic</li>
+                    <li>Separation of layers based on MVC or MVVM</li>
+                </ul>
+            </li>
+
+            <li>
+                HTML / CSS / DOM
+                <ul>
+                    <li>HTML templating must be easy. Ideally "coding" free (logicless) without tons of additional tags and attributes so web designers can use it without need of learning so much stuff.</li>
+                    <li>Manipulation of DOM should not be necessary form the application (but possible)</li>
+                    <li>From the application, nothing like createElement or $(… should be necessary - but of course possible</li>
+                    <li>Frameworks / Libraries like jquery should be avoided but possible to use</li>
+                    <li>Reusable HTML/CSS components</li>
+                    <li>CSS frameworks should be usable with no impact</li>
+                    <li>Stylesheets must be used at maximum level. Avoding manipulation of the style attribute is the big plus</li>
+                    <li>DOM should be ideally manipulated only automatically based on the template and the data</li>
+                </ul>
+            </li>
+
+            <li>
+                Testable code
+            </li>
+
+            <li>
+                Typed language such as TypeScript
+            </li>
+
+            <li>
+                Build tool chain should be limited as much as possible (it would be possible to use Node, NPM and tons of tools, but better if it will not be necessary)
+            </li>
+
+            <li>
+                Complete and easy accessible debugging possibilities with break points and another nice stuff in some full featured IDE
+            </li>
+
+            <li>
+                Well documented and ideally supported
+            </li>
+
+            <li>
+                Ready for extensions and migrations (i.e. to ES6)
+            </li>
+        </ul>
+    </li>
+  
+</ul>
+
+<ul>
+    <li>
+        Browser must still work as a browser.
+        <ul>
+            <li>It’s still a web. So for the maximum possible User Experience keep it as a web.</li>
+        </ul>
+    </li>
+</ul>
+
+
+<ul>
+    <li>
+        It should be simple to use and optimized for rapid application development.
+        <ul>
+            <li>
+                Reusability of templates and the view components code is a must
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        Easy language and translation support
+        <ul>
+            <li>
+                It should be simple to translate the application to a different language.
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<ul>
+    <li>
+        As less as possible data transfers between the client and server
+        <ul>
+            <li>
+                Data &amp; and resource caching, ideally controllable from the application, is a must
+            </li>
+        </ul>
+    </li>
+</ul>

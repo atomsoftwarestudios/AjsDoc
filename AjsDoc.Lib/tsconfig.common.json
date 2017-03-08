@@ -1,0 +1,35 @@
+{
+  // TypeScript 2.1 compiler configuration
+  // COMMON CONFIGURATION (DEBUG/RELEASE)
+
+  "compilerOptions": {
+    "allowJs": true,
+    // generate .d.ts declaration file
+    "declaration": false,
+    // output file (single js file will be generated)
+    "outFile": "./bin/ajsdoc.lib.js",
+    // target ECMA version
+    "target": "es5",
+    // libs to be used during compilation
+    "lib": [ "dom", "es2015.promise", "es5" ],
+    // moule system to be used (none, AMD, CommonJS, UMD, System, ES2015)
+    "module": "none",
+    // don't emit any output when compilation fails
+    "noEmitOnError": true,
+    // don't emit BOM
+    "emitBOM": false,
+    // preserve const enums (don't delete from generated code)
+    "preserveConstEnums": true,
+    // implicit any
+    "noImplicitAny": false
+  },
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    "./bin/**/*"
+  ]
+
+
+}
+//# sourceMappingURL=tsconfig.js.map

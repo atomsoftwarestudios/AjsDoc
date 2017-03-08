@@ -1,0 +1,211 @@
+<div style="text-align: center">
+
+    <h1>Introduction</h1>
+
+    <br />
+
+    <div style="display: inline-block">
+        <div style="text-align: center">
+            <h3 style="margin: 0; padding: 0">the Atom JavaScript Frontend Framework</h3>
+        </div>
+        <div class="ajs-logo" style="vertical-align: middle"></div>
+        <div class="atom-logo" style="vertical-align: middle"></div>
+    </div>
+
+    <br />
+    <br />
+    <br />
+
+    <div>
+        <strong style="background-color: red; color: white">&nbsp;!!! PLEASE NOTE THE FRAMEWORK IS STILL UNDER DEVELOPMENT AND THE DOCUMENTATION IS SUBJECT TO CHANGE !!!&nbsp;</strong>
+    </div>
+
+    <br />
+    <br />
+
+    <div>
+        <strong>
+            Please note the AjsDoc is the example application for the Ajs framework so it is available in offline mode too. It currently consumes about 3 megabytes of the local storage
+            for all (unoptimized) resources it is using so if you don't want to have these data stored in your browser you have to clean the application cache using developer tools or the
+            JavaScript console ( localStorage.clean() ). It is also using the Application Cache feature where it consumes about  so there are other few files stored there.             
+        </strong>
+    </div>
+
+    <br />
+    <br />
+
+    <p>
+        AJS (pronounce /aɪs/) is JavaScript MVVM Single Page Application framework written in TypeScript focused to the rapid web browser application development, team role separation, offline
+        web applications and great user experience. It is developed with TypeScript (currently 2.5.1) with transpillation target ECMA5 and focusing standard web browsers.
+    </p>
+
+    <p>
+        The code is written in the C# way so classes and interfaces are split to separate files and the design of the code overall is similar to the C#. Also, the MVVM concept has its inspiration
+        in "Windows Forms" or the Borland "Delphi" concept (its probably more similiar to WPF as it is using separate language for template definition) except the data binding which is not supported
+        now. The view state is managed in the React way but it is extended about templating in separate HTML files instead of JSXs. Ofcourse, everything is adopted to the Web environment so all the
+        Web and Browser functionalities known to web users will stay the same.
+    </p>
+
+    <p>
+        Ajs currently does not support any "dependency" loader such as require.js so the dependency and initialization of 3rd party libraries must be done manually according the documentation. Of course,
+        other methods, like webpack, can be used to for the JavaScript single library package preparation.
+    </p>
+
+    <p>
+        Set of development tools will grow as there will be need for it. Everything will be focused on the Visual Studio and MS Build and the Windows platform but another fork to support other
+        development tools, IDEs and platforms can be maintained by the community.
+    </p>
+
+    <!--
+    <h2>What's new</h2>
+
+    <p>
+        As this is the initial release of the framework, everything is new.
+    </p>
+    -->
+
+    <h2>Features</h2>
+
+    <div class="feature">
+        <h4>Browser Support</h4>
+
+        <ul>
+            <li>AJS Framework is designed to fully support major Web Browsers</li>
+        </ul>
+
+
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="ie"></td>
+                <td class="edge"></td>
+                <td class="chrome"></td>
+                <td class="firefox"></td>
+                <td class="opera"></td>
+                <td class="safari"></td>
+            </tr>
+            <tr>
+                <td class="browser">IE 10+</td>
+                <td class="browser">Edge</td>
+                <td class="browser">Chrome 4+</td>
+                <td class="browser">Firefox 2+</td>
+                <td class="browser">Opera 9+</td>
+                <td class="browser">Safari 3.1+</td>
+
+            </tr>
+        </table>
+    </div>
+
+    <div class="feature">
+        <h4>Offline Application Support</h4>
+
+        <ul>
+            <li>Support for full or partial offline Web Applications</li>
+            <li>The Application cache browser feature is used to support offline applications</li>
+            <li>Application resources can be managed and cached using the framework itself</li>
+            <li>Includes support for cache and appliaction updates with last recent versions</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h4>Boot Process Control</h4>
+
+        <ul>
+            <li>Simple initial index.html page</li>
+            <li>AJS Framework Configuration</li>
+            <li>Custom Application Configuration</li>
+            <li>Configurable resource loading</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h4>Navigation &amp; Routing &amp; Redirection management</h4>
+
+        <ul>
+            <li>Managed navigation with notifications</li>
+            <li>Configurable path-to-path redirection</li>
+            <li>Configurable path-to-view component routing</li>
+        </ul>
+    </div>
+
+
+    <div class="feature">
+        <h4>Resource Management & Caching</h4>
+
+        <ul>
+            <li>Resources are loaded from the server using AJAX requests</li>
+            <li>Resources can be cached in one of available storages – Local, Session or Memory</li>
+            <li>Automatic script evaluation</li>
+            <li>Callback system to notify the caller the resource/s was/were loaded.</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h4>MVVM Architecture</h4>
+
+        <ul>
+            <li>Model View View Model architecture</li>
+            <li>Innovative approach to Veiw with the Visual and View Components</li>
+            <li>View Component (ViewModel) drives the flow through the application</li>
+            <li>Models fully controllable by developers</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h4>Visual Component, View Component, View Model, View</h4>
+
+        <ul>
+            <li>Inspired by React approach to the state management</li>
+            <li>View Components are completely based on the logic-less templates called Visual Components</li>
+            <li>Event based notification about user actions through the tree of components</li>
+            <li>Automatic DOM rendering and updating based on template and the view component state</li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h4>Data Management &amp; Caching</h4>
+
+        <ul>
+            <li>
+                <strong>Under development</strong>
+            </li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h4>Language &amp; Translation</h4>
+
+        <ul>
+            <li>
+                <strong>Under development</strong>
+            </li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h4>Utilities</h4>
+
+        <ul>
+            <li>
+                <strong>Under development</strong>
+            </li>
+        </ul>
+    </div>
+
+    <div class="feature">
+        <h4>Development tools</h4>
+
+        <ul>
+            <li>
+                <strong>Under development</strong>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="clear"></div>
+
+    <p>
+        See <a href="/02-Design-requirements" onclick="return ajs.Framework.navigator.linkClicked(event);">Design requirements</a> section for more details under which conditions it was developed and which considerations were made.
+    </p>
+
+</div>

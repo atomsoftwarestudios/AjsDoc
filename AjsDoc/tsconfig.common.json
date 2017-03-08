@@ -2,11 +2,10 @@
   // TypeScript 2.1 compiler configuration
   // COMMON CONFIGURATION (DEBUG/RELEASE)
 
-  "compileOnSave": true,
   "compilerOptions": {
     "declaration": true,
     // output file (single js file will be generated)
-    "outFile": "./js/ajsdocbrowser.js",
+    "outFile": "./bin/ajsdocbrowser.js",
     // target ECMA version
     "target": "es5",
     // libs to be used during compilation
@@ -23,13 +22,12 @@
     "noImplicitAny": false
   },
   "include": [
-    "./src/**/*",
-    "./js/*.d.ts"
+    "./**/*",
+    "../Ajs/bin/*.d.ts"
   ],
   "exclude": [
-    "./src/Ajs/*",
-    "./src/Ajs.Boot.Config/*",
-    "./js/ajsdocbrowser.d.ts"
+    "./bin/**/*",
+    "./wwwroot/**/*"
   ]
+
 }
-//# sourceMappingURL=tsconfig.js.map

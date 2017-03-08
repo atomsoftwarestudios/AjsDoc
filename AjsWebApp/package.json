@@ -1,0 +1,33 @@
+{
+  "name": "ajswebapp",
+  "version": "1.0.0",
+  "description": "Ajs Framework Web Application builder & packager for Visual Studio",
+  "keywords": [
+    "Ajs",
+    "Atom"
+  ],
+  "homepage": "http://ajsfw.azurewebsites.net",
+  "license": "MIT",
+  "author": {
+    "name": "Atom Software Studios",
+    "email": "opensource@atomsoftwarestudios.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/atomsoftwarestudios/AjsWebApp.git"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "0.0.37",
+    "@types/gulp": "^3.8.32",
+    "@types/gulp-uglify": "0.0.29",
+    "@types/node": "^7.0.5",
+    "@types/xml2js": "0.0.32",
+    "fs-extra": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-uglify": "^2.0.1",
+    "path": "^0.12.7",
+    "ps-sync": "0.0.2",
+    "xml2js": "^0.4.17"
+  }
+}

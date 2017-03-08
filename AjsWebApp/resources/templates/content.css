@@ -1,0 +1,144 @@
+﻿.ajsDocArticleContent {
+    text-align: left;
+}
+
+.ajsDocArticleContent a {
+    color: black;
+    font-style: oblique;
+}
+
+.ajsDocArticleContent h2 {
+    margin-top: 2em;
+}
+
+.ajsDocArticleContent p {
+    text-align: justify;
+}
+
+.ajsDocArticleContent .ajs-logo {
+    display: inline-block;
+    width: 110px;
+    height: 108px;
+    margin: 0.5em;
+    background-size: cover;
+    background-image: url('/resources/img/ajs-logo.png');
+}
+
+.ajsDocArticleContent .atom-logo {
+    display: inline-block;
+    width: 130px;
+    height: 85px;
+    margin: 0.5em;
+    background-size: cover;
+    background-image: url('/resources/img/atom-logo.png');
+}
+
+.ajsDocArticleContent .edge {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: url('/resources/img/edge.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .firefox {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: url('/resources/img/firefox.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .chrome {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: url('/resources/img/chrome.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .ie {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: url('/resources/img/ie.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .opera {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: url('/resources/img/opera.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .safari {
+    width: 24px;
+    height: 24px;
+    padding: 0.2em;
+    background-image: url('/resources/img/safari.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ajsDocArticleContent .feature {
+    background-color: #EAF4F8;
+    background: linear-gradient(-3deg, #FAFCFD, #EAF4F8, #FAFCFD);
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+    text-align: left;
+    min-height: 150px;
+    float: left;
+    box-sizing: border-box;
+}
+
+.ajsDocArticleContent .feature table {
+    text-align: center;
+    margin-left: 1em;
+}
+
+.ajsDocArticleContent .feature h4 {
+    margin: 0;
+}
+
+.ajsDocArticleContent .browser {
+    font-size: 0.75em;
+    white-space: nowrap;
+    width: 60px
+}
+
+.ajsDocArticleContent .clear {
+    clear: both;
+}
+
+@media only screen and (min-width: 1300px) {
+
+    .ajsDocArticleContent .feature {
+        min-width: 49%;
+        max-width: 49%;
+        width: 49%
+    }
+
+    .ajsDocArticleContent .feature:nth-child(even) {
+        margin-left: 1em;
+    }
+
+}
+
+@media only screen and (max-width: 1300px) {
+
+    .ajsDocArticleContent .feature {
+        min-width: 100%;
+    }
+
+    .ajsDocArticleContent .feature:nth-child(even) {
+        margin-left: 0;
+    }
+
+}
