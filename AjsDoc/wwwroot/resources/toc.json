@@ -1,0 +1,51 @@
+{
+  "defaultPath": "/resources/content/01 Introduction.html",
+  "toc": {
+    "children": [
+      { "path": "/resources/content/01 Introduction.html"}, 
+      { "path": "/resources/content/02 Design requirements.html"}, 
+      {
+        "path": "/resources/content/03 Visual Studio Solution Setup.html",
+        "children": [
+          { "path": "/resources/content/03/01 Application developers.html"}, 
+          { "path": "/resources/content/03/02 Contributors.html"}
+        ]
+      }, 
+      { "path": "/resources/content/04 Web Server Requirements and Configuration.html"}, 
+      {
+        "path": "/resources/content/05 How it works.html",
+        "children": [
+          { "path": "/resources/content/05/01 Overview.html"}, 
+          { "path": "/resources/content/05/02 Offline Application Support.html"}, 
+          { "path": "/resources/content/05/03 Boot Process.html"}, 
+          { "path": "/resources/content/05/04 Navigation and Routing.html"}, 
+          { "path": "/resources/content/05/05 Resource Management and Caching.html"}, 
+          {
+            "path": "/resources/content/05/06 MVVM architecture.html",
+            "children": [
+              {
+                "path": "/resources/content/05/06/01 View and its components.html",
+                "children": [
+                  { "path": "/resources/content/05/06/01/01 View.html"}, 
+                  { "path": "/resources/content/05/06/01/02 Visual Components and Visual Styles.html"}, 
+                  { "path": "/resources/content/05/06/01/03 View Components.html"}
+                ]
+              }, 
+              { "path": "/resources/content/05/06/02 Models.html"}
+            ]
+          }
+        ]
+      }, 
+      {
+        "path": "/resources/content/06 Debugging tools.html",
+        "children": [
+          { "path": "/resources/content/06/01 Logger.html"}, 
+          { "path": "/resources/content/06/02 Resource manager info.html"}
+        ]
+      }, 
+      { "path": "/resources/content/97 Special thanks.html"}, 
+      { "path": "/resources/content/98 License.html"}, 
+      { "path": "/resources/content/99 Changelog.html"}
+    ]
+  }
+}

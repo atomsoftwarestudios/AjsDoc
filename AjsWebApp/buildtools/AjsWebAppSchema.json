@@ -1,0 +1,144 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "JSON schema for the Ajs Web Application builder configuration file",
+
+  "type": "object",
+
+  "properties": {
+
+    "ignoredProjects": {
+      "description": "Specifies projects to be ignored from processing",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": "[]"
+    },
+
+    "projectIgnore": {
+      "description": "removes the complete Visual Studio project from the processing (valid for config defined within the project)",
+      "type": "boolean",
+      "default": "false"
+    },
+
+    "jsSourceFolder": {
+      "description": "specifies source folder for javascript files (usually TypeScript compiled output)",
+      "type": "string",
+      "default": [ "/bin" ]
+    },
+
+    "wwwRootSourceFolder": {
+      "description": "specifies the wwwroot folder of the project to be processed (the folder with all sources except compiled js files)",
+      "type": "string",
+      "default": "/wwwroot"
+    },
+
+    "targetWebServer": {
+      "description": "target web server (the web.config / .htaccess files are updated automatically with virtual directories containing source files)",
+      "type": "string",
+      "enum": [ "IIS" ],
+      "default": "IIS"
+    },
+
+    "sourcesPath": {
+      "description": "path where virtual directories for project sources will be created (the map file must reflect this). Valid for Debug configuration only",
+      "type": "string",
+      "default": "/src"
+    },
+
+    "enableSourceMaps": {
+      "description": "specifies if generation / transferring of source maps is allowed. Valid for Debug configuration only.",
+      "type": "boolean",
+      "default": "true"
+    },
+
+    "jsTargetFolder": {
+      "description": "target folder for JavaScript files",
+      "type": "string",
+      "default": "/js"
+    },
+
+    "jsCreateProjectFolder": {
+      "description": "specifies if the folder with the project name will be created in the target javascript folder",
+      "type": "boolean",
+      "default": "false"
+    },
+
+    "offlineSupport": {
+      "description": "specifies if the cache.manifest file will be generated",
+      "type": "boolean",
+      "default": "false"
+    },
+
+    "offlineFiles": {
+      "description": "specifies file url's to be cached in the application cache",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+
+    "processLESS": {
+      "description": "enables/disables processing of .less files",
+      "type": "boolean",
+      "default": "true"
+    },
+
+    "lessOptions": {
+      "description": "gulp-less options (not supported yet)",
+      "type": "object",
+      "default": {}
+    },
+
+    "processSASS": {
+      "description": "enables/disables processing of .sass files",
+      "type": "boolean",
+      "default": "true"
+    },
+
+    "sassOptions": {
+      "description": "gulp-sass options (not supported yet)",
+      "type": "object",
+      "default": {}
+    },
+
+    "jsMinify": {
+      "description": "specifies if JavaScript files will be minified",
+      "type": "boolean",
+      "default": "false"
+    },
+
+    "jsMinifyOptions": {
+      "description": "gulp-uglify options (not supported yet)",
+      "type": "object",
+      "default": {}
+    },
+
+    "cssMinify": {
+      "description": "specifies if CSS resources will be minified",
+      "type": "boolean",
+      "default": "false"
+    },
+
+    "cssMinifyOptions": {
+      "description": "gulp-clean-css options (not supported yet)",
+      "type": "object",
+      "default": {}
+    },
+
+    "htmlMinify": {
+      "description": "specifies if HTML resources will be minified",
+      "type": "boolean",
+      "default": "false"
+    },
+
+    "htmlMinifyOptions": {
+      "description": "gulp-html-min options (not supported yet)",
+      "type": "object",
+      "default": {}
+    }
+
+  }
+
+}
