@@ -26,6 +26,9 @@ IN THE SOFTWARE.
 ///<reference path="LoggerStyleSheet.tsx" />
 ///<reference path="LoggerToolbar.tsx" />
 
+/**
+ * Contains view components of the log debug module
+ */
 namespace ajs.dbg.modules.logger {
 
     "use strict";
