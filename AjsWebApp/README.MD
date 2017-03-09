@@ -17,10 +17,10 @@ the TypeScript language and are included in the project. Additionaly, standard N
 
 ### Table of Contents
 
-- [Features]
-- [Planned Features]
-- [Usage]
-  - [Prerequisites]
+- [Features](#features)
+- [Planned Features](#planned-features)
+- [usage](#usage)
+  - [Prerequisites](#prerequisites)
   - [AjsWebApp Visual Studio project]
   - [Application, library and content projects]
   - [Using pre-created solution & project templates]
