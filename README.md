@@ -20,12 +20,12 @@ both versions are not optimized from the size perspective (no uglify or other to
 
 - [Introduction](#introduction)
 - [Features](#features)
-- [Visual Studio prerequisites & setup](Visual-Studio+-prerequisites--setup)
-- [Build](#Build)
-- [Usage](#Usage)
-- [Known bugs](#Known bugs)
-- [License](#License)
-- [Contribution](#Contribution)
+- [Visual Studio prerequisites & setup](visual-studio-prerequisites--setup)
+- [Build](#build)
+- [Usage](#usage)
+- [Known bugs](#known-bugs)
+- [License](#license)
+- [Contribution](#contribution)
 
 ---
 
