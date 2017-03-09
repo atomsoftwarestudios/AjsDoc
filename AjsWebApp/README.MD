@@ -21,15 +21,15 @@ the TypeScript language and are included in the project. Additionaly, standard N
 - [Planned Features](#planned-features)
 - [usage](#usage)
   - [Prerequisites](#prerequisites)
-  - [AjsWebApp Visual Studio project]
-  - [Application, library and content projects]
-  - [Using pre-created solution & project templates]
-  - [AjsWebApp post-build configuration files]
-  - [WebPublish & .pubxml]
-  - [.gitignore]
-- [Known issues]
-- [License]
-- [Contribution]
+  - [AjsWebApp Visual Studio project](#ajswebapp-visual-studio-project)
+  - [Application, library and content projects](application--library-and-content-projects)
+  - [Using pre-created solution & project templates](using-pre--created-solution--project-templates)
+  - [AjsWebApp post-build configuration files](#ajswebapp-post--build-configuration-files)
+  - [WebPublish & .pubxml](#webpublish---pubxml)
+  - [.gitignore](#-gitignore)
+- [Known issues](#known-issues)
+- [License](#license)
+- [Contribution](#contribution)
 
 ---
 
