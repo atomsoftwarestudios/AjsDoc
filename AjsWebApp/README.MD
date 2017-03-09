@@ -19,7 +19,7 @@ the TypeScript language and are included in the project. Additionaly, standard N
 
 - [Features](#features)
 - [Planned Features](#planned-features)
-- [usage](#usage)
+- [Usage](#usage)
   - [Prerequisites](#prerequisites)
   - [AjsWebApp Visual Studio project](#ajswebapp-visual-studio-project)
   - [Application, library and content projects](application--library-and-content-projects)
