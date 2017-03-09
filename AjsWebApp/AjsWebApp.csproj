@@ -47,13 +47,9 @@
     <None Include="README.MD" />
     <TypeScriptCompile Include="buildtools\src\Gulpfile.ts" />
     <Content Include="tsconfig.json" />
-    <None Include="WebDeploy-AjsFw.pubxml" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="WebDeploy-AjsDoc.pubxml">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
