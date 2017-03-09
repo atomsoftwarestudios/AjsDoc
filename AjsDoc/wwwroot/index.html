@@ -15,6 +15,30 @@
 
                     "use strict";
 
+                    // Class ajs.ui.RenderTarget
+                    var RenderTarget = (function() {
+
+                        var _this;
+
+                        function RenderTarget() {
+                            _this = this;
+                            this._renderTarget = document.getElementById("ajsRenderTarget");
+                        }
+
+                        RenderTarget.prototype.show = function() {
+                            this._renderTarget.style.display = "";
+                        }
+
+                        RenderTarget.prototype.hide = function () {
+                            this._renderTarget.style.display = "none";
+                        }
+
+                        return RenderTarget;
+
+                    }())
+
+                    ui.RenderTarget = RenderTarget;
+
                     // Class ajs.ui.ErrorScreen
 
                     var ErrorScreen = (function () {
@@ -239,27 +263,26 @@
     <div id="ajsRenderTarget"></div>
 
     <script type="text/javascript">
+
+        ajs.ui.renderTarget = new ajs.ui.RenderTarget();
         ajs.ui.progressBar = new ajs.ui.ProgressBar("AjsDoc is loading...");       
         ajs.ui.errorScreen = new ajs.ui.ErrorScreen();
 
         if (ajs.errorsBeforeOnLoad.length > 0) {
-
-            console.log(ajs.errorsBeforeOnLoad[0]);
 
             ajs.ui.errorScreen.show({
                 label:        "AjsDoc fatal error",
                 errorCode:    "0x00000001",
                 errorLabel:   "Failed to load script: " + ajs.errorsBeforeOnLoad[0].target.src,
                 errorMessage: "FailedToLoadScript",
-                //errorTrace:   "at...\n   at...\n      at...",
+                errorTrace:   "index.html, &lt;head&gt;&lt;script&gt;",
                 userAction:   "You can try to resolve the problem by reloading the page (F5) at least twice<br />" +
                               "If reload does will not help, please report the issue at <a href='https://github.com/atomsoftwarestudios/AjsDoc/issues'>GitHub</a>",
             });
 
         }
-    </script>
 
-    <ifdebug></ifdebug>
+    </script>
 
 </body>
 
