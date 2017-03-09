@@ -18,7 +18,7 @@ both versions are not optimized from the size perspective (no uglify or other to
 
 ### Table of Contents
 
-- [Introduction]
+- [Introduction](#introduction)
 - [Features]
 - [Visual Studio prerequisites & setup]
 - [Build]
