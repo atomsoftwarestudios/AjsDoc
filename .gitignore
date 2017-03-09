@@ -10,11 +10,12 @@ AjsWebApp/*
 !AjsWebApp/web.*
 !AjsWebApp.*
 
-!AjsWebApp/buildtools/
+!AjsWebApp/buildtools/*
+AjsWebApp/buildtools/dist/*
 AjsWebApp/buildtools/dist/
 AjsWebApp/buildtools/solutionInfo.json
 AjsWebApp/buildtools/clean.json
-AjsWebApp/buildtools/watcher.*
+AjsWebApp/buildtools/watcher*
 
 
 
