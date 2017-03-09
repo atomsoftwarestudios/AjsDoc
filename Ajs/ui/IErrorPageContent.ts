@@ -1,4 +1,4 @@
-/* *************************************************************************
+﻿/* *************************************************************************
 The MIT License (MIT)
 Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
 
@@ -25,22 +25,13 @@ namespace ajs.ui {
 
     "use strict";
 
-    export declare class ProgressBar {
-
-        protected _total: number;
-        public total: number;
-
-        protected _current: number;
-        public current: number;
-
-        protected _update(): void;
-
-        public resourceLoading(label: string): void;
-        public resourceLoaded(e: string): void;
-        public show(): void;
-        public hide(): void;
+    export interface IErrorPageContent {
+        label: string;
+        errorCode: string;
+        errorLabel?: string;
+        errorMessage?: string;
+        errorTrace?: string;
+        userAction?: string;
     }
-
-    export let progressBar: ProgressBar;
 
 }

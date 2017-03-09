@@ -1137,41 +1137,6 @@ function watcher() {
                                 }
                                 processWWWRootFile(srcabspath, tgtabspath, clean, projectDirs[key].project, projectDirs[key].projectConfig, ajsWebAppProj, ajsWebAppCfg);
                                 fs.writeFileSync(path.normalize(ajsWebAppProj.projectDir + "/buildtools/clean.json"), JSON.stringify(clean), "utf8");
-                                index_1.printf();
-                                /*    for (i = 0; i < files.length; i++) {
-                                
-                                        let relpath: string = files[i].substr(wwwrootPath.length);
-                                
-                                        let stat: fs.Stats = fs.statSync(files[i]);
-                                
-                                        if (stat.isDirectory()) {
-                                
-                                            try {
-                                                fs.mkdirSync(path.normalize(targetRoot + relpath));
-                                                toClean.push(targetRoot + relpath);
-                                            } catch (e) {
-                                                if (e.code !== "EEXIST") {
-                                                    throw e;
-                                                }
-                                            }
-                                
-                                        } else {
-                                            processWWWRootFile(
-                                                files[i],
-                                                path.normalize(targetRoot + relpath),
-                                                toClean,
-                                                project,
-                                                projectConfig,
-                                                ajsWebAppProject,
-                                                ajsWebAppProjectConfig
-                                            );
-                                        }
-                                
-                                    }
-                                
-                                    fs.writeFileSync(path.normalize(targetRoot + "/buildtools/clean.json"), JSON.stringify(toClean, null, 2), "utf8");
-                                                                */
-                                index_1.printf("");
                             }
                         }
                         else {

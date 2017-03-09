@@ -25,22 +25,15 @@ namespace ajs.ui {
 
     "use strict";
 
-    export declare class ProgressBar {
+    export declare class RenderTarget {
 
-        protected _total: number;
-        public total: number;
+        protected _renderTarget: HTMLElement;
 
-        protected _current: number;
-        public current: number;
-
-        protected _update(): void;
-
-        public resourceLoading(label: string): void;
-        public resourceLoaded(e: string): void;
-        public show(): void;
         public hide(): void;
+        public show(): void;
+
     }
 
-    export let progressBar: ProgressBar;
+    export let renderTarget: RenderTarget;
 
 }

@@ -38,8 +38,6 @@ namespace ajs.boot {
 
     getAjsConfig = function(): IAjsConfig {
 
-        let doc: Document = window.document.implementation.createHTMLDocument("test");
-
         // const allParamsAndHashes: string = "($|\\/$|\\/\\?.*|\\/\\#.*|\\?.*|\\#.*)";
         // const anyPath: string = "(\\/.*|.*)";
 

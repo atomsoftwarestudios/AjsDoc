@@ -25,22 +25,21 @@ namespace ajs.ui {
 
     "use strict";
 
-    export declare class ProgressBar {
+    export declare class ErrorPage {
 
-        protected _total: number;
-        public total: number;
+        protected _errorScreen: HTMLElement;
+        protected _label: HTMLElement;
+        protected _errorLabel: HTMLElement;
+        protected _userAction: HTMLElement;
+        protected _errorCode: HTMLElement;
+        protected _message: HTMLElement;
+        protected _stackTrace: HTMLElement;
 
-        protected _current: number;
-        public current: number;
-
-        protected _update(): void;
-
-        public resourceLoading(label: string): void;
-        public resourceLoaded(e: string): void;
-        public show(): void;
         public hide(): void;
+        public show(error: IErrorPageContent): void;
+
     }
 
-    export let progressBar: ProgressBar;
+    export let errorPage: ProgressBar;
 
 }
