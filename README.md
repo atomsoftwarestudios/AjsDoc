@@ -20,7 +20,7 @@ both versions are not optimized from the size perspective (no uglify or other to
 
 - [Introduction](#introduction)
 - [Features](#features)
-- [Visual Studio prerequisites & setup](visual-studio-prerequisites--setup)
+- [Visual Studio prerequisites & setup](#visual-studio-prerequisites--setup)
 - [Build](#build)
 - [Usage](#usage)
 - [Known bugs](#known-bugs)
