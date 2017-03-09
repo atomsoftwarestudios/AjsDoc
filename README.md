@@ -19,13 +19,13 @@ both versions are not optimized from the size perspective (no uglify or other to
 ### Table of Contents
 
 - [Introduction](#introduction)
-- [Features]
-- [Visual Studio prerequisites & setup]
-- [Build]
-- [Usage]
-- [Known bugs]
-- [License]
-- [Contribution]
+- [Features](#features)
+- [Visual Studio prerequisites & setup](Visual Studio prerequisites & setup)
+- [Build](Build)
+- [Usage](Usage)
+- [Known bugs](Known bugs)
+- [License](License)
+- [Contribution](Contribution)
 
 ---
 
