@@ -22,11 +22,11 @@ the TypeScript language and are included in the project. Additionaly, standard N
 - [Usage](#usage)
   - [Prerequisites](#prerequisites)
   - [AjsWebApp Visual Studio project](#ajswebapp-visual-studio-project)
-  - [Application, library and content projects](application--library-and-content-projects)
-  - [Using pre-created solution & project templates](using-pre--created-solution--project-templates)
-  - [AjsWebApp post-build configuration files](#ajswebapp-post--build-configuration-files)
-  - [WebPublish & .pubxml](#webpublish---pubxml)
-  - [.gitignore](#-gitignore)
+  - [Application, library and content projects](#application--library-and-content-projects)
+  - [Using pre-created solution & project templates](#using-pre-created-solution--project-templates)
+  - [AjsWebApp post-build configuration files](#ajswebapp-post-build-configuration-files)
+  - [WebPublish & .pubxml](#webpublish--pubxml)
+  - [.gitignore](#gitignore)
 - [Known issues](#known-issues)
 - [License](#license)
 - [Contribution](#contribution)
@@ -194,7 +194,7 @@ the debugging, web application server settings (web.config) and deployment infor
 which can be downloaded separately and added to the solution using the Add -> Existing Project option in the Solution Explorer context
 menu.
 
-**TypeScript projects recommended setup**
+**TypeScript projects - recommended setup**
 
 For all TypeScript project it is recommended to 
 
